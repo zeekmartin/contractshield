@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://guardrails.dev/schemas/decision.v0.1.json",
+  "title": "Guardrails Decision v0.1",
+  "type": "object",
+  "required": [
+    "version",
+    "action",
+    "statusCode",
+    "risk"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "enum": [
+        "0.1"
+      ]
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "ALLOW",
+        "BLOCK",
+        "MONITOR",
+        "CHALLENGE"
+      ]
+    },
+    "statusCode": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 599
+    },
+    "reason": {
+      "type": "string"
+    },
+    "ruleHits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "severity"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "med",
+              "high",
+              "critical"
+            ]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "default": []
+    },
+    "risk": {
+      "type": "object",
+      "required": [
+        "score",
+        "level"
+      ],
+      "properties": {
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "level": {
+          "type": "string",
+          "enum": [
+            "none",
+            "low",
+            "med",
+            "high",
+            "critical"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "redactions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "action"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "description": "JSONPath-like selector, e.g. request.body.json.sample.email"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "mask",
+              "hash",
+              "drop"
+            ]
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000
+          }
+        },
+        "additionalProperties": false
+      },
+      "default": []
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Optional bag for adapters/engines to attach non-normative data (must remain safe to log)."
+    }
+  },
+  "additionalProperties": false
+}
