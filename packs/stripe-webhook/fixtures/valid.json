@@ -1,0 +1,11 @@
+{
+  "id": "evt_valid",
+  "type": "checkout.session.completed",
+  "api_version": "2023-10-16",
+  "created": 1700000000,
+  "data": {
+    "object": {
+      "id": "cs_test"
+    }
+  }
+}

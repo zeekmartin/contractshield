@@ -1,0 +1,36 @@
+policyVersion: "0.1"
+defaults:
+  mode: enforce
+routes:
+  - id: webhook.stripe.v1
+    match:
+      method: POST
+      path: /webhooks/stripe
+    webhook:
+      provider: stripe
+      requireRawBody: true
+      toleranceSeconds: 300
+    contract:
+      requestSchemaRef: ./schemas/event.v1.json
+      rejectUnknownFields: true
+    rules:
+      - id: webhook.stripe.signature
+        type: webhook-signature
+        action: block
+        severity: critical
+
+      - id: webhook.stripe.replay
+        type: webhook-replay
+        action: block
+        severity: critical
+
+      - id: webhook.stripe.event.allowlist
+        type: cel
+        action: block
+        severity: high
+        config:
+          expr: request.body.json.sample.type in [
+            "checkout.session.completed",
+            "invoice.paid",
+            "customer.subscription.updated"
+          ]

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "data",
+    "api_version",
+    "created"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "api_version": {
+      "type": "string"
+    },
+    "created": {
+      "type": "integer"
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "object"
+      ],
+      "properties": {
+        "object": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

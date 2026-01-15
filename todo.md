@@ -55,3 +55,13 @@
       - focus sur action / ruleHits / risk
       - éviter les gros dumps JSON illisibles en CI
 
+## TODO – Decisions
+
+- [x] ALLOW
+- [x] BLOCK
+- [x] MONITOR
+- [ ] CHALLENGE
+      - define semantics
+      - define Decision contract
+      - adapter behavior
+      - golden tests
