@@ -1,0 +1,45 @@
+{
+  "version": "0.1",
+  "id": "ctx-block-tenant-1",
+  "timestamp": "2026-01-14T16:27:09.960683Z",
+  "request": {
+    "method": "POST",
+    "path": "/api/license/activate",
+    "routeId": "license.activate.v1",
+    "query": {},
+    "headers": {
+      "content-type": "application/json"
+    },
+    "contentType": "application/json",
+    "body": {
+      "present": true,
+      "sizeBytes": 180,
+      "sha256": "abc123abc123abc123",
+      "json": {
+        "redacted": true,
+        "sample": {
+          "tenantId": "t-1",
+          "licenseKey": "***",
+          "deviceId": "d-1"
+        }
+      }
+    }
+  },
+  "identity": {
+    "authenticated": true,
+    "subject": "u-1",
+    "tenant": "t-2",
+    "scopes": [
+      "license:activate"
+    ]
+  },
+  "client": {
+    "ip": "203.0.113.10",
+    "userAgent": "test"
+  },
+  "runtime": {
+    "language": "node",
+    "service": "example",
+    "env": "test"
+  }
+}

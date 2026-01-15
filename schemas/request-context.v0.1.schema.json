@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/request-context.v0.1.json",
+  "title": "RequestContext",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "id",
+    "timestamp",
+    "request",
+    "runtime"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "0.1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "path",
+        "headers",
+        "contentType",
+        "body"
+      ],
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ]
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "routeId": {
+          "type": "string"
+        },
+        "query": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "null",
+              "array",
+              "object"
+            ]
+          }
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "contentType": {
+          "type": "string"
+        },
+        "body": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "present",
+            "sizeBytes",
+            "sha256"
+          ],
+          "properties": {
+            "present": {
+              "type": "boolean"
+            },
+            "sizeBytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "sha256": {
+              "type": "string",
+              "minLength": 16
+            },
+            "rawBase64": {
+              "type": "string",
+              "description": "Optional. Use only in webhook mode when raw body is required."
+            },
+            "json": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "redacted": {
+                  "type": "boolean"
+                },
+                "sample": {
+                  "type": [
+                    "object",
+                    "array",
+                    "string",
+                    "number",
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "paths": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Optional: list of JSON pointer paths extracted as features."
+                }
+              }
+            },
+            "features": {
+              "type": "object",
+              "additionalProperties": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean",
+                  "null",
+                  "array",
+                  "object"
+                ]
+              },
+              "description": "Optional derived features (tokens, counts, flags) for privacy/perf."
+            }
+          }
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "authenticated": {
+          "type": "boolean"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "tenant": {
+          "type": "string"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "claims": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "null",
+              "array",
+              "object"
+            ]
+          }
+        }
+      }
+    },
+    "client": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ip": {
+          "type": "string"
+        },
+        "userAgent": {
+          "type": "string"
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "service",
+        "env"
+      ],
+      "properties": {
+        "language": {
+          "type": "string",
+          "enum": [
+            "node",
+            "java",
+            "other"
+          ]
+        },
+        "service": {
+          "type": "string",
+          "minLength": 1
+        },
+        "env": {
+          "type": "string",
+          "minLength": 1
+        },
+        "adapterVersion": {
+          "type": "string"
+        },
+        "pdpVersion": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

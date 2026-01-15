@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/policy.v0.1.json",
+  "title": "PolicyFile",
+  "type": "object",
+  "required": [
+    "policyVersion",
+    "defaults",
+    "routes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "policyVersion": {
+      "type": "string",
+      "const": "0.1"
+    },
+    "defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "response"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "monitor",
+            "enforce"
+          ]
+        },
+        "response": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "blockStatusCode": {
+              "type": "integer",
+              "default": 403
+            },
+            "malformedStatusCode": {
+              "type": "integer",
+              "default": 400
+            }
+          }
+        },
+        "limits": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "maxBodyBytes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "maxJsonDepth": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "maxArrayLength": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "match",
+          "rules"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "match": {
+            "type": "object",
+            "required": [
+              "method",
+              "path"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string",
+                "description": "Exact or prefix match depending on engine implementation."
+              }
+            }
+          },
+          "contract": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "openapiRef": {
+                "type": "string"
+              },
+              "requestSchemaRef": {
+                "type": "string"
+              },
+              "rejectUnknownFields": {
+                "type": "boolean"
+              }
+            }
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "type",
+                "action"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "limit",
+                    "header",
+                    "cel",
+                    "webhook",
+                    "rate",
+                    "ssrf",
+                    "traversal"
+                  ]
+                },
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "allow",
+                    "block",
+                    "monitor"
+                  ]
+                },
+                "severity": {
+                  "type": "string",
+                  "enum": [
+                    "low",
+                    "med",
+                    "high",
+                    "critical"
+                  ],
+                  "default": "high"
+                },
+                "config": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "version": "0.1",
+  "action": "BLOCK",
+  "statusCode": 403,
+  "reason": "Policy violation",
+  "ruleHits": [
+    {
+      "id": "tenant.binding",
+      "severity": "critical",
+      "message": "Tenant mismatch"
+    }
+  ],
+  "risk": {
+    "score": 90,
+    "level": "critical"
+  },
+  "redactions": []
+}

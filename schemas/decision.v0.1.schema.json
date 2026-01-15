@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/decision.v0.1.json",
+  "title": "Decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "action",
+    "statusCode",
+    "reason",
+    "ruleHits",
+    "risk"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "0.1"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "ALLOW",
+        "BLOCK",
+        "MONITOR",
+        "CHALLENGE"
+      ]
+    },
+    "statusCode": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 599
+    },
+    "reason": {
+      "type": "string"
+    },
+    "ruleHits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "severity"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "med",
+              "high",
+              "critical"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "score",
+        "level"
+      ],
+      "properties": {
+        "score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "level": {
+          "type": "string",
+          "enum": [
+            "none",
+            "low",
+            "med",
+            "high",
+            "critical"
+          ]
+        }
+      }
+    },
+    "redactions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "type"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "JSON pointer or dotted path"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "mask",
+              "hash",
+              "drop"
+            ]
+          }
+        }
+      }
+    },
+    "headers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Optional response headers to add (e.g., Retry-After)."
+    }
+  }
+}

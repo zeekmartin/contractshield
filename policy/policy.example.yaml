@@ -1,0 +1,62 @@
+policyVersion: "0.1"
+defaults:
+  mode: monitor           # monitor | enforce
+  response:
+    blockStatusCode: 403
+    malformedStatusCode: 400
+  limits:
+    maxBodyBytes: 1048576
+    maxJsonDepth: 30
+    maxArrayLength: 2000
+
+routes:
+  - id: webhook.stripe.v1
+    match: { method: POST, path: /stripe/webhook }
+    contract:
+      rejectUnknownFields: false
+    rules:
+      - id: webhook.stripe.signature
+        type: webhook
+        action: block
+        severity: critical
+        config:
+          provider: stripe
+          header: stripe-signature
+          toleranceSeconds: 300
+          requireRawBody: true
+          idempotency:
+            store: postgres
+            table: stripe_events
+            key: event_id
+      - id: limit.body.webhook
+        type: limit
+        action: block
+        config:
+          maxBodyBytes: 2097152
+
+  - id: license.activate.v1
+    match: { method: POST, path: /api/license/activate }
+    contract:
+      openapiRef: ./examples/openapi.yaml#/paths/~1api~1license~1activate/post
+      requestSchemaRef: ./examples/schemas/license.activate.request.json
+      rejectUnknownFields: true
+    rules:
+      - id: auth.required
+        type: cel
+        action: block
+        severity: high
+        config:
+          expr: identity.authenticated == true
+
+      - id: tenant.binding
+        type: cel
+        action: block
+        severity: critical
+        config:
+          expr: identity.tenant != "" && request.body.json.sample.tenantId == identity.tenant
+
+      - id: limit.body.activate
+        type: limit
+        action: block
+        config:
+          maxBodyBytes: 32768

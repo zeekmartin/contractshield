@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/license.activate.request.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "tenantId",
+    "licenseKey",
+    "deviceId"
+  ],
+  "properties": {
+    "tenantId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "licenseKey": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 256
+    },
+    "deviceId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128
+    },
+    "userEmail": {
+      "type": "string",
+      "format": "email"
+    },
+    "client": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}
