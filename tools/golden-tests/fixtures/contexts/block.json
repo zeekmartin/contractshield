@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "POST",
+    "path": "/api/license/activate",
+    "body": {
+      "tenantId": "tenant-2",
+      "licenseKey": "XXXX"
+    }
+  },
+  "identity": {
+    "authenticated": true,
+    "tenant": "tenant-1"
+  }
+}

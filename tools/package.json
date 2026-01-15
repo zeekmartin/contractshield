@@ -1,0 +1,11 @@
+{
+  "name": "@guardrails/golden-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:golden": "node tools/golden-test-runner.mjs"
+  },
+  "dependencies": {
+    "yaml": "^2.5.0"
+  }
+}

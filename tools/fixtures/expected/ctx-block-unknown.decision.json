@@ -1,0 +1,17 @@
+{
+  "version": "0.1",
+  "action": "BLOCK",
+  "statusCode": 403,
+  "reason": "Policy violation",
+  "ruleHits": [
+    {
+      "id": "contract.reject_unknown_fields",
+      "severity": "high"
+    }
+  ],
+  "risk": {
+    "score": 60,
+    "level": "high"
+  },
+  "redactions": []
+}

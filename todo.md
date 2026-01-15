@@ -25,3 +25,33 @@
 - [ ] WASM execution mode
 - [ ] Rego/OPA backend option (keep stable interfaces)
 - [ ] Policy UI (PAP) + policy diff/replay
+
+## Golden tests & CI (v0.1)
+
+- [ ] Remplacer le “mini evaluator” par le vrai PDP
+      - conserver strictement le format des fixtures
+      - PDP interchangeable (embedded ou sidecar)
+      - aucun changement côté tests
+
+- [ ] Tests monitor vs enforce
+      - même contexte, décisions différentes selon le mode
+      - vérifier mapping BLOCK → MONITOR en mode monitor
+
+- [ ] Tests webhooks Stripe
+      - raw body obligatoire
+      - vérification signature
+      - tolérance timestamp
+      - protection replay (idempotency key)
+      - cas valides / invalides / replay
+
+- [ ] Tests de limits
+      - taille body max
+      - profondeur JSON
+      - taille des arrays
+      - payload borderline (juste en dessous / juste au-dessus)
+
+- [ ] Snapshot-friendly diff
+      - diff lisible ligne par ligne
+      - focus sur action / ruleHits / risk
+      - éviter les gros dumps JSON illisibles en CI
+
