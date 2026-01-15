@@ -122,3 +122,38 @@ Notes:
 - **Uploads**: streaming inspection, mime allowlist, max pages, decompression limits.
 - **Egress controls (later)**: destination allowlist, private IP blocks, DNS rebinding mitigations.
 - **Sink-aware RASP (later)**: `SinkContext` evaluation at dangerous call sites.
+
+---
+
+## Reference implementation in this repo (v0.1)
+
+### PDP (Policy Decision Point)
+- Location: `packages/pdp/`
+- Entry point: `packages/pdp/src/pdp.ts` → `evaluate(policy, ctx, opts)`
+- Contract: `schemas/decision.v0.1.json` (output), `schemas/request-context.v0.1.schema.json` (input)
+
+Pipeline in code:
+1. route match (`utils/matchRoute.ts`)
+2. limits (`rules/limits.ts`)
+3. contract validation (AJV JSON Schema) (`rules/contract.ts`)
+4. Stripe webhooks:
+   - signature (`rules/webhookStripe.ts`)
+   - replay (`rules/webhookStripeReplay.ts`)
+5. CEL invariants (`rules/cel.ts`)
+6. aggregate hits → `Decision` (monitor/enforce mapping)
+
+Extension points (via `opts`):
+- `schemaLoader(ref)` — loads JSON Schemas (file loader today)
+- `getSecret(...)` — Stripe webhook secret provider
+- `replayStore` — idempotency / replay protection store (Redis later; memory store for dev/tests)
+- `celEvaluator` — plug a real CEL engine (fallback subset exists for docs/tests)
+
+### Golden tests (non-regression harness)
+- Fixtures (repo root): `fixtures/contexts/*.json` and `fixtures/expected/*.decision.json`
+- Runner (added): `tools/golden-pdp-runner.mjs`
+- The runner calls the real PDP and diffs Decisions in a snapshot-friendly way.
+
+Why this matters:
+- the PDP is a pure function → deterministic tests
+- policies are GitOps → every change must be validated by golden tests
+

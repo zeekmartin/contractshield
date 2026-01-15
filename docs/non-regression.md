@@ -54,3 +54,35 @@ Any change touching:
 - webhook verification
 - egress rules
 must trigger a security review using `prompts/security-review.prompt.md`.
+
+---
+
+## Golden tests wired to the real PDP (v0.1)
+
+In this repo, golden tests are executed against the **real PDP** (`packages/pdp`) to prevent regressions.
+
+### Fixture locations (root)
+- `fixtures/contexts/*.json` — `RequestContext`
+- `fixtures/expected/*.decision.json` — expected `Decision` (schema v0.1)
+
+### Runner
+- `tools/golden-pdp-runner.mjs`
+
+### How it works
+For each context fixture:
+1. load a policy file (default: `policy/policy.example.yaml`)
+2. call `@guardrails/pdp.evaluate(policy, ctx, opts)`
+3. compare to `fixtures/expected/<ctx.id>.decision.json`
+
+### Determinism rules
+- fixtures may force Stripe outcomes for CI stability:
+  - `ctx.webhook.signatureValid: boolean`
+  - `ctx.webhook.replayed: boolean`
+
+### CI expectation
+A PR that changes:
+- policy packs (`packs/*`)
+- PDP code (`packages/pdp/*`)
+- schemas (`schemas/*`)
+must run golden tests in CI.
+

@@ -101,3 +101,23 @@ During monitor → enforce:
 - export structured events to OTEL logs pipeline
 
 Keep fields consistent across runtimes (Node/Java/others).
+
+---
+
+## PDP vs PEP responsibility
+
+The **PDP** evaluates policies and returns a `Decision`. It should not perform I/O logging by itself.
+
+The **PEP** (Node/Java adapter) is responsible for:
+- generating / propagating `correlationId`
+- enforcing the `Decision` (block/allow/monitor)
+- emitting structured logs and metrics
+- applying redactions directives to any debug output
+
+### Recommended adapter behavior (v0.1)
+- Always emit `guardrails.decision` with:
+  - `routeId`, `action`, `statusCode`, `risk`, `ruleHits`
+  - `correlationId`, `tenant`, `subject` when available
+  - request features only (`bodySizeBytes`, `bodySha256`), never raw bodies
+- When in monitor mode, still log rule hits (so rollout decisions are measurable).
+
