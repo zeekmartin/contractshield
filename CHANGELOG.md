@@ -7,6 +7,134 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-01-17
+
+### Added
+
+- **Policy Hot Reload** for embedded deployment
+  - `PolicyHotReloader` class with file watching
+  - Debounced reload (500ms default)
+  - Validation before applying new policy
+  - `onReload` and `onError` callbacks
+  - Auto-enabled in development mode
+
+- **Unix Socket Support** for sidecar deployment
+  - `unixSocket` configuration option
+  - ~0.1ms latency (vs ~1-5ms HTTP)
+  - Shared volume support for Kubernetes
+  - Can run alongside HTTP server
+
+- **`@contractshield/client` SDK** for centralized deployment
+  - LRU cache with configurable TTL
+  - Automatic retry with backoff
+  - Fail-open/fail-closed modes
+  - Unix socket support
+  - Cache statistics and health checks
+
+- **Enhanced Health Checks**
+  - Detailed `/health` endpoint with component status
+  - `/live` liveness probe
+  - `/ready` readiness probe with dependency checks
+  - Redis and policy validation status
+
+- **Prometheus Metrics**
+  - `contractshield_decisions_total` (counter by action)
+  - `contractshield_eval_latency_ms` (histogram with buckets)
+  - `contractshield_policy_routes` (gauge)
+  - `contractshield_errors_total` (counter by type)
+  - `contractshield_cache_hits_total` / `cache_misses_total`
+
+### Improved
+
+- Sidecar latency reduced from ~1-5ms to ~0.1ms with Unix socket
+- Centralized deployment resilience with client-side caching
+- Better observability with detailed health status
+- Updated `docs/deployment.md` with new features
+
+## [1.0.0] - 2026-01-17
+
+### Added
+
+- 🎉 **Sink-aware RASP** (`@contractshield/sink-rasp`) - Commercial
+  - **Command execution protection** (child_process hooks)
+    - `exec`, `execSync`, `spawn`, `spawnSync`, `execFile`, `execFileSync`
+    - Detects: semicolon chaining, pipes, backticks, $() substitution, && / ||
+    - Detects dangerous commands: rm, curl, wget, bash, python, etc.
+  - **Filesystem protection** (fs hooks)
+    - `readFile`, `writeFile`, `unlink`, `readdir`, `stat` (sync and async)
+    - Detects: path traversal (`../`), URL-encoded traversal, sensitive paths
+    - Protects: /etc/passwd, /proc, /home, .ssh, .aws, etc.
+  - **HTTP egress protection** (SSRF prevention)
+    - `http.request`, `https.request`, `fetch`
+    - Blocks: private IPs (127.x, 10.x, 192.168.x, 172.16-31.x)
+    - Blocks: cloud metadata (169.254.169.254, metadata.google.internal)
+    - Blocks: dangerous protocols (file://, gopher://, dict://)
+  - **Request context tracking**
+    - AsyncLocalStorage for correlating RASP events to HTTP requests
+    - Express middleware: `expressContextMiddleware()`
+    - Fastify plugin: `fastifyContextPlugin`
+  - **Operation modes**
+    - `monitor`: Log detections without blocking
+    - `enforce`: Block dangerous operations
+  - **Structured logging** for SIEM integration
+    - JSON format with timestamp, sink, operation, reason, requestId
+    - Configurable reporter with redaction
+  - **License enforcement**
+    - Requires valid license with `sink-rasp` feature
+    - Works with `@contractshield/license` package
+
+- **Analyzers** (usable standalone)
+  - `analyzeCommand()` - Command injection detection
+  - `analyzePath()` - Path traversal detection
+  - `analyzeUrl()` - SSRF detection
+
+- **Documentation** (`docs/sink-rasp.md`)
+  - Configuration guide
+  - Detection examples
+  - SIEM integration
+  - Performance notes
+
+### Changed
+
+- Project marked as **production ready** (v1.0)
+- `@contractshield/sink-rasp` version bumped to 1.0.0
+
+## [0.3.1] - 2026-01-17
+
+### Added
+
+- **Open Core licensing infrastructure**
+  - Apache 2.0 LICENSE file for open source packages
+  - CLA (Contributor License Agreement)
+  - Commercial LICENSE for Pro/Enterprise packages
+
+- **`@contractshield/license` package**
+  - `verifyLicense()` - Verify license key and get details
+  - `requireLicense()` - Require valid license or throw
+  - `hasFeature()` - Check if license includes a feature
+  - RSA-SHA256 signature verification (offline, no network)
+  - No external dependencies
+
+- **License generator tool** (`tools/license-generator/`)
+  - Generate signed license keys (JWT format)
+  - RSA 2048 key pair generation script
+  - CLI for creating Pro/Enterprise licenses
+
+- **Pro package structure** (`pro/`)
+  - `@contractshield/sink-rasp` placeholder
+  - Commercial license enforcement
+  - Private npm publishing setup
+
+- **Licensing documentation** (`docs/licensing.md`)
+  - Open source vs commercial features
+  - License verification guide
+  - FAQ and pricing information
+
+### Changed
+
+- Updated root `package.json` with workspaces for `pro/*` and `tools/*`
+- Updated `.gitignore` to exclude secrets and private keys
+
 ## [0.3.0] - 2026-01-17
 
 ### Added

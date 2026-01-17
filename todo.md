@@ -33,16 +33,67 @@
 - [x] Documentation: webhooks.md, adapters.md, deployment.md
 - [x] Golden tests for webhook providers
 
-## v0.4
+## v0.3.1 (Open Core Licensing)
+- [x] Apache 2.0 LICENSE file
+- [x] CLA (Contributor License Agreement)
+- [x] Commercial LICENSE for pro/ packages
+- [x] `@contractshield/license` package (verify, requireLicense, hasFeature)
+- [x] License generator tool (`tools/license-generator/`)
+- [x] Pro package structure (`pro/sink-rasp/` placeholder)
+- [x] Licensing documentation (`docs/licensing.md`)
+- [x] License verification tests
+
+## v1.0 (Sink-aware RASP) ✅
+- [x] **Sink-aware RASP** (`@contractshield/sink-rasp`) - Commercial
+  - [x] Command execution hooks (child_process)
+  - [x] Command injection analyzer
+  - [x] Filesystem hooks (fs, fs/promises)
+  - [x] Path traversal analyzer
+  - [x] HTTP egress hooks (http, https, fetch)
+  - [x] SSRF/URL analyzer
+  - [x] Async context tracking (link to HTTP request)
+  - [x] Structured reporter for SIEM
+  - [x] Monitor and enforce modes
+  - [x] Allowlist support
+  - [x] License enforcement (requires `sink-rasp` feature)
+- [x] Documentation (`docs/sink-rasp.md`)
+- [x] Tests for analyzers and hooks
+- [x] CHANGELOG updated
+
+## v1.1 (Deployment Optimizations) ✅
+- [x] **Policy Hot Reload** for embedded deployment
+  - [x] `PolicyHotReloader` with file watching
+  - [x] Debounced reload and validation
+  - [x] Auto-enabled in development
+- [x] **Unix Socket Support** for sidecar
+  - [x] `unixSocket` config option
+  - [x] ~0.1ms latency (vs ~1-5ms HTTP)
+- [x] **`@contractshield/client` SDK**
+  - [x] LRU cache with TTL
+  - [x] Retry with backoff
+  - [x] Fail-open/fail-closed modes
+- [x] **Enhanced Health Checks**
+  - [x] Detailed `/health` endpoint
+  - [x] `/live` and `/ready` probes
+  - [x] Redis and policy status
+- [x] **Prometheus Metrics**
+  - [x] Decision counters and latency histogram
+  - [x] Error and cache metrics
+- [x] Documentation (`docs/deployment.md`) updated
+- [x] CHANGELOG updated
+
+## v1.2 (SQL + Eval Hooks)
+- [ ] SQL hooks (mysql, pg, mysql2)
+- [ ] SQL injection analyzer
+- [ ] Eval hooks (eval, Function, vm)
+- [ ] Template injection detection
+
+## v1.3
 - [ ] Policy packs (Stripe webhook pack, upload pack, OAuth pack)
 - [ ] Egress controls (declared URL fields, destination allowlists)
 - [ ] Workflow counters (sequence + quotas)
 
-## v0.5
-- [ ] Sink-aware hooks (http egress, sql, fs, template, exec) — declared first
-- [ ] Optional runtime instrumentation agents
-
-## v1.0+
+## v2.0+
 - [ ] WASM execution mode
 - [ ] Rego/OPA backend option (keep stable interfaces)
 - [ ] Policy UI (PAP) + policy diff/replay

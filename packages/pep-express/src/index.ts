@@ -1,5 +1,10 @@
 export { contractshield, guardrails, rawBodyCapture } from "./middleware.js";
 export { buildRequestContext } from "./context.js";
+export {
+  PolicyHotReloader,
+  createPolicyLoader,
+  type HotReloadOptions,
+} from "./hotReload.js";
 export type {
   ContractShieldOptions,
   ContractShieldRequest,

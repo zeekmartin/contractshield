@@ -1,0 +1,22 @@
+{
+  "name": "@contractshield/license-generator",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Internal tool for generating ContractShield license keys",
+  "type": "module",
+  "main": "generate.ts",
+  "exports": {
+    ".": {
+      "import": "./generate.ts",
+      "types": "./generate.ts"
+    }
+  },
+  "scripts": {
+    "generate": "npx tsx generate.ts",
+    "generate-keys": "bash generate-keys.sh"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "@types/node": "^20.11.30"
+  }
+}

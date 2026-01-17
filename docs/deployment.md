@@ -35,7 +35,6 @@ The PDP runs in-process with your application.
 
 ### Cons
 - Node.js only
-- Policy changes require restart
 - Memory overhead per instance
 
 ### Example (Express)
@@ -56,6 +55,29 @@ app.use(contractshield({
 
 app.listen(3000);
 ```
+
+### Hot Reload (v1.1+)
+
+Enable automatic policy reloading without restart:
+
+```typescript
+import express from "express";
+import { contractshield } from "@contractshield/pep-express";
+
+const app = express();
+
+app.use(contractshield({
+  policy: "./policy.yaml",  // Path to policy file
+  hotReload: true,          // Default: true in development
+  onPolicyReload: (policy) => {
+    console.log(`Policy reloaded: ${policy.routes?.length} routes`);
+  },
+}));
+```
+
+Hot reload is enabled by default in development (`NODE_ENV !== 'production'`).
+Changes to the policy file are debounced (500ms) and validated before applying.
+Invalid policies are rejected and the previous policy remains active.
 
 ## Sidecar Deployment
 
@@ -82,9 +104,40 @@ The PDP runs as a separate container alongside your application.
 - Independent scaling
 
 ### Cons
-- Network latency (~1-5ms)
 - Additional container management
 - Requires HTTP client
+
+### Unix Socket (v1.1+)
+
+For lowest latency (~0.1ms vs ~1-5ms HTTP), use Unix sockets:
+
+```yaml
+# Kubernetes deployment with Unix socket
+volumes:
+  - name: contractshield-socket
+    emptyDir: {}
+
+containers:
+  - name: app
+    image: my-app:latest
+    volumeMounts:
+      - name: contractshield-socket
+        mountPath: /var/run/contractshield
+    env:
+      - name: CONTRACTSHIELD_SOCKET
+        value: "/var/run/contractshield/pdp.sock"
+
+  - name: contractshield-sidecar
+    image: contractshield/sidecar:1.1.0
+    volumeMounts:
+      - name: contractshield-socket
+        mountPath: /var/run/contractshield
+    env:
+      - name: UNIX_SOCKET
+        value: "/var/run/contractshield/pdp.sock"
+      - name: HTTP_PORT
+        value: "0"  # Disable HTTP if socket is enough
+```
 
 ### Kubernetes Deployment
 
@@ -195,9 +248,53 @@ A shared PDP service for multiple applications.
 - Easier policy updates
 
 ### Cons
-- Single point of failure
-- Higher latency
 - Requires service mesh or LB
+
+### Client SDK (v1.1+)
+
+The client SDK provides caching, retry, and failover for resilience:
+
+```typescript
+import { ContractShieldClient } from '@contractshield/client';
+
+const client = new ContractShieldClient({
+  url: 'http://contractshield-service:3100',
+
+  // Caching (reduces latency and load)
+  cacheEnabled: true,
+  cacheMaxSize: 1000,
+  cacheTtlMs: 60000,  // 1 minute
+
+  // Retry on failure
+  retries: 2,
+  retryDelayMs: 10,
+  timeoutMs: 100,
+
+  // Failover (allow requests if service is down)
+  failOpen: true,
+
+  // Callbacks
+  onError: (err) => console.error('ContractShield error:', err),
+  onCacheHit: (key) => metrics.inc('cache_hits'),
+  onFailover: (err) => alerting.warn('ContractShield failover', err),
+});
+
+// Use in your middleware
+app.use(async (req, res, next) => {
+  const context = buildContext(req);
+  const decision = await client.evaluate(context);
+
+  if (decision.action === 'BLOCK') {
+    return res.status(403).json({ error: decision.reason });
+  }
+  next();
+});
+```
+
+**Cache behavior:**
+- Only `ALLOW` and `MONITOR` decisions are cached
+- `BLOCK` decisions are never cached (re-evaluated each time)
+- Cache key: `method:route:tenant:scopes` (body is not included)
 
 ### Kubernetes Service
 
@@ -279,9 +376,43 @@ All deployment patterns should include health checks.
 
 | Endpoint | Purpose | Response |
 |----------|---------|----------|
-| `/health` | Liveness | `{"status": "ok"}` |
+| `/health` | Detailed status | `{"status": "ok", "checks": {...}}` |
+| `/live` | Liveness | `{"alive": true}` |
 | `/ready` | Readiness | `{"ready": true}` |
 | `/metrics` | Prometheus | Metrics in text format |
+
+### Health Response (v1.1+)
+
+```json
+{
+  "status": "ok",           // "ok", "degraded", or "unhealthy"
+  "version": "1.1.0",
+  "uptime": 3600,           // seconds
+  "checks": {
+    "redis": {
+      "status": "ok",
+      "latencyMs": 2
+    },
+    "policy": {
+      "status": "ok",
+      "routeCount": 15
+    }
+  }
+}
+```
+
+### Readiness Response
+
+```json
+{
+  "ready": true
+}
+// or
+{
+  "ready": false,
+  "reason": "Redis not connected"
+}
+```
 
 ### Kubernetes Probes
 
@@ -310,15 +441,29 @@ readinessProbe:
 The sidecar exposes Prometheus metrics at `/metrics`:
 
 ```promql
-# Sidecar availability
+# Sidecar availability (gauge)
 contractshield_up
 
-# Decision latency histogram
-contractshield_eval_latency_ms
+# Policy route count (gauge)
+contractshield_policy_routes
 
-# Decisions by action
+# Decision latency histogram (buckets: 1, 5, 10, 25, 50, 100, 250, 500ms)
+contractshield_eval_latency_ms_bucket{action="ALLOW", le="10"}
+contractshield_eval_latency_ms_sum{action="ALLOW"}
+contractshield_eval_latency_ms_count{action="ALLOW"}
+
+# Decisions by action (counter)
 contractshield_decisions_total{action="ALLOW"}
 contractshield_decisions_total{action="BLOCK"}
+contractshield_decisions_total{action="MONITOR"}
+
+# Errors by type (counter)
+contractshield_errors_total{type="validation"}
+contractshield_errors_total{type="evaluation"}
+
+# Cache statistics (counter) - Client SDK
+contractshield_cache_hits_total
+contractshield_cache_misses_total
 ```
 
 ### Logging
