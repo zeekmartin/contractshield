@@ -1,0 +1,9 @@
+# Test: Valid Stripe webhook
+# Expected: ALLOW (signature valid, not replayed, event type allowed)
+_template: webhook-stripe
+id: stripe-valid
+
+# Template defaults provide:
+# - webhook.signatureValid: true
+# - webhook.replayed: false
+# - body.json.sample.type: checkout.session.completed (in allowlist)

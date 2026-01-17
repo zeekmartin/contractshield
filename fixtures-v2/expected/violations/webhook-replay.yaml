@@ -1,0 +1,6 @@
+# Expected: BLOCK - replay detected
+_template: decision-block
+
+ruleHits:
+  - id: webhook.stripe.replay
+    severity: critical

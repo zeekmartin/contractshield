@@ -1,0 +1,10 @@
+# Expected: BLOCK - auth.required violated
+_template: decision-block
+
+ruleHits:
+  - id: auth.required
+    severity: high
+
+risk:
+  score: 60
+  level: high

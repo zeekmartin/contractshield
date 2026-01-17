@@ -1,0 +1,9 @@
+# Default decision for BLOCK
+version: "0.1"
+action: BLOCK
+statusCode: 403
+reason: Policy violation
+risk:
+  score: 90
+  level: critical
+redactions: []

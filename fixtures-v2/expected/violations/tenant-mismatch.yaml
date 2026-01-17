@@ -1,0 +1,6 @@
+# Expected: BLOCK - tenant.binding violated
+_template: decision-block
+
+ruleHits:
+  - id: tenant.binding
+    severity: critical
