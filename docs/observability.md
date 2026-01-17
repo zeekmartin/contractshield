@@ -2,7 +2,7 @@
 
 Date: 2026-01-15
 
-Guardrails must be operable:
+ContractShield must be operable:
 - decisions are explainable
 - logs are safe (no secrets)
 - regressions are detectable
@@ -13,11 +13,11 @@ Guardrails must be operable:
 ## Event types
 
 Emit one structured event per evaluation:
-- `guardrails.decision`
+- `contractshield.decision`
 
 Optional:
-- `guardrails.webhook` (signature/idempotency details, redacted)
-- `guardrails.debug` (canonicalization debug, disabled by default)
+- `contractshield.webhook` (signature/idempotency details, redacted)
+- `contractshield.debug` (canonicalization debug, disabled by default)
 
 ---
 
@@ -25,7 +25,7 @@ Optional:
 
 ```json
 {
-  "event": "guardrails.decision",
+  "event": "contractshield.decision",
   "timestamp": "RFC3339",
   "correlationId": "uuid",
   "service": "my-service",
@@ -89,13 +89,13 @@ During monitor → enforce:
 ## Future: OpenTelemetry (OTEL)
 
 ### Traces
-- span: `guardrails.evaluate`
+- span: `contractshield.evaluate`
   - attrs: `routeId`, `action`, `riskLevel`
 
 ### Metrics
-- `guardrails_decisions_total{action,routeId}`
-- `guardrails_rule_hits_total{ruleId,severity}`
-- `guardrails_eval_latency_ms` (histogram)
+- `contractshield_decisions_total{action,routeId}`
+- `contractshield_rule_hits_total{ruleId,severity}`
+- `contractshield_eval_latency_ms` (histogram)
 
 ### Logs
 - export structured events to OTEL logs pipeline
@@ -115,7 +115,7 @@ The **PEP** (Node/Java adapter) is responsible for:
 - applying redactions directives to any debug output
 
 ### Recommended adapter behavior (v0.1)
-- Always emit `guardrails.decision` with:
+- Always emit `contractshield.decision` with:
   - `routeId`, `action`, `statusCode`, `risk`, `ruleHits`
   - `correlationId`, `tenant`, `subject` when available
   - request features only (`bodySizeBytes`, `bodySha256`), never raw bodies

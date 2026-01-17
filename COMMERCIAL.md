@@ -1,4 +1,4 @@
-# Guardrails Commercial Offering
+# ContractShield Commercial Offering
 
 ## Core vs Commercial
 

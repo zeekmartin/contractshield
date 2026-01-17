@@ -1,21 +1,21 @@
-# Guardrails Manifesto
+# ContractShield Manifesto
 
 Date: 2026-01-15
 
-Application-layer Guardrails exists to make application security **explicit**, **deterministic**, and **owned by developers**.
+Application-layer ContractShield exists to make application security **explicit**, **deterministic**, and **owned by developers**.
 
 Modern applications are attacked through the gaps between:
 - what the app *expects*,
 - what the perimeter tools *can infer*,
 - and what the runtime *actually executes*.
 
-Guardrails closes that gap by enforcing **declared intent** at runtime.
+ContractShield closes that gap by enforcing **declared intent** at runtime.
 
 ---
 
 ## One-sentence definition
 
-**Guardrails is a policy enforcement layer that rejects anything your application did not explicitly declare as expected.**
+**ContractShield is a policy enforcement layer that rejects anything your application did not explicitly declare as expected.**
 
 ---
 
@@ -28,7 +28,7 @@ Signatures and heuristics are useful, but they are not enough:
 - They are hard to test deterministically.
 - They fail silently under obfuscation and encoding tricks.
 
-Guardrails starts from what you can define and verify: contracts, context, and invariants.
+ContractShield starts from what you can define and verify: contracts, context, and invariants.
 
 ---
 
@@ -41,11 +41,11 @@ Define what is allowed. Reject everything else.
 Normalize inputs before evaluation to prevent bypasses (double-encoding, unicode tricks, header ambiguity).
 
 ### 3) Deterministic decisions
-Same input → same decision.  
+Same input → same decision.
 Every decision must be explainable with rule IDs and reasons.
 
 ### 4) Minimum necessary data
-Prefer hashes, derived features, and redaction.  
+Prefer hashes, derived features, and redaction.
 Avoid storing raw sensitive payloads.
 
 ### 5) Safe by default
@@ -55,7 +55,7 @@ Start in **monitor** mode, then graduate to **enforce** with progressive rollout
 Policies are versioned, reviewed, tested, and deployed like code (GitOps).
 
 ### 7) Composable security
-Guardrails complements existing controls:
+ContractShield complements existing controls:
 - authn/authz
 - WAF
 - rate limiting
@@ -83,9 +83,9 @@ Security without operability is theater:
 
 ---
 
-## What “good” looks like
+## What "good" looks like
 
-A Guardrails-enabled service can answer:
+A ContractShield-enabled service can answer:
 - What is allowed on this endpoint?
 - What would be blocked, and why?
 - Which rule changed behavior between versions?
@@ -96,15 +96,15 @@ A Guardrails-enabled service can answer:
 
 ## Product stance
 
-Guardrails is built for:
+ContractShield is built for:
 - teams that ship frequently,
 - want strong security,
 - and require predictable behavior.
 
-Guardrails is not built for:
-- “magic AI security” promises,
+ContractShield is not built for:
+- "magic AI security" promises,
 - opaque black boxes,
-- security that can’t be tested or explained.
+- security that can't be tested or explained.
 
 ---
 

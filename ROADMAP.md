@@ -1,4 +1,4 @@
-# Roadmap – Guardrails
+# Roadmap – ContractShield
 
 Last updated: 2026-01-17
 
@@ -6,7 +6,7 @@ Last updated: 2026-01-17
 
 ## Vision
 
-Guardrails = **Vulnerability Shield** + **Contract Enforcement**
+ContractShield = **Vulnerability Shield** + **Contract Enforcement**
 
 ```
 Requête entrante
@@ -29,7 +29,7 @@ Requête entrante
 
 ---
 
-## v0.1 — MVP Utilisable
+## v0.1 — MVP Utilisable ✅
 
 **Objectif** : Un développeur Node.js peut protéger une API Express en 30 minutes.
 
@@ -45,148 +45,126 @@ Requête entrante
 - [x] Contract validation (JSON Schema / AJV)
 - [x] CEL invariants (subset)
 - [x] Stripe webhook (signature + replay)
-- [ ] Cache AJV schemas (perf)
-- [ ] Option `defaults.unmatchedRouteAction`
+- [x] Cache AJV schemas (perf)
+- [x] Option `defaults.unmatchedRouteAction`
 
 ### PEP Adapters
-- [ ] Express.js middleware (`@guardrails/pep-express`)
-- [ ] Example `examples/express-basic/`
+- [x] Express.js middleware (`@contractshield/pep-express`)
+- [x] Example `examples/express-basic/`
 
 ### Testing & Fixtures
 - [x] Golden tests runner
-- [ ] Fixtures YAML + templates (simplification)
-- [ ] Tests unitaires critiques (matchRoute, jsonMetrics, webhookStripe)
+- [x] Fixtures YAML + templates (simplification)
+- [x] Tests unitaires critiques (matchRoute, jsonMetrics, webhookStripe)
 
 ### Documentation
 - [x] Manifesto & principles
 - [x] Threat model
 - [x] Policy language
-- [ ] Documenter subset CEL supporté
-- [ ] Badges `[future]` sur features non implémentées
+- [x] Documenter subset CEL supporté
+- [x] Badges `[future]` sur features non implémentées
 
 ---
 
-## v0.2 — Vulnerability Checks + Observabilité
+## v0.2 — Vulnerability Checks + Observabilité ✅
 
 **Objectif** : Bloquer les attaques connues sur Node.js/runtimes, pas seulement valider les schemas.
 
-### Vulnerability Checks (nouveau)
-
-Checks configurables globalement et par route :
-
-| Check | Cible | Faux positifs |
-|-------|-------|---------------|
-| `prototypePollution` | `__proto__`, `constructor.prototype` dans JSON keys | Quasi nuls |
-| `pathTraversal` | `../`, `..\\` dans strings | Faibles si ciblé par champ |
-| `ssrfInternal` | IPs privées/metadata dans URLs (`127.0.0.1`, `169.254.*`, `10.*`) | Faibles |
-| `commandInjection` | `; \| $ \` ( )` dans champs sensibles | Moyens — opt-in par champ |
-| `nosqlInjection` | `$gt`, `$ne`, `$where` comme keys | Quasi nuls |
-
-**Format policy** :
-
-```yaml
-defaults:
-  vulnerabilityChecks:
-    prototypePollution: true
-    pathTraversal: true
-    ssrfInternal: true
-    commandInjection: false   # opt-in
-    nosqlInjection: false     # opt-in (MongoDB)
-
-routes:
-  - path: /api/upload
-    rules:
-      - type: vulnerability
-        pathTraversal:
-          fields: [body.filename, body.directory]
-        commandInjection:
-          fields: [body.filename]
-
-  - path: /api/webhook
-    rules:
-      - type: vulnerability
-        ssrfInternal:
-          fields: [body.callbackUrl, body.returnUrl]
-```
-
-### Implémentation
-- [ ] Rule type `vulnerability` dans PDP
-- [ ] Check `prototypePollution` (scan JSON keys récursif)
-- [ ] Check `pathTraversal` (regex sur champs configurés)
-- [ ] Check `ssrfInternal` (parse URL, check IP ranges)
-- [ ] Check `commandInjection` (patterns shell, opt-in)
-- [ ] Check `nosqlInjection` (MongoDB operators, opt-in)
-- [ ] Golden tests pour chaque check
-- [ ] Documentation des checks et tuning
-
-### CEL
-- [ ] Intégrer vrai évaluateur CEL (cel-js ou WASM)
-
-### Observability
-- [ ] OpenTelemetry spans pour décisions
-- [ ] Métriques : requêtes bloquées par type de check
-- [ ] Dashboard minimal (CLI ou HTML statique)
-
-### DX
-- [ ] Mode dry-run avec diff (monitor → enforce preview)
-- [ ] Policy pack : `@guardrails/pack-api-basics`
-- [ ] `npx guardrails init --from openapi.yaml` (génération auto)
+### Vulnerability Checks
+- [x] `prototypePollution` (scan JSON keys récursif)
+- [x] `pathTraversal` (regex sur champs configurés)
+- [x] `ssrfInternal` (parse URL, check IP ranges)
+- [x] `commandInjection` (patterns shell, opt-in)
+- [x] `nosqlInjection` (MongoDB operators, opt-in)
+- [x] Golden tests pour chaque check
+- [x] Documentation des checks et tuning
 
 ---
 
-## v0.3 — Multi-runtime + Webhooks
+## v0.3 — Multi-runtime + Webhooks ✅
 
 **Objectif** : Java support, webhooks généralisés.
 
 ### Adapters
+- [x] Fastify adapter (`@contractshield/pep-fastify`)
 - [ ] Java adapter (Spring/Servlet)
-- [ ] Fastify adapter
 
 ### Webhooks
-- [ ] Webhook générique (signature plugin system)
-- [ ] Plugins : GitHub, Slack, Twilio
+- [x] Webhook générique (signature plugin system)
+- [x] Plugins : GitHub, Slack, Twilio, Stripe
 
 ### Production
-- [ ] Redis replay store
-- [ ] Sidecar Docker image
+- [x] Redis replay store
+- [x] Sidecar Docker image
 
 ---
 
-## v1.0 — Production Ready + Sink-aware
+## v0.3.1 — Open Core Licensing ✅
 
-**Objectif** : Entreprises peuvent déployer en confiance. Protection au niveau des sinks.
+- [x] Apache 2.0 LICENSE for open source packages
+- [x] Commercial LICENSE for Pro/Enterprise
+- [x] `@contractshield/license` verification package
+- [x] License generator tool
 
-### Sink-aware RASP (différenciateur)
+---
 
-Intercepter les appels dangereux au runtime :
+## v1.0 — Sink-aware RASP ✅
 
-| Sink | Exemples | Protection |
-|------|----------|------------|
-| Command execution | `exec()`, `spawn()`, `system()` | Block si input contient patterns |
-| Filesystem | `fs.readFile()`, `fs.writeFile()` | Block path traversal |
-| HTTP egress | `fetch()`, `http.request()` | Block SSRF, allowlist domains |
-| SQL | `query()`, ORM raw queries | Block injection patterns |
-| Template engines | `render()`, `compile()` | Block template injection |
+**Objectif** : Protection au niveau des sinks.
 
-- [ ] Architecture hooks sink-aware
-- [ ] Node.js sink interceptors
-- [ ] Configuration allowlist/denylist par sink
-- [ ] Logging des tentatives bloquées
+### Sink-aware RASP (Commercial)
+
+- [x] Command execution hooks (`child_process`)
+- [x] Filesystem hooks (`fs`)
+- [x] HTTP egress hooks (SSRF prevention)
+- [x] Monitor and enforce modes
+- [x] Request context tracking
+- [x] Structured logging for SIEM
+- [ ] SQL hooks (mysql, pg) — v1.2
+- [ ] Template injection — v1.2
+
+---
+
+## v1.1 — Deployment Optimizations ✅
+
+- [x] Policy hot reload (embedded)
+- [x] Unix socket support (sidecar)
+- [x] `@contractshield/client` SDK (caching, retry, failover)
+- [x] Enhanced health checks
+- [x] Prometheus metrics
+
+---
+
+## v1.2 — SQL + Eval Hooks (Planned)
+
+- [ ] SQL hooks (mysql, pg, mysql2)
+- [ ] SQL injection analyzer
+- [ ] Eval hooks (eval, Function, vm)
+- [ ] Template injection detection
+
+---
+
+## v1.3 — Policy Packs (Planned)
+
+- [ ] Policy pack : `@contractshield/pack-api-basics`
+- [ ] Policy pack : `@contractshield/pack-stripe-webhook`
+- [ ] Egress controls (declared URL fields, destination allowlists)
+- [ ] Workflow counters (sequence + quotas)
+
+---
+
+## v2.0+ — Enterprise (Planned)
 
 ### Portability
 - [ ] WASM PDP
 - [ ] OPA/Rego backend alternatif
 
-### Security
-- [ ] Egress controls (SSRF protection renforcée)
-- [ ] DNS rebinding protection
-
 ### Enterprise
 - [ ] Policy UI (authoring + replay)
 - [ ] Audit logging certifié
-- [ ] Docs compliance (SOC2)
+- [ ] `npx contractshield init --from openapi.yaml` (génération auto)
 
-### Decisions (v1)
+### Decisions
 - [ ] CHALLENGE
   - Semantics definition
   - Adapter behavior (captcha, MFA step-up)
@@ -208,17 +186,16 @@ Intercepter les appels dangereux au runtime :
 
 ## Couverture des attaques par version
 
-| Attaque | v0.1 | v0.2 | v1.0 |
-|---------|------|------|------|
-| Mass assignment | ✅ Contract | ✅ | ✅ |
-| Schema violation | ✅ Contract | ✅ | ✅ |
-| IDOR / cross-tenant | ✅ CEL invariants | ✅ | ✅ |
-| Webhook spoofing | ✅ Signature | ✅ | ✅ |
-| Prototype pollution | ❌ | ✅ Check | ✅ |
-| Path traversal | ❌ | ✅ Check | ✅ + Sink |
-| SSRF | ❌ | ✅ Check | ✅ + Sink |
-| Command injection | ❌ | ⚠️ Opt-in | ✅ + Sink |
-| NoSQL injection | ❌ | ⚠️ Opt-in | ✅ |
-| SQL injection | ❌ | ❌ | ✅ Sink |
-| Template injection | ❌ | ❌ | ✅ Sink |
-| Stored/second-order | ❌ | ❌ | ✅ Sink |
+| Attaque | v0.1 | v0.2 | v1.0 | v1.1 |
+|---------|------|------|------|------|
+| Mass assignment | ✅ Contract | ✅ | ✅ | ✅ |
+| Schema violation | ✅ Contract | ✅ | ✅ | ✅ |
+| IDOR / cross-tenant | ✅ CEL invariants | ✅ | ✅ | ✅ |
+| Webhook spoofing | ✅ Signature | ✅ | ✅ | ✅ |
+| Prototype pollution | ❌ | ✅ Check | ✅ | ✅ |
+| Path traversal | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink |
+| SSRF | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink |
+| Command injection | ❌ | ⚠️ Opt-in | ✅ + Sink | ✅ + Sink |
+| NoSQL injection | ❌ | ⚠️ Opt-in | ✅ | ✅ |
+| SQL injection | ❌ | ❌ | ❌ | v1.2 |
+| Template injection | ❌ | ❌ | ❌ | v1.2 |

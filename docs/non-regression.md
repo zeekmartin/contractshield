@@ -71,7 +71,7 @@ In this repo, golden tests are executed against the **real PDP** (`packages/pdp`
 ### How it works
 For each context fixture:
 1. load a policy file (default: `policy/policy.example.yaml`)
-2. call `@guardrails/pdp.evaluate(policy, ctx, opts)`
+2. call `@contractshield/pdp.evaluate(policy, ctx, opts)`
 3. compare to `fixtures/expected/<ctx.id>.decision.json`
 
 ### Determinism rules

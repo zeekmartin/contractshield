@@ -1,13 +1,13 @@
 # Express Basic Example
 
-Minimal Express.js app demonstrating Guardrails policy enforcement.
+Minimal Express.js app demonstrating ContractShield policy enforcement.
 
 ## What it does
 
 - Protects `/api/license/activate` endpoint
 - Requires authentication
 - Enforces tenant binding (payload tenantId must match identity)
-- Adds `X-Guardrails-Decision` header to responses
+- Adds `X-ContractShield-Decision` header to responses
 
 ## Run
 
@@ -45,15 +45,15 @@ curl -X POST http://localhost:3000/api/license/activate \
 
 See `policy.json` for the policy configuration.
 
-## Using @guardrails/pep-express
+## Using @contractshield/pep-express
 
 In a real app, use the middleware package:
 
 ```typescript
 import express from "express";
-import { guardrails } from "@guardrails/pep-express";
+import { contractshield } from "@contractshield/pep-express";
 
 const app = express();
 app.use(express.json());
-app.use(guardrails({ policy: "./policy.json" }));
+app.use(contractshield({ policy: "./policy.json" }));
 ```

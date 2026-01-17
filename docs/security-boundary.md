@@ -2,11 +2,11 @@
 
 Date: 2026-01-15
 
-Where Guardrails runs, what it can see, and what it cannot.
+Where ContractShield runs, what it can see, and what it cannot.
 
 ---
 
-## Where Guardrails sits
+## Where ContractShield sits
 
 - after TLS termination
 - at HTTP ingress (middleware/filter) or local sidecar
@@ -19,19 +19,19 @@ Client → Proxy/Gateway → PEP → App
 
 ## Trust assumptions
 
-Guardrails assumes:
+ContractShield assumes:
 - decrypted HTTP is available at the PEP
 - identity context can be provided (auth upstream or in-app)
 - the service can declare intent (schemas, invariants)
 
-Guardrails does not assume:
+ContractShield does not assume:
 - well-formed inputs
 - consistent headers
 - honest clients
 
 ---
 
-## What Guardrails can see
+## What ContractShield can see
 
 - method/path/query/headers (normalized)
 - content-type
@@ -42,13 +42,13 @@ Guardrails does not assume:
 
 ---
 
-## What Guardrails cannot see (by design)
+## What ContractShield cannot see (by design)
 
 - network-layer DDoS (SYN floods, volumetric)
 - client-side execution (DOM/browser)
 - malware on endpoints
 - supply-chain compromise
-- encrypted payload contents if TLS terminates elsewhere and PEP doesn’t see plaintext
+- encrypted payload contents if TLS terminates elsewhere and PEP doesn't see plaintext
 
 ---
 
@@ -73,7 +73,7 @@ Webhook mode must be route-scoped to avoid accidental raw-body logging.
 
 ## Future: sink-aware boundary (optional)
 
-Later Guardrails can evaluate sink events:
+Later ContractShield can evaluate sink events:
 - SQL, filesystem, template render, exec, HTTP egress
 
 This is a separate enforcement boundary and can be enabled per service.

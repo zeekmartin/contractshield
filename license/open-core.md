@@ -1,6 +1,6 @@
 # Open-core model
 
-Guardrails follows an **open-core** licensing model.
+ContractShield follows an **open-core** licensing model.
 
 ## What is open-source (Core)
 
@@ -29,7 +29,7 @@ No artificial limitations are imposed on the core.
 
 ## What is commercial
 
-Commercial components are **not required** to run Guardrails core.
+Commercial components are **not required** to run ContractShield core.
 
 They include advanced runtime and enterprise features such as:
 - sink-aware RASP enforcement

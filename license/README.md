@@ -1,6 +1,6 @@
-# Guardrails – Licensing overview
+# ContractShield – Licensing overview
 
-Guardrails is distributed under an **open-core** model.
+ContractShield is distributed under an **open-core** model.
 
 This directory documents:
 - what is open-source

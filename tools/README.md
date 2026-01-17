@@ -2,7 +2,7 @@
 
 Date: 2026-01-15
 
-This folder provides a minimal **golden test** harness for Guardrails policies.
+This folder provides a minimal **golden test** harness for ContractShield policies.
 
 ## Why golden tests?
 They prevent security regressions by locking policy behavior to:

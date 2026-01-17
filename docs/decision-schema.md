@@ -2,7 +2,7 @@
 
 Date: 2026-01-15
 
-This document defines the **stable output contract** of Guardrails policy evaluation.
+This document defines the **stable output contract** of ContractShield policy evaluation.
 
 A **Decision** is produced by the PDP and enforced by the PEP. It must be:
 - deterministic

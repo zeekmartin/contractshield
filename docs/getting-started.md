@@ -2,10 +2,10 @@
 
 Date: 2026-01-15
 
-This is the fastest way to understand **Application-layer Guardrails**.
+This is the fastest way to understand **Application-layer ContractShield**.
 
 ## What you get
-Guardrails enforces **declared application intent** at runtime:
+ContractShield enforces **declared application intent** at runtime:
 - contracts (OpenAPI / JSON Schema)
 - limits (size, depth, rate)
 - context rules (auth, scopes, tenant binding)
@@ -58,4 +58,4 @@ routes:
 ## 5) What to read next
 - `docs/policy-language.md` — CEL basics and pitfalls
 - `docs/policy-authoring.md` — packs, overrides, rule IDs, precedence
-- `docs/security-boundary.md` — what Guardrails can/can’t see
+- `docs/security-boundary.md` — what ContractShield can/can't see

@@ -2,7 +2,7 @@
 
 Date: 2026-01-15
 
-How to author Guardrails policies:
+How to author ContractShield policies:
 - structure of a policy
 - route matching
 - packs and overrides

@@ -1,5 +1,5 @@
 {
-  "name": "@guardrails/golden-tests",
+  "name": "@contractshield/golden-tests",
   "private": true,
   "type": "module",
   "scripts": {

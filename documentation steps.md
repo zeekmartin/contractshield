@@ -1,7 +1,7 @@
 
 # Step 1 — Manifesto & Principles
 
-This package contains the foundational documents for **Application-layer Guardrails**:
+This package contains the foundational documents for **Application-layer ContractShield**:
 - `docs/manifesto.md`: the manifesto and non-negotiables
 - `docs/principles.md`: the short principles list
 
@@ -12,7 +12,7 @@ Use these as the “north star” for documentation, design, and roadmap discuss
 This package contains the official comparison between:
 - Web Application Firewalls (WAF)
 - Runtime Application Self-Protection (RASP)
-- Application-layer Guardrails
+- Application-layer ContractShield
 
 Purpose:
 - Clarify positioning
@@ -22,7 +22,7 @@ Purpose:
 
 # Step 3 — Threat Model
 
-This package contains the formal threat model for **Application-layer Guardrails**.
+This package contains the formal threat model for **Application-layer ContractShield**.
 
 Purpose:
 - Define scope
@@ -41,10 +41,10 @@ Policy Packs encode:
 
 They are the bridge between theory and real-world usage.
 
-# Step 5 — Hello Guardrails
+# Step 5 — Hello ContractShield
 
 This package contains a **10-minute tutorial** demonstrating
-Application-layer Guardrails with a minimal API and policy.
+Application-layer ContractShield with a minimal API and policy.
 
 Audience:
 - developers

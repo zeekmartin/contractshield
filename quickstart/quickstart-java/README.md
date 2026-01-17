@@ -1,4 +1,4 @@
-# Guardrails Quick Start — Java / Spring-style (conceptual)
+# ContractShield Quick Start — Java / Spring-style (conceptual)
 
 Date: 2026-01-15
 

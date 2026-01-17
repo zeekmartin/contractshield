@@ -1,8 +1,8 @@
-# Threat Model — Application-layer Guardrails
+# Threat Model — Application-layer ContractShield
 
 Date: 2026-01-15
 
-This document defines the **explicit threat model** addressed by Application-layer Guardrails.
+This document defines the **explicit threat model** addressed by Application-layer ContractShield.
 It clarifies what is **in scope**, **out of scope**, and **how threats map to policies**.
 
 ---
@@ -14,14 +14,14 @@ It clarifies what is **in scope**, **out of scope**, and **how threats map to po
 - Provide a shared language between developers and security teams
 - Enable deterministic testing and verification
 
-Guardrails does **not** attempt to detect attackers.
+ContractShield does **not** attempt to detect attackers.
 It enforces **application intent** and rejects deviations.
 
 ---
 
 ## Security boundary
 
-Guardrails operates:
+ContractShield operates:
 - **After TLS termination**
 - **Before application business logic**
 - **With access to application context** (routes, schemas, identity)
@@ -45,7 +45,7 @@ Untrusted input is crafted to alter execution beyond declared intent.
 - Expression injection
 - Command injection via indirect parameters
 
-**Guardrails mitigation**
+**ContractShield mitigation**
 - Strict schema validation
 - Reject unknown fields
 - Canonicalization
@@ -68,7 +68,7 @@ Accessing or modifying objects belonging to another tenant or user.
 - Guessing resource identifiers
 - Cross-organization access
 
-**Guardrails mitigation**
+**ContractShield mitigation**
 - Identity-to-data binding via invariants
 - Route-specific policies
 - Explicit tenant scoping
@@ -89,7 +89,7 @@ Supplying extra fields to influence internal state.
 - Hidden flags
 - Future fields accepted silently
 
-**Guardrails mitigation**
+**ContractShield mitigation**
 - Reject unknown fields
 - Contract-first enforcement
 
@@ -108,7 +108,7 @@ Calling valid endpoints in an invalid order.
 - Reuse expired tokens
 - Double submission
 
-**Guardrails mitigation**
+**ContractShield mitigation**
 - Explicit workflow rules (phase 2+)
 - Counters and state tracking
 - Idempotency enforcement
@@ -129,7 +129,7 @@ Application is abused to perform unintended outbound requests.
 - Internal network scanning
 - Data exfiltration via URLs
 
-**Guardrails mitigation**
+**ContractShield mitigation**
 - Declared egress intent
 - URL field classification
 - Destination allowlists
@@ -151,7 +151,7 @@ Accessing unintended filesystem locations.
 - Encoded traversal
 - Arbitrary file reads
 
-**Guardrails mitigation**
+**ContractShield mitigation**
 - Canonicalized paths
 - Declared path usage
 - Reject ambiguous encodings
@@ -168,7 +168,7 @@ Forged or replayed webhook events.
 - Replay of old events
 - Payload tampering
 
-**Guardrails mitigation**
+**ContractShield mitigation**
 - Raw body signature verification
 - Timestamp tolerance
 - Idempotency keys
@@ -189,7 +189,7 @@ Valid requests used at abusive rates or volumes.
 - API scraping
 - Oversized payloads
 
-**Guardrails mitigation**
+**ContractShield mitigation**
 - Size limits
 - Rate limits
 - Progressive enforcement
@@ -198,7 +198,7 @@ Valid requests used at abusive rates or volumes.
 
 ## Out-of-scope threats (by design)
 
-Guardrails does **not** address:
+ContractShield does **not** address:
 
 - Network-level attacks (DDoS, SYN floods)
 - Malware detection
@@ -243,5 +243,5 @@ Threat coverage is validated by:
 
 ## Key statement
 
-> Guardrails does not block attackers.
+> ContractShield does not block attackers.
 > It blocks **behavior that was never declared as acceptable**.
