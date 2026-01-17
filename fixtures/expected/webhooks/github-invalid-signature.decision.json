@@ -1,0 +1,16 @@
+{
+  "version": "0.1",
+  "action": "BLOCK",
+  "statusCode": 403,
+  "reason": "Policy violation",
+  "ruleHits": [
+    {
+      "id": "webhook.github.signature",
+      "severity": "critical"
+    }
+  ],
+  "risk": {
+    "score": 90,
+    "level": "critical"
+  }
+}

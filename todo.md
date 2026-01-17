@@ -2,8 +2,8 @@
 
 ## v0.1 (CEL-first MVP)
 - [x] Define RequestContext and Decision JSON schemas (versioned)
-- [ ] Implement PDP sidecar service (`/evaluate`)
-- [x] Implement Node PEP middleware (Express/Fastify) → `packages/pep-express/`
+- [x] Implement PDP sidecar service (`/evaluate`) → `packages/sidecar/`
+- [x] Implement Node PEP middleware (Express/Fastify) → `packages/pep-express/`, `packages/pep-fastify/`
 - [ ] Implement Java PEP filter (Servlet/Spring)
 - [ ] Canonicalization module (path, headers, json)
 - [x] OpenAPI/JSON schema validation (per route) → `rules/contract.ts`
@@ -24,16 +24,25 @@
 - [x] Documentation (`docs/vulnerability-checks.md`)
 - [x] Golden tests for all vulnerability checks
 
-## v0.3
+## v0.3 (Multi-runtime + Webhooks)
+- [x] Rename project to ContractShield (`@contractshield/*` packages)
+- [x] Generic webhook plugin system (Stripe, GitHub, Slack, Twilio)
+- [x] Redis replay store for production
+- [x] Fastify adapter (`@contractshield/pep-fastify`)
+- [x] Sidecar server + Docker (`@contractshield/sidecar`)
+- [x] Documentation: webhooks.md, adapters.md, deployment.md
+- [x] Golden tests for webhook providers
+
+## v0.4
 - [ ] Policy packs (Stripe webhook pack, upload pack, OAuth pack)
 - [ ] Egress controls (declared URL fields, destination allowlists)
 - [ ] Workflow counters (sequence + quotas)
 
-## v0.4
+## v0.5
 - [ ] Sink-aware hooks (http egress, sql, fs, template, exec) — declared first
 - [ ] Optional runtime instrumentation agents
 
-## v0.4+
+## v1.0+
 - [ ] WASM execution mode
 - [ ] Rego/OPA backend option (keep stable interfaces)
 - [ ] Policy UI (PAP) + policy diff/replay

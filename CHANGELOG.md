@@ -7,6 +7,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-01-17
+
+### Added
+
+- **Project renamed** from "Guardrails" to "ContractShield"
+  - Package names: `@contractshield/pdp`, `@contractshield/pep-express`, etc.
+  - Backward compatibility aliases provided
+
+- **Generic webhook plugin system** (`packages/pdp/src/rules/webhooks/`)
+  - Plugin interface for custom providers
+  - Built-in plugins: Stripe, GitHub, Slack, Twilio
+  - `registerWebhookPlugin()` for custom providers
+  - Tree-shakeable individual plugin imports
+
+- **Fastify adapter** (`@contractshield/pep-fastify`)
+  - Plugin: `contractshield(options)`
+  - Context builder: Fastify request → RequestContext
+  - Path exclusion support
+  - Same API as Express adapter
+
+- **Redis replay store** for production
+  - `createRedisReplayStore({ client, prefix, ttl })`
+  - Compatible with `redis` and `ioredis` clients
+  - Automatic TTL-based cleanup
+  - Multi-tenant prefix support
+
+- **Sidecar server** (`@contractshield/sidecar`)
+  - HTTP API for language-agnostic policy evaluation
+  - `POST /evaluate` - Evaluate policy
+  - `GET /health` - Health check
+  - `GET /metrics` - Prometheus metrics
+  - Environment-based configuration
+
+- **Docker support**
+  - Multi-stage Dockerfile for minimal image (<100MB)
+  - docker-compose.yml with Redis
+  - Kubernetes-ready with health probes
+
+- **Documentation**
+  - `docs/webhooks.md` - Webhook security guide
+  - `docs/adapters.md` - Framework adapters
+  - `docs/deployment.md` - Deployment patterns
+
+- **Golden tests** for webhook providers
+  - GitHub valid/invalid signature
+  - Slack valid/expired timestamp
+  - Twilio valid/invalid
+
+### Changed
+
+- Webhook configuration now uses `secretRef` for environment variables
+- `timestampTolerance` replaces `toleranceSeconds` (deprecated)
+- Express middleware renamed to `contractshield()` (alias: `guardrails()`)
+
+### Deprecated
+
+- `@guardrails/*` package names (use `@contractshield/*`)
+- `guardrails()` function name (use `contractshield()`)
+- `GuardrailsOptions` type (use `ContractShieldOptions`)
+
 ## [0.2.0] - 2026-01-17
 
 ### Added

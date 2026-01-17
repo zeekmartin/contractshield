@@ -1,0 +1,349 @@
+# Deployment Patterns
+
+ContractShield supports multiple deployment patterns to fit your architecture.
+
+## Overview
+
+| Pattern | Latency | Complexity | Use Case |
+|---------|---------|------------|----------|
+| **Embedded** | Lowest | Low | Single Node.js app |
+| **Sidecar** | Low | Medium | Kubernetes, multi-language |
+| **Centralized** | Medium | High | Shared policy service |
+
+## Embedded Deployment
+
+The PDP runs in-process with your application.
+
+### Architecture
+
+```
+┌─────────────────────────────────────────┐
+│            Your Application              │
+│                                          │
+│  ┌─────────┐    ┌─────────┐             │
+│  │ Express │ -> │   PDP   │ -> Routes   │
+│  │ Fastify │    │ (embed) │             │
+│  └─────────┘    └─────────┘             │
+│                                          │
+└─────────────────────────────────────────┘
+```
+
+### Pros
+- Lowest latency (no network hop)
+- Simplest deployment
+- No additional infrastructure
+
+### Cons
+- Node.js only
+- Policy changes require restart
+- Memory overhead per instance
+
+### Example (Express)
+
+```typescript
+import express from "express";
+import { contractshield } from "@contractshield/pep-express";
+import { MemoryReplayStore } from "@contractshield/pdp";
+
+const app = express();
+
+app.use(contractshield({
+  policy: require("./policy.json"),
+  pdpOptions: {
+    replayStore: new MemoryReplayStore(),
+  },
+}));
+
+app.listen(3000);
+```
+
+## Sidecar Deployment
+
+The PDP runs as a separate container alongside your application.
+
+### Architecture
+
+```
+┌─────────────────────────────────────────────────────┐
+│                    Kubernetes Pod                    │
+│                                                      │
+│  ┌──────────────┐         ┌──────────────────┐      │
+│  │     Your     │  HTTP   │  ContractShield  │      │
+│  │ Application  │ ──────> │     Sidecar      │      │
+│  │ (any lang)   │         │   (port 3100)    │      │
+│  └──────────────┘         └──────────────────┘      │
+│                                                      │
+└─────────────────────────────────────────────────────┘
+```
+
+### Pros
+- Language agnostic
+- Shared across multiple containers
+- Independent scaling
+
+### Cons
+- Network latency (~1-5ms)
+- Additional container management
+- Requires HTTP client
+
+### Kubernetes Deployment
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        # Your application
+        - name: app
+          image: my-app:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: CONTRACTSHIELD_URL
+              value: "http://localhost:3100"
+
+        # ContractShield sidecar
+        - name: contractshield
+          image: contractshield/sidecar:0.3.0
+          ports:
+            - containerPort: 3100
+          env:
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: url
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3100
+            initialDelaySeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 3100
+```
+
+### Docker Compose
+
+```yaml
+version: "3.8"
+
+services:
+  app:
+    image: my-app:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - CONTRACTSHIELD_URL=http://sidecar:3100
+    depends_on:
+      - sidecar
+
+  sidecar:
+    image: contractshield/sidecar:0.3.0
+    ports:
+      - "3100:3100"
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+```
+
+## Centralized Deployment
+
+A shared PDP service for multiple applications.
+
+### Architecture
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   App A     │     │   App B     │     │   App C     │
+└──────┬──────┘     └──────┬──────┘     └──────┬──────┘
+       │                   │                   │
+       └───────────────────┼───────────────────┘
+                           │
+                           ▼
+                ┌─────────────────────┐
+                │   ContractShield    │
+                │   Service (LB)      │
+                └──────────┬──────────┘
+                           │
+                           ▼
+                    ┌─────────────┐
+                    │    Redis    │
+                    └─────────────┘
+```
+
+### Pros
+- Single point of policy management
+- Shared caching and replay store
+- Easier policy updates
+
+### Cons
+- Single point of failure
+- Higher latency
+- Requires service mesh or LB
+
+### Kubernetes Service
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: contractshield
+spec:
+  selector:
+    app: contractshield
+  ports:
+    - port: 3100
+      targetPort: 3100
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contractshield
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: contractshield
+  template:
+    metadata:
+      labels:
+        app: contractshield
+    spec:
+      containers:
+        - name: contractshield
+          image: contractshield/sidecar:0.3.0
+          env:
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: redis-secret
+                  key: url
+```
+
+## Redis Configuration
+
+For production deployments with replay protection, use Redis.
+
+### Single Instance
+
+```bash
+REDIS_URL=redis://localhost:6379
+```
+
+### Redis Sentinel
+
+```bash
+REDIS_URL=redis://sentinel1:26379,sentinel2:26379,sentinel3:26379?sentinelName=mymaster
+```
+
+### Redis Cluster
+
+```bash
+REDIS_URL=redis://node1:6379,node2:6379,node3:6379
+```
+
+### Security
+
+```bash
+# With authentication
+REDIS_URL=redis://:password@localhost:6379
+
+# With TLS
+REDIS_URL=rediss://:password@localhost:6379
+```
+
+## Health Checks
+
+All deployment patterns should include health checks.
+
+### Endpoints
+
+| Endpoint | Purpose | Response |
+|----------|---------|----------|
+| `/health` | Liveness | `{"status": "ok"}` |
+| `/ready` | Readiness | `{"ready": true}` |
+| `/metrics` | Prometheus | Metrics in text format |
+
+### Kubernetes Probes
+
+```yaml
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 3100
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: 3100
+  initialDelaySeconds: 2
+  periodSeconds: 5
+  failureThreshold: 2
+```
+
+## Monitoring
+
+### Prometheus Metrics
+
+The sidecar exposes Prometheus metrics at `/metrics`:
+
+```promql
+# Sidecar availability
+contractshield_up
+
+# Decision latency histogram
+contractshield_eval_latency_ms
+
+# Decisions by action
+contractshield_decisions_total{action="ALLOW"}
+contractshield_decisions_total{action="BLOCK"}
+```
+
+### Logging
+
+Configure log level via `LOG_LEVEL` environment variable:
+
+```bash
+LOG_LEVEL=debug  # debug, info, warn, error, fatal
+```
+
+### Alerting Rules
+
+```yaml
+groups:
+  - name: contractshield
+    rules:
+      - alert: ContractShieldDown
+        expr: contractshield_up == 0
+        for: 1m
+        labels:
+          severity: critical
+
+      - alert: HighBlockRate
+        expr: rate(contractshield_decisions_total{action="BLOCK"}[5m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+```

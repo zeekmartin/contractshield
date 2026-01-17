@@ -1,0 +1,30 @@
+{
+  "version": "0.1",
+  "id": "test-github-valid",
+  "timestamp": "2026-01-17T12:00:00Z",
+  "request": {
+    "method": "POST",
+    "path": "/webhooks/github",
+    "headers": {
+      "content-type": "application/json",
+      "x-hub-signature-256": "sha256=abc123",
+      "x-github-delivery": "delivery-123",
+      "x-github-event": "push"
+    },
+    "body": {
+      "present": true,
+      "sizeBytes": 100,
+      "raw": "{\"ref\":\"refs/heads/main\"}",
+      "json": {
+        "sample": {
+          "ref": "refs/heads/main"
+        }
+      }
+    }
+  },
+  "webhook": {
+    "provider": "github",
+    "signatureValid": true,
+    "replayed": false
+  }
+}

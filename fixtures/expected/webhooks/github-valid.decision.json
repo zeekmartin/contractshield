@@ -1,0 +1,11 @@
+{
+  "version": "0.1",
+  "action": "ALLOW",
+  "statusCode": 200,
+  "reason": "Allowed",
+  "ruleHits": [],
+  "risk": {
+    "score": 0,
+    "level": "none"
+  }
+}

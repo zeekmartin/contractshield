@@ -1,0 +1,21 @@
+{
+  "name": "@contractshield/sidecar",
+  "version": "0.3.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "contractshield-sidecar": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/cli.js"
+  },
+  "dependencies": {
+    "@contractshield/pdp": "workspace:*",
+    "fastify": "^4.26.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/node": "^20.11.30"
+  }
+}

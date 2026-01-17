@@ -1,0 +1,24 @@
+{
+  "version": "0.1",
+  "id": "test-github-invalid-sig",
+  "timestamp": "2026-01-17T12:00:00Z",
+  "request": {
+    "method": "POST",
+    "path": "/webhooks/github",
+    "headers": {
+      "content-type": "application/json",
+      "x-hub-signature-256": "sha256=invalid",
+      "x-github-delivery": "delivery-456"
+    },
+    "body": {
+      "present": true,
+      "sizeBytes": 100,
+      "raw": "{\"ref\":\"refs/heads/main\"}"
+    }
+  },
+  "webhook": {
+    "provider": "github",
+    "signatureValid": false,
+    "replayed": false
+  }
+}

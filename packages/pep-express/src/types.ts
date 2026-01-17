@@ -1,7 +1,7 @@
 import type { Request } from "express";
-import type { PolicySet, PdpOptions, Decision, RequestContext } from "@guardrails/pdp";
+import type { PolicySet, PdpOptions, Decision, RequestContext } from "@contractshield/pdp";
 
-export interface GuardrailsOptions {
+export interface ContractShieldOptions {
   /** Policy object or path to policy YAML/JSON file. */
   policy: PolicySet | string;
 
@@ -23,14 +23,25 @@ export interface GuardrailsOptions {
     includeRuleHits?: boolean;
   };
 
-  /** Header name for decision info. Default: X-Guardrails-Decision */
+  /** Header name for decision info. Default: X-ContractShield-Decision */
   decisionHeader?: string;
 }
 
-export interface GuardrailsRequest extends Request {
-  /** Guardrails decision attached by middleware. */
+export interface ContractShieldRequest extends Request {
+  /** ContractShield decision attached by middleware. */
+  contractshield?: {
+    decision: Decision;
+    context: RequestContext;
+  };
+  /** @deprecated Use contractshield instead. Alias for backward compatibility. */
   guardrails?: {
     decision: Decision;
     context: RequestContext;
   };
 }
+
+// Backward compatibility aliases
+/** @deprecated Use ContractShieldOptions instead */
+export type GuardrailsOptions = ContractShieldOptions;
+/** @deprecated Use ContractShieldRequest instead */
+export type GuardrailsRequest = ContractShieldRequest;

@@ -5,8 +5,7 @@ import { checkVulnerabilities, mergeVulnerabilityConfig } from "./rules/vulnerab
 import { checkLimits } from "./rules/limits.js";
 import { validateContract } from "./rules/contract.js";
 import { evalCelRule } from "./rules/cel.js";
-import { verifyStripeSignature } from "./rules/webhookStripe.js";
-import { checkStripeReplay } from "./rules/webhookStripeReplay.js";
+import { verifyWebhookSignature, checkWebhookReplay } from "./rules/webhooks/index.js";
 
 function riskFromHits(hits: RuleHit[]) {
   if (hits.length === 0) return { score: 0, level: "none" as const };
@@ -49,10 +48,10 @@ export async function evaluate(policy: PolicySet, ctx: RequestContext, opts: Pdp
   // 3) Contract
   hits.push(...(await validateContract(policy, route, ctx, opts)));
 
-  // 4) Webhooks
-  if (route.webhook?.provider === "stripe") {
-    hits.push(...(await verifyStripeSignature(route, ctx, opts)));
-    hits.push(...(await checkStripeReplay(route, ctx, opts)));
+  // 4) Webhooks (generic plugin system - supports stripe, github, slack, twilio, etc.)
+  if (route.webhook?.provider) {
+    hits.push(...(await verifyWebhookSignature(route, ctx, opts)));
+    hits.push(...(await checkWebhookReplay(route, ctx, opts)));
   }
 
   // 5) CEL

@@ -1,6 +1,6 @@
 {
-  "name": "@guardrails/pdp",
-  "version": "0.1.0",
+  "name": "@contractshield/pdp",
+  "version": "0.3.0",
   "type": "commonjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
