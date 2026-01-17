@@ -14,12 +14,14 @@ Le projet Guardrails est une implémentation solide d'une couche de sécurité a
 - CEL comme langage de policy : bon compromis simplicité/expressivité
 - Extension points bien pensés (celEvaluator, schemaLoader, replayStore)
 - Scope v0.1 réaliste : pas de feature creep
+- Documentation de qualité professionnelle (manifesto, threat model, 12 principes)
 
 **Axes d'amélioration prioritaires:**
 1. Fixtures trop verbeux → maintenabilité difficile
 2. Pas de tests unitaires dans le repo
 3. Cache AJV manquant (perf)
 4. Évaluateur CEL subset fragile
+5. Écart doc/code sur features futures (oauth, uploads, rate limits) → ajouter badges `[future]`
 
 ---
 
@@ -460,7 +462,75 @@ export type PolicyFile = PolicySet; // Alias pour clarté
 
 ---
 
-## 7. Conclusion
+## 7. Revue de la documentation
+
+Après lecture complète de tous les documents (`/docs/*`, `/tutorial/*`, `*.md` racine), voici les observations supplémentaires.
+
+### 7.1 Points forts de la documentation
+
+| Document | Qualité | Remarque |
+|----------|---------|----------|
+| `docs/manifesto.md` | ✅ Excellent | Les 10 principes sont clairs et cohérents |
+| `docs/threat-model.md` | ✅ Excellent | Scope explicite, menaces bien cartographiées |
+| `docs/comparison.md` | ✅ Excellent | Positionnement WAF/RASP/Guardrails clair |
+| `docs/policy-language.md` | ✅ Très bon | Pitfalls bien documentés |
+| `docs/observability.md` | ✅ Très bon | Schema de logs, OTEL, responsabilités PDP/PEP |
+| `tutorial/hello-guardrails.md` | ✅ Bon | Tutoriel 10 min accessible |
+
+**Verdict global:** Documentation de qualité professionnelle, cohérente et complète pour un projet v0.1.
+
+### 7.2 Écarts entre documentation et code
+
+| Document | Promesse | Réalité code |
+|----------|----------|--------------|
+| `docs/packs/oauth.md` | OAuth rule type | ❌ Non implémenté |
+| `docs/packs/uploads.md` | Upload rule type | ❌ Non implémenté |
+| `docs/security.md` | Rate limiting | ❌ Non implémenté |
+| `docs/guardrails.md` | CHALLENGE action | ⚠️ Défini mais non supporté |
+| `todo.md` | Node/Java PEP adapters | ⚠️ Quickstart existe, pas le middleware |
+
+**Recommandation:** Ajouter des badges `[future]` ou `[not yet implemented]` dans les docs des features non implémentées pour éviter la confusion.
+
+### 7.3 Documentation manquante
+
+| Sujet | Impact |
+|-------|--------|
+| **CHANGELOG** | Pas de suivi des versions |
+| **ADR (Architecture Decision Records)** | Décisions non tracées |
+| **Diagramme de séquence PEP↔PDP** | Serait utile |
+| **Exemples d'erreurs courantes** | Troubleshooting |
+
+### 7.4 Cohérence avec todo.md
+
+Le fichier `todo.md` est détaillé et aligné avec le code actuel. Les items cochés correspondent aux features implémentées.
+
+**Observations:**
+- v0.1 est ~70% complète selon le todo
+- Les golden tests manquent pour limits et monitor/enforce
+- Les PEP adapters sont listés mais non implémentés
+
+### 7.5 Les 12 principes (docs/principles.md)
+
+Les principes sont excellents et le code les respecte majoritairement :
+
+| Principe | Respect |
+|----------|---------|
+| 1. Declare intent | ✅ |
+| 2. Allowlist over denylist | ✅ |
+| 3. Canonicalize before evaluating | ⚠️ Fait dans buildEnv, mais pas de normalisation URL |
+| 4. Validate contracts early | ✅ |
+| 5. Bind identity to data | ✅ |
+| 6. Limit everything | ✅ |
+| 7. Prefer deterministic rules | ✅ |
+| 8. Explain every decision | ✅ ruleHits présents |
+| 9. Log without leaking secrets | ⚠️ Pas de logging dans PDP (correct) |
+| 10. Ship in monitor mode first | ✅ Mode configurable |
+| 11. Prevent regressions with golden tests | ✅ |
+| 12. Prepare for sink-aware enforcement | ⚠️ Non commencé |
+
+---
+
+## 8. Conclusion
 
 Guardrails v0.1 est un projet bien conçu avec un scope réaliste. L'architecture PEP/PDP/PAP est adaptée, les choix technologiques sont pertinents, et le code est propre.
 
