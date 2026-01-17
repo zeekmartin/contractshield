@@ -1,0 +1,10 @@
+# Test: Stripe event type not in allowlist
+# Expected: BLOCK (webhook.stripe.event.allowlist rule)
+_template: webhook-stripe
+id: stripe-invalid-event-type
+
+request:
+  body:
+    json:
+      sample:
+        type: unknown.event  # Not in allowlist

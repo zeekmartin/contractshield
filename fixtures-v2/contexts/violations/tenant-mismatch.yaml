@@ -1,0 +1,9 @@
+# Test: Cross-tenant access attempt
+# Expected: BLOCK (tenant.binding rule)
+_template: api-request
+id: ctx-block-tenant-1
+
+# Override identity tenant to create mismatch
+# Body has tenantId: t-1, but identity.tenant is t-2 -> mismatch
+identity:
+  tenant: t-2

@@ -1,0 +1,6 @@
+# Expected: BLOCK - invalid signature
+_template: decision-block
+
+ruleHits:
+  - id: webhook.stripe.signature
+    severity: critical

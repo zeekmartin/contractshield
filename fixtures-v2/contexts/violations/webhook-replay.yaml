@@ -1,0 +1,7 @@
+# Test: Replayed Stripe webhook
+# Expected: BLOCK (webhook.stripe.replay rule)
+_template: webhook-stripe
+id: stripe-replay
+
+webhook:
+  replayed: true  # Override: this is a replay attack

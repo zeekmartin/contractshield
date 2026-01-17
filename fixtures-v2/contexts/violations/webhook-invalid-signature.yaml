@@ -1,0 +1,7 @@
+# Test: Invalid Stripe signature
+# Expected: BLOCK (webhook.stripe.signature rule)
+_template: webhook-stripe
+id: stripe-invalid-signature
+
+webhook:
+  signatureValid: false  # Override: signature doesn't match

@@ -1,0 +1,9 @@
+# Test: Unauthenticated request to protected route
+# Expected: BLOCK (auth.required rule)
+_template: api-request
+id: ctx-block-unknown-1
+
+identity:
+  authenticated: false
+  subject: ""
+  tenant: ""

@@ -1,0 +1,9 @@
+# Test: Basic API call with matching tenant
+# Expected: ALLOW (tenant t-1 in body matches identity.tenant t-1)
+_template: api-request
+id: ctx-allow-1
+
+# Everything uses template defaults:
+# - identity.tenant: t-1
+# - body.json.sample.tenantId: t-1
+# → tenant binding passes
