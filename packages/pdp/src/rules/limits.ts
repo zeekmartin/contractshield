@@ -1,5 +1,5 @@
-import { PolicySet, PolicyRoute, RequestContext, RuleHit } from "../types";
-import { jsonDepth, maxArrayLength } from "../utils/jsonMetrics";
+import { PolicySet, PolicyRoute, RequestContext, RuleHit } from "../types.js";
+import { jsonDepth, maxArrayLength } from "../utils/jsonMetrics.js";
 
 export function checkLimits(policy: PolicySet, route: PolicyRoute, ctx: RequestContext): RuleHit[] {
   const hits: RuleHit[] = [];

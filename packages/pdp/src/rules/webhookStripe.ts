@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { PolicyRoute, RequestContext, RuleHit, PdpOptions } from "../types";
+import { PolicyRoute, RequestContext, RuleHit, PdpOptions } from "../types.js";
 
 /**
  * Stripe signature verification (v0.1)

@@ -1,4 +1,4 @@
-import { PolicyRule, RuleHit, PdpOptions } from "../types";
+import { PolicyRule, RuleHit, PdpOptions } from "../types.js";
 
 /**
  * CEL evaluation is pluggable.
