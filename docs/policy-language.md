@@ -164,3 +164,44 @@ const decision = await evaluate(policy, ctx, {
 ```
 
 **Roadmap:** Native CEL support via WASM is planned.
+
+---
+
+## Vulnerability Checks (v0.2)
+
+In addition to CEL invariants, Guardrails includes built-in vulnerability checks that run **before** contract validation. These are denylist-based checks for common attack patterns.
+
+### Configuration
+
+```yaml
+defaults:
+  vulnerabilityChecks:
+    prototypePollution: true   # Default: true
+    pathTraversal: true        # Default: true
+    ssrfInternal: true         # Default: true
+    nosqlInjection: false      # Default: false (opt-in)
+    commandInjection: false    # Default: false (opt-in)
+```
+
+### Available checks
+
+| Check | Detected patterns |
+|-------|------------------|
+| `prototypePollution` | `__proto__`, `constructor`, `prototype` keys |
+| `pathTraversal` | `../`, `%2e%2e%2f`, encoded variants |
+| `ssrfInternal` | `localhost`, `127.0.0.1`, `169.254.169.254`, private IPs |
+| `nosqlInjection` | `$gt`, `$where`, `$regex`, MongoDB operators |
+| `commandInjection` | `;`, `|`, `` ` ``, `$()`, shell metacharacters |
+
+### Per-route overrides
+
+```yaml
+routes:
+  - id: upload.file
+    vulnerability:
+      pathTraversal:
+        fields: ["filename"]  # Target specific fields
+      commandInjection: true   # Enable for this route
+```
+
+See `docs/vulnerability-checks.md` for full documentation.

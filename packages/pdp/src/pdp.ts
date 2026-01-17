@@ -1,11 +1,12 @@
-import { PolicySet, RequestContext, Decision, RuleHit, PdpOptions, PolicyRoute } from "./types";
-import { matchRoute } from "./utils/matchRoute";
-import { buildEnv } from "./utils/buildEnv";
-import { checkLimits } from "./rules/limits";
-import { validateContract } from "./rules/contract";
-import { evalCelRule } from "./rules/cel";
-import { verifyStripeSignature } from "./rules/webhookStripe";
-import { checkStripeReplay } from "./rules/webhookStripeReplay";
+import { PolicySet, RequestContext, Decision, RuleHit, PdpOptions, PolicyRoute } from "./types.js";
+import { matchRoute } from "./utils/matchRoute.js";
+import { buildEnv } from "./utils/buildEnv.js";
+import { checkVulnerabilities, mergeVulnerabilityConfig } from "./rules/vulnerability/index.js";
+import { checkLimits } from "./rules/limits.js";
+import { validateContract } from "./rules/contract.js";
+import { evalCelRule } from "./rules/cel.js";
+import { verifyStripeSignature } from "./rules/webhookStripe.js";
+import { checkStripeReplay } from "./rules/webhookStripeReplay.js";
 
 function riskFromHits(hits: RuleHit[]) {
   if (hits.length === 0) return { score: 0, level: "none" as const };
@@ -35,19 +36,26 @@ export async function evaluate(policy: PolicySet, ctx: RequestContext, opts: Pdp
   const hits: RuleHit[] = [];
   const statusBlock = policy.defaults?.response?.blockStatusCode ?? 403;
 
-  // 1) Limits
+  // 1) Vulnerability checks (first line of defense - denylist)
+  const vulnConfig = mergeVulnerabilityConfig(
+    policy.defaults?.vulnerabilityChecks,
+    route.vulnerability
+  );
+  hits.push(...checkVulnerabilities(ctx, vulnConfig));
+
+  // 2) Limits
   hits.push(...checkLimits(policy, route, ctx));
 
-  // 2) Contract
+  // 3) Contract
   hits.push(...(await validateContract(policy, route, ctx, opts)));
 
-  // 3) Webhooks
+  // 4) Webhooks
   if (route.webhook?.provider === "stripe") {
     hits.push(...(await verifyStripeSignature(route, ctx, opts)));
     hits.push(...(await checkStripeReplay(route, ctx, opts)));
   }
 
-  // 4) CEL
+  // 5) CEL
   const env = buildEnv(ctx);
   for (const rule of route.rules ?? []) {
     if (rule.type === "cel") hits.push(...evalCelRule(rule, env, opts));
