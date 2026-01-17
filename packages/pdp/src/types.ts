@@ -89,12 +89,16 @@ export interface PolicySet {
   policyVersion: "0.1";
   defaults?: {
     mode?: "monitor" | "enforce";
+    /** Action when no route matches. Default: "allow" (fail-open). */
+    unmatchedRouteAction?: "allow" | "block" | "monitor";
     response?: { blockStatusCode?: number };
     limits?: {
       maxBodyBytes?: number;
       maxJsonDepth?: number;
       maxArrayLength?: number;
     };
+    /** Global vulnerability checks. Runs before contract validation. */
+    vulnerabilityChecks?: VulnerabilityChecksConfig;
   };
   routes: PolicyRoute[];
 }
@@ -112,6 +116,8 @@ export interface PolicyRoute {
     requireRawBody?: boolean;
     toleranceSeconds?: number;
   };
+  /** Per-route vulnerability check overrides. */
+  vulnerability?: VulnerabilityChecksConfig;
   rules?: PolicyRule[];
   limits?: {
     maxBodyBytes?: number;
@@ -149,4 +155,37 @@ export interface ReplayStore {
 export interface CelEvaluator {
   /** Evaluate a CEL expression against a context object. */
   eval(expr: string, env: Record<string, any>): boolean;
+}
+
+// ============================================================================
+// Vulnerability Checks (v0.2)
+// ============================================================================
+
+/** Available vulnerability check types. */
+export type VulnerabilityCheckType =
+  | "prototypePollution"
+  | "pathTraversal"
+  | "ssrfInternal"
+  | "commandInjection"
+  | "nosqlInjection";
+
+/** Global vulnerability check configuration in policy defaults. */
+export interface VulnerabilityChecksConfig {
+  /** Detect __proto__, constructor, prototype keys. Default: true */
+  prototypePollution?: boolean;
+  /** Detect ../ and encoded variants in strings. Default: true */
+  pathTraversal?: boolean | { fields?: string[] };
+  /** Detect internal IPs and dangerous protocols in URL fields. Default: true */
+  ssrfInternal?: boolean | { fields?: string[] };
+  /** Detect shell metacharacters. Default: false (opt-in) */
+  commandInjection?: boolean | { fields?: string[] };
+  /** Detect MongoDB operators ($gt, $where, etc). Default: false (opt-in) */
+  nosqlInjection?: boolean;
+}
+
+/** Per-route vulnerability rule. */
+export interface VulnerabilityRule {
+  type: "vulnerability";
+  /** Override or extend global vulnerability checks for this route. */
+  checks?: VulnerabilityChecksConfig;
 }

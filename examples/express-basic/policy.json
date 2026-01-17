@@ -1,0 +1,46 @@
+{
+  "policyVersion": "0.1",
+  "defaults": {
+    "mode": "enforce",
+    "unmatchedRouteAction": "allow",
+    "response": {
+      "blockStatusCode": 403
+    }
+  },
+  "routes": [
+    {
+      "id": "license.activate.v1",
+      "match": {
+        "method": "POST",
+        "path": "/api/license/activate"
+      },
+      "rules": [
+        {
+          "id": "auth.required",
+          "type": "cel",
+          "action": "block",
+          "severity": "high",
+          "config": {
+            "expr": "identity.authenticated == true"
+          }
+        },
+        {
+          "id": "tenant.binding",
+          "type": "cel",
+          "action": "block",
+          "severity": "critical",
+          "config": {
+            "expr": "identity.tenant == request.body.tenantId"
+          }
+        }
+      ]
+    },
+    {
+      "id": "health.check",
+      "match": {
+        "method": "GET",
+        "path": "/health"
+      }
+    }
+  ]
+}

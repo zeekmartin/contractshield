@@ -1,23 +1,35 @@
 # TODO / Roadmap
 
 ## v0.1 (CEL-first MVP)
-- [ ] Define RequestContext and Decision JSON schemas (versioned)
+- [x] Define RequestContext and Decision JSON schemas (versioned)
 - [ ] Implement PDP sidecar service (`/evaluate`)
-- [ ] Implement Node PEP middleware (Express/Fastify)
+- [x] Implement Node PEP middleware (Express/Fastify) → `packages/pep-express/`
 - [ ] Implement Java PEP filter (Servlet/Spring)
 - [ ] Canonicalization module (path, headers, json)
-- [ ] OpenAPI/JSON schema validation (per route)
-- [ ] CEL invariants (compile + eval)
-- [ ] Baseline security pack (limits, unknown fields, webhook mode, rate limits)
+- [x] OpenAPI/JSON schema validation (per route) → `rules/contract.ts`
+- [x] CEL invariants (compile + eval) → `rules/cel.ts` (subset + pluggable)
+- [x] Baseline security pack (limits, unknown fields, webhook mode)
 - [ ] Structured logging + correlation ids
-- [ ] Golden tests + fixtures
+- [x] Golden tests + fixtures
 
-## v0.2
+## v0.2 (Vulnerability Checks)
+- [x] Vulnerability checks layer (runs before contract validation)
+  - [x] Prototype pollution detection (`__proto__`, `constructor`, `prototype`)
+  - [x] Path traversal detection (`../`, encoded variants)
+  - [x] SSRF internal detection (private IPs, localhost, metadata)
+  - [x] NoSQL injection detection (MongoDB operators, opt-in)
+  - [x] Command injection detection (shell metacharacters, opt-in)
+- [x] Global + per-route vulnerability config
+- [x] Field targeting for precise detection
+- [x] Documentation (`docs/vulnerability-checks.md`)
+- [x] Golden tests for all vulnerability checks
+
+## v0.3
 - [ ] Policy packs (Stripe webhook pack, upload pack, OAuth pack)
 - [ ] Egress controls (declared URL fields, destination allowlists)
 - [ ] Workflow counters (sequence + quotas)
 
-## v0.3
+## v0.4
 - [ ] Sink-aware hooks (http egress, sql, fs, template, exec) — declared first
 - [ ] Optional runtime instrumentation agents
 

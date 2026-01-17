@@ -126,4 +126,82 @@ Adapters must canonicalize duplicates deterministically; do not depend on ambigu
 `matches()` can be expensive. Prefer `contains/startsWith` when possible.
 
 ### 5) Blacklist mindset
-CEL is for invariants and contracts, not a signature WAF. If you’re writing many token patterns, you likely need better schemas/intent.
+CEL is for invariants and contracts, not a signature WAF. If you're writing many token patterns, you likely need better schemas/intent.
+
+---
+
+## Built-in CEL subset (no external evaluator)
+
+The PDP includes a minimal CEL subset for docs/tests when no `celEvaluator` is provided.
+
+**Supported expressions:**
+
+| Pattern | Example |
+|---------|---------|
+| Auth check | `identity.authenticated == true` |
+| Tenant binding | `identity.tenant == request.body.tenantId` |
+| Membership check | `request.body.json.sample.type in ["a", "b", "c"]` |
+
+**Limitations:**
+- Only exact pattern matches above
+- No string functions (`contains`, `startsWith`, etc.)
+- No list comprehensions
+- No math operators
+
+**For production**, provide a real `celEvaluator` via `opts.celEvaluator`:
+
+```typescript
+import { evaluate } from "@guardrails/pdp";
+
+const decision = await evaluate(policy, ctx, {
+  celEvaluator: {
+    eval: (expr, env) => {
+      // Use cel-js, google-cel, or WASM-compiled CEL
+      return myCelEngine.evaluate(expr, env);
+    }
+  }
+});
+```
+
+**Roadmap:** Native CEL support via WASM is planned.
+
+---
+
+## Vulnerability Checks (v0.2)
+
+In addition to CEL invariants, Guardrails includes built-in vulnerability checks that run **before** contract validation. These are denylist-based checks for common attack patterns.
+
+### Configuration
+
+```yaml
+defaults:
+  vulnerabilityChecks:
+    prototypePollution: true   # Default: true
+    pathTraversal: true        # Default: true
+    ssrfInternal: true         # Default: true
+    nosqlInjection: false      # Default: false (opt-in)
+    commandInjection: false    # Default: false (opt-in)
+```
+
+### Available checks
+
+| Check | Detected patterns |
+|-------|------------------|
+| `prototypePollution` | `__proto__`, `constructor`, `prototype` keys |
+| `pathTraversal` | `../`, `%2e%2e%2f`, encoded variants |
+| `ssrfInternal` | `localhost`, `127.0.0.1`, `169.254.169.254`, private IPs |
+| `nosqlInjection` | `$gt`, `$where`, `$regex`, MongoDB operators |
+| `commandInjection` | `;`, `|`, `` ` ``, `$()`, shell metacharacters |
+
+### Per-route overrides
+
+```yaml
+routes:
+  - id: upload.file
+    vulnerability:
+      pathTraversal:
+        fields: ["filename"]  # Target specific fields
+      commandInjection: true   # Enable for this route
+```
+
+See `docs/vulnerability-checks.md` for full documentation.
