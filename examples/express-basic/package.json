@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node dist/server.js",
+    "start": "npm run build && node server.js",
     "dev": "node --experimental-strip-types server.ts"
   },
   "dependencies": {
