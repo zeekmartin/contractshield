@@ -1,80 +1,81 @@
-import type { Request, Response, NextFunction, RequestHandler } from "express";
+import type { FastifyPluginAsync, FastifyRequest, FastifyReply } from "fastify";
+import fp from "fastify-plugin";
 import { evaluate, type PolicySet, type Decision } from "@contractshield/pdp";
 import { buildRequestContext } from "./context.js";
-import type { ContractShieldOptions, ContractShieldRequest } from "./types.js";
+import type { ContractShieldOptions } from "./types.js";
 import fs from "fs";
 import path from "path";
 
 /**
- * Express middleware for ContractShield policy enforcement.
+ * Fastify plugin for ContractShield policy enforcement.
  *
  * @example
  * ```typescript
- * import express from "express";
- * import { contractshield } from "@contractshield/pep-express";
+ * import Fastify from "fastify";
+ * import { contractshield } from "@contractshield/pep-fastify";
  *
- * const app = express();
- * app.use(express.json());
- * app.use(contractshield({ policy: "./policy.yaml" }));
+ * const fastify = Fastify();
+ *
+ * fastify.register(contractshield, {
+ *   policy: "./policy.yaml",
+ *   dryRun: process.env.NODE_ENV !== "production"
+ * });
  * ```
  */
-export function contractshield(options: ContractShieldOptions): RequestHandler {
+const contractshieldPlugin: FastifyPluginAsync<ContractShieldOptions> = async (fastify, options) => {
   const policy = loadPolicy(options.policy);
   const decisionHeader = options.decisionHeader ?? "X-ContractShield-Decision";
+  const excludePaths = new Set(options.exclude || []);
 
-  return async (req: Request, res: Response, next: NextFunction) => {
+  // Add preHandler hook for policy enforcement
+  fastify.addHook("preHandler", async (request: FastifyRequest, reply: FastifyReply) => {
+    // Skip excluded paths
+    const urlPath = request.url.split("?")[0];
+    if (excludePaths.has(urlPath)) {
+      return;
+    }
+
     try {
-      const ctx = buildRequestContext(req, options.identityExtractor);
+      const ctx = buildRequestContext(request, options.identityExtractor);
       const decision = await evaluate(policy, ctx, options.pdpOptions);
 
-      // Attach to request for downstream access (both new and legacy)
-      const csReq = req as ContractShieldRequest;
-      csReq.contractshield = { decision, context: ctx };
-      csReq.guardrails = { decision, context: ctx }; // Backward compat
+      // Attach to request for downstream access
+      request.contractshield = { decision, context: ctx };
 
       // Set decision header
-      res.setHeader(decisionHeader, decision.action);
+      reply.header(decisionHeader, decision.action);
 
       // Log decision
       if (options.logger) {
-        options.logger(decision, req);
+        options.logger(decision, request);
       } else if (process.env.NODE_ENV !== "production") {
-        logDecision(decision, req);
+        logDecision(decision, request, fastify);
       }
 
       // Enforce decision
       if (options.dryRun) {
-        return next();
+        return;
       }
 
       switch (decision.action) {
         case "ALLOW":
-          return next();
-
         case "MONITOR":
-          // Log but allow through
-          return next();
+          return;
 
         case "BLOCK":
-          return sendBlockResponse(res, decision, options);
-
         case "CHALLENGE":
-          // Future: implement challenge response
-          return sendBlockResponse(res, decision, options);
+          return sendBlockResponse(reply, decision, options);
 
         default:
-          return next();
+          return;
       }
     } catch (error) {
-      // On error, fail-open by default (configurable)
-      console.error("[contractshield] Error evaluating policy:", error);
-      return next();
+      // On error, fail-open by default
+      fastify.log.error({ err: error }, "[contractshield] Error evaluating policy");
+      return;
     }
-  };
-}
-
-/** @deprecated Use contractshield() instead */
-export const guardrails = contractshield;
+  });
+};
 
 function loadPolicy(policyOrPath: PolicySet | string): PolicySet {
   if (typeof policyOrPath === "object") {
@@ -85,8 +86,6 @@ function loadPolicy(policyOrPath: PolicySet | string): PolicySet {
   const content = fs.readFileSync(resolved, "utf8");
 
   if (resolved.endsWith(".yaml") || resolved.endsWith(".yml")) {
-    // Simple YAML parsing for basic cases
-    // For production, use js-yaml
     return parseSimpleYaml(content) as PolicySet;
   }
 
@@ -94,14 +93,10 @@ function loadPolicy(policyOrPath: PolicySet | string): PolicySet {
 }
 
 function parseSimpleYaml(content: string): unknown {
-  // Minimal YAML parser for policy files
-  // Handles basic key: value, arrays, and nested objects
-  // For production, use js-yaml package
   try {
-    // Try JSON first (YAML is superset of JSON)
     return JSON.parse(content);
   } catch {
-    // Basic YAML parsing
+    // Basic YAML parsing (same as Express adapter)
     const lines = content.split("\n");
     const result: any = {};
     const stack: { obj: any; indent: number }[] = [{ obj: result, indent: -1 }];
@@ -114,7 +109,6 @@ function parseSimpleYaml(content: string): unknown {
       const indent = line.search(/\S/);
       const trimmed = line.trim();
 
-      // Handle array items
       if (trimmed.startsWith("- ")) {
         if (currentArray && indent === currentArrayIndent) {
           const value = trimmed.slice(2).trim();
@@ -130,7 +124,6 @@ function parseSimpleYaml(content: string): unknown {
         continue;
       }
 
-      // Pop stack for decreased indent
       while (stack.length > 1 && stack[stack.length - 1].indent >= indent) {
         stack.pop();
       }
@@ -144,7 +137,6 @@ function parseSimpleYaml(content: string): unknown {
       const parent = stack[stack.length - 1].obj;
 
       if (rawValue === "") {
-        // Check if next non-empty line is array
         const nextLineIdx = lines.indexOf(line) + 1;
         const nextLine = lines.slice(nextLineIdx).find((l) => l.trim());
         if (nextLine?.trim().startsWith("- ")) {
@@ -176,7 +168,7 @@ function parseYamlValue(str: string): any {
 }
 
 function sendBlockResponse(
-  res: Response,
+  reply: FastifyReply,
   decision: Decision,
   options: ContractShieldOptions
 ): void {
@@ -192,35 +184,24 @@ function sendBlockResponse(
     body.ruleHits = decision.ruleHits.map((h) => h.id);
   }
 
-  res.status(statusCode).json(body);
+  reply.status(statusCode).send(body);
 }
 
-function logDecision(decision: Decision, req: Request): void {
+function logDecision(decision: Decision, request: FastifyRequest, fastify: any): void {
   const emoji = decision.action === "ALLOW" ? "✓" : decision.action === "BLOCK" ? "✗" : "⚠";
-  console.log(
-    `[contractshield] ${emoji} ${decision.action} ${req.method} ${req.path}`,
-    decision.ruleHits?.length ? `(${decision.ruleHits.map((h) => h.id).join(", ")})` : ""
-  );
+  const ruleInfo = decision.ruleHits?.length
+    ? `(${decision.ruleHits.map((h) => h.id).join(", ")})`
+    : "";
+
+  fastify.log.info(`[contractshield] ${emoji} ${decision.action} ${request.method} ${request.url} ${ruleInfo}`);
 }
 
 /**
- * Express middleware to capture raw body for webhook signature verification.
- * Use before express.json() and contractshield().
- *
- * @example
- * ```typescript
- * app.use(rawBodyCapture());
- * app.use(express.json());
- * app.use(contractshield({ policy }));
- * ```
+ * Fastify plugin wrapped with fastify-plugin for proper encapsulation.
  */
-export function rawBodyCapture(): RequestHandler {
-  return (req: Request, _res: Response, next: NextFunction) => {
-    const chunks: Buffer[] = [];
-    req.on("data", (chunk: Buffer) => chunks.push(chunk));
-    req.on("end", () => {
-      (req as any).rawBody = Buffer.concat(chunks);
-    });
-    next();
-  };
-}
+export const contractshield = fp(contractshieldPlugin, {
+  fastify: "4.x || 5.x",
+  name: "@contractshield/pep-fastify",
+});
+
+export default contractshield;

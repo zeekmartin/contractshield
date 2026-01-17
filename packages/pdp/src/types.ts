@@ -78,7 +78,8 @@ export interface RequestContext {
   };
 
   webhook?: {
-    provider?: "stripe";
+    /** Webhook provider hint (stripe, github, slack, twilio, etc.). */
+    provider?: string;
     // optional evaluation hints for tests; real runtime will compute these
     signatureValid?: boolean;
     replayed?: boolean;
@@ -112,8 +113,21 @@ export interface PolicyRoute {
     rejectUnknownFields?: boolean;
   };
   webhook?: {
-    provider?: "stripe";
+    /** Webhook provider (stripe, github, slack, twilio). */
+    provider?: string;
+    /** Environment variable name containing the secret. */
+    secretRef?: string;
+    /** Direct secret (not recommended, prefer secretRef). */
+    secret?: string;
+    /** Require raw body for signature verification. Default: true */
     requireRawBody?: boolean;
+    /** Timestamp tolerance in seconds. Default varies by provider. */
+    timestampTolerance?: number;
+    /** Enable replay protection. Default: true */
+    replayProtection?: boolean;
+    /** Allowed event types (optional filter). */
+    allowedEventTypes?: string[];
+    /** @deprecated Use timestampTolerance instead */
     toleranceSeconds?: number;
   };
   /** Per-route vulnerability check overrides. */
@@ -137,9 +151,9 @@ export interface PolicyRule {
 }
 
 export interface PdpOptions {
-  /** Called by webhook signature verifier to retrieve Stripe secret for the given route/provider. */
-  getSecret?: (args: { provider: "stripe"; routeId: string; ctx: RequestContext }) => string | undefined;
-  /** Replay store for webhook events (e.g. Redis). */
+  /** Called by webhook signature verifier to retrieve secret for the given route/provider. */
+  getSecret?: (args: { provider: string; routeId: string; ctx: RequestContext }) => string | undefined;
+  /** Replay store for webhook events (e.g. Redis, memory). */
   replayStore?: ReplayStore;
   /** Load external schemas by ref. */
   schemaLoader?: (ref: string) => Promise<any> | any;
@@ -149,7 +163,7 @@ export interface PdpOptions {
 
 export interface ReplayStore {
   /** Returns true if this id was already seen (and records it if not). */
-  checkAndStore(args: { provider: "stripe"; eventId: string; ttlSeconds: number }): Promise<boolean>;
+  checkAndStore(args: { provider: string; eventId: string; ttlSeconds: number }): Promise<boolean>;
 }
 
 export interface CelEvaluator {
