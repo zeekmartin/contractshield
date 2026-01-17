@@ -5,6 +5,12 @@
   "description": "Internal tool for generating ContractShield license keys",
   "type": "module",
   "main": "generate.ts",
+  "exports": {
+    ".": {
+      "import": "./generate.ts",
+      "types": "./generate.ts"
+    }
+  },
   "scripts": {
     "generate": "npx tsx generate.ts",
     "generate-keys": "bash generate-keys.sh"

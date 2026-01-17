@@ -43,16 +43,35 @@
 - [x] Licensing documentation (`docs/licensing.md`)
 - [x] License verification tests
 
-## v0.4
+## v1.0 (Sink-aware RASP) ✅
+- [x] **Sink-aware RASP** (`@contractshield/sink-rasp`) - Commercial
+  - [x] Command execution hooks (child_process)
+  - [x] Command injection analyzer
+  - [x] Filesystem hooks (fs, fs/promises)
+  - [x] Path traversal analyzer
+  - [x] HTTP egress hooks (http, https, fetch)
+  - [x] SSRF/URL analyzer
+  - [x] Async context tracking (link to HTTP request)
+  - [x] Structured reporter for SIEM
+  - [x] Monitor and enforce modes
+  - [x] Allowlist support
+  - [x] License enforcement (requires `sink-rasp` feature)
+- [x] Documentation (`docs/sink-rasp.md`)
+- [x] Tests for analyzers and hooks
+- [x] CHANGELOG updated
+
+## v1.1
+- [ ] SQL hooks (mysql, pg, mysql2)
+- [ ] SQL injection analyzer
+- [ ] Eval hooks (eval, Function, vm)
+- [ ] Template injection detection
+
+## v1.2
 - [ ] Policy packs (Stripe webhook pack, upload pack, OAuth pack)
 - [ ] Egress controls (declared URL fields, destination allowlists)
 - [ ] Workflow counters (sequence + quotas)
 
-## v0.5
-- [ ] Sink-aware hooks (http egress, sql, fs, template, exec) — declared first
-- [ ] Optional runtime instrumentation agents
-
-## v1.0+
+## v2.0+
 - [ ] WASM execution mode
 - [ ] Rego/OPA backend option (keep stable interfaces)
 - [ ] Policy UI (PAP) + policy diff/replay
