@@ -65,3 +65,12 @@
       - define Decision contract
       - adapter behavior
       - golden tests
+
+## TODO – Repo cleanup (deprecated paths)
+
+- [ ] Mark legacy golden-test tooling as deprecated (docs + README notes)
+- [ ] Migrate any useful fixtures from `tools/fixtures` → `fixtures/`
+- [ ] Remove legacy `tools/golden-tests` once canonical runner is the only path
+- [ ] Remove `tools/tools/golden-test-runner.mjs` once replaced everywhere
+- [ ] Remove/merge `tools/policy/policy.yaml` if redundant with `policy/policy.example.yaml`
+

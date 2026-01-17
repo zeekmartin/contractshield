@@ -1,4 +1,4 @@
-import Ajv from "ajv";
+import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { PolicySet, PolicyRoute, RequestContext, RuleHit, PdpOptions } from "../types";
 
@@ -6,7 +6,7 @@ import { PolicySet, PolicyRoute, RequestContext, RuleHit, PdpOptions } from "../
  * Contract validation is schema-first.
  * v0.1 supports JSON Schema via AJV.
  */
-const ajv = new Ajv({ allErrors: true, strict: false });
+const ajv = new Ajv2020({ allErrors: true, strict: false });
 addFormats(ajv);
 
 export async function validateContract(
