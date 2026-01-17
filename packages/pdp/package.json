@@ -1,7 +1,7 @@
 {
   "name": "@guardrails/pdp",
   "version": "0.1.0",
-  "type": "module",
+  "type": "commonjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -12,7 +12,7 @@
     "ajv-formats": "^3.0.1"
   },
   "devDependencies": {
-    "typescript": "^5.5.4",
-    "@types/node": "^20.11.30"
+    "@types/node": "^20.11.30",
+    "typescript": "^5.5.4"
   }
 }
