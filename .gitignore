@@ -44,3 +44,11 @@ coverage/
 tmp/
 temp/
 *.tgz
+
+# Secrets (NEVER commit)
+.secrets/
+private.pem
+*.license
+
+# Keep public.pem example
+!packages/license/src/public.pem.example

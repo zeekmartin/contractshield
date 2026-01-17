@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-01-17
+
+### Added
+
+- **Open Core licensing infrastructure**
+  - Apache 2.0 LICENSE file for open source packages
+  - CLA (Contributor License Agreement)
+  - Commercial LICENSE for Pro/Enterprise packages
+
+- **`@contractshield/license` package**
+  - `verifyLicense()` - Verify license key and get details
+  - `requireLicense()` - Require valid license or throw
+  - `hasFeature()` - Check if license includes a feature
+  - RSA-SHA256 signature verification (offline, no network)
+  - No external dependencies
+
+- **License generator tool** (`tools/license-generator/`)
+  - Generate signed license keys (JWT format)
+  - RSA 2048 key pair generation script
+  - CLI for creating Pro/Enterprise licenses
+
+- **Pro package structure** (`pro/`)
+  - `@contractshield/sink-rasp` placeholder
+  - Commercial license enforcement
+  - Private npm publishing setup
+
+- **Licensing documentation** (`docs/licensing.md`)
+  - Open source vs commercial features
+  - License verification guide
+  - FAQ and pricing information
+
+### Changed
+
+- Updated root `package.json` with workspaces for `pro/*` and `tools/*`
+- Updated `.gitignore` to exclude secrets and private keys
+
 ## [0.3.0] - 2026-01-17
 
 ### Added

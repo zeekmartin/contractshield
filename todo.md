@@ -33,6 +33,16 @@
 - [x] Documentation: webhooks.md, adapters.md, deployment.md
 - [x] Golden tests for webhook providers
 
+## v0.3.1 (Open Core Licensing)
+- [x] Apache 2.0 LICENSE file
+- [x] CLA (Contributor License Agreement)
+- [x] Commercial LICENSE for pro/ packages
+- [x] `@contractshield/license` package (verify, requireLicense, hasFeature)
+- [x] License generator tool (`tools/license-generator/`)
+- [x] Pro package structure (`pro/sink-rasp/` placeholder)
+- [x] Licensing documentation (`docs/licensing.md`)
+- [x] License verification tests
+
 ## v0.4
 - [ ] Policy packs (Stripe webhook pack, upload pack, OAuth pack)
 - [ ] Egress controls (declared URL fields, destination allowlists)

@@ -1,5 +1,19 @@
 {
+  "name": "contractshield",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "pro/*",
+    "tools/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "generate-license": "npx tsx tools/license-generator/generate.ts",
+    "generate-keys": "bash tools/license-generator/generate-keys.sh"
+  },
   "devDependencies": {
-    "yaml": "^2.8.2"
+    "yaml": "^2.8.2",
+    "tsx": "^4.7.0"
   }
 }
