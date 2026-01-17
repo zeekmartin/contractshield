@@ -60,13 +60,35 @@
 - [x] Tests for analyzers and hooks
 - [x] CHANGELOG updated
 
-## v1.1
+## v1.1 (Deployment Optimizations) ✅
+- [x] **Policy Hot Reload** for embedded deployment
+  - [x] `PolicyHotReloader` with file watching
+  - [x] Debounced reload and validation
+  - [x] Auto-enabled in development
+- [x] **Unix Socket Support** for sidecar
+  - [x] `unixSocket` config option
+  - [x] ~0.1ms latency (vs ~1-5ms HTTP)
+- [x] **`@contractshield/client` SDK**
+  - [x] LRU cache with TTL
+  - [x] Retry with backoff
+  - [x] Fail-open/fail-closed modes
+- [x] **Enhanced Health Checks**
+  - [x] Detailed `/health` endpoint
+  - [x] `/live` and `/ready` probes
+  - [x] Redis and policy status
+- [x] **Prometheus Metrics**
+  - [x] Decision counters and latency histogram
+  - [x] Error and cache metrics
+- [x] Documentation (`docs/deployment.md`) updated
+- [x] CHANGELOG updated
+
+## v1.2 (SQL + Eval Hooks)
 - [ ] SQL hooks (mysql, pg, mysql2)
 - [ ] SQL injection analyzer
 - [ ] Eval hooks (eval, Function, vm)
 - [ ] Template injection detection
 
-## v1.2
+## v1.3
 - [ ] Policy packs (Stripe webhook pack, upload pack, OAuth pack)
 - [ ] Egress controls (declared URL fields, destination allowlists)
 - [ ] Workflow counters (sequence + quotas)

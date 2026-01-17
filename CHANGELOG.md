@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-01-17
+
+### Added
+
+- **Policy Hot Reload** for embedded deployment
+  - `PolicyHotReloader` class with file watching
+  - Debounced reload (500ms default)
+  - Validation before applying new policy
+  - `onReload` and `onError` callbacks
+  - Auto-enabled in development mode
+
+- **Unix Socket Support** for sidecar deployment
+  - `unixSocket` configuration option
+  - ~0.1ms latency (vs ~1-5ms HTTP)
+  - Shared volume support for Kubernetes
+  - Can run alongside HTTP server
+
+- **`@contractshield/client` SDK** for centralized deployment
+  - LRU cache with configurable TTL
+  - Automatic retry with backoff
+  - Fail-open/fail-closed modes
+  - Unix socket support
+  - Cache statistics and health checks
+
+- **Enhanced Health Checks**
+  - Detailed `/health` endpoint with component status
+  - `/live` liveness probe
+  - `/ready` readiness probe with dependency checks
+  - Redis and policy validation status
+
+- **Prometheus Metrics**
+  - `contractshield_decisions_total` (counter by action)
+  - `contractshield_eval_latency_ms` (histogram with buckets)
+  - `contractshield_policy_routes` (gauge)
+  - `contractshield_errors_total` (counter by type)
+  - `contractshield_cache_hits_total` / `cache_misses_total`
+
+### Improved
+
+- Sidecar latency reduced from ~1-5ms to ~0.1ms with Unix socket
+- Centralized deployment resilience with client-side caching
+- Better observability with detailed health status
+- Updated `docs/deployment.md` with new features
+
 ## [1.0.0] - 2026-01-17
 
 ### Added
