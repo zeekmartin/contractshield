@@ -89,6 +89,8 @@ export interface PolicySet {
   policyVersion: "0.1";
   defaults?: {
     mode?: "monitor" | "enforce";
+    /** Action when no route matches. Default: "allow" (fail-open). */
+    unmatchedRouteAction?: "allow" | "block" | "monitor";
     response?: { blockStatusCode?: number };
     limits?: {
       maxBodyBytes?: number;

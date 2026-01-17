@@ -126,4 +126,41 @@ Adapters must canonicalize duplicates deterministically; do not depend on ambigu
 `matches()` can be expensive. Prefer `contains/startsWith` when possible.
 
 ### 5) Blacklist mindset
-CEL is for invariants and contracts, not a signature WAF. If you’re writing many token patterns, you likely need better schemas/intent.
+CEL is for invariants and contracts, not a signature WAF. If you're writing many token patterns, you likely need better schemas/intent.
+
+---
+
+## Built-in CEL subset (no external evaluator)
+
+The PDP includes a minimal CEL subset for docs/tests when no `celEvaluator` is provided.
+
+**Supported expressions:**
+
+| Pattern | Example |
+|---------|---------|
+| Auth check | `identity.authenticated == true` |
+| Tenant binding | `identity.tenant == request.body.tenantId` |
+| Membership check | `request.body.json.sample.type in ["a", "b", "c"]` |
+
+**Limitations:**
+- Only exact pattern matches above
+- No string functions (`contains`, `startsWith`, etc.)
+- No list comprehensions
+- No math operators
+
+**For production**, provide a real `celEvaluator` via `opts.celEvaluator`:
+
+```typescript
+import { evaluate } from "@guardrails/pdp";
+
+const decision = await evaluate(policy, ctx, {
+  celEvaluator: {
+    eval: (expr, env) => {
+      // Use cel-js, google-cel, or WASM-compiled CEL
+      return myCelEngine.evaluate(expr, env);
+    }
+  }
+});
+```
+
+**Roadmap:** Native CEL support via WASM is planned.

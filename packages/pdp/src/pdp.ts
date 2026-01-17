@@ -21,6 +21,14 @@ function routeMode(policy: PolicySet, route: PolicyRoute): "monitor" | "enforce"
 export async function evaluate(policy: PolicySet, ctx: RequestContext, opts: PdpOptions = {}): Promise<Decision> {
   const route = matchRoute(policy.routes, ctx.request.method, ctx.request.path, ctx.request.routeId);
   if (!route) {
+    const unmatchedAction = policy.defaults?.unmatchedRouteAction ?? "allow";
+    const statusBlock = policy.defaults?.response?.blockStatusCode ?? 403;
+    if (unmatchedAction === "block") {
+      return { version: "0.1", action: "BLOCK", statusCode: statusBlock, reason: "No matching route (blocked)", risk: { score: 60, level: "high" }, ruleHits: [{ id: "route.unmatched", severity: "high" }], redactions: [] };
+    }
+    if (unmatchedAction === "monitor") {
+      return { version: "0.1", action: "MONITOR", statusCode: 200, reason: "No matching route (monitored)", risk: { score: 30, level: "med" }, ruleHits: [{ id: "route.unmatched", severity: "med" }], redactions: [] };
+    }
     return { version: "0.1", action: "ALLOW", statusCode: 200, reason: "No matching route", risk: { score: 0, level: "none" }, ruleHits: [], redactions: [] };
   }
 

@@ -1,4 +1,4 @@
-import Ajv from "ajv";
+import Ajv, { ValidateFunction } from "ajv";
 import addFormats from "ajv-formats";
 import { PolicySet, PolicyRoute, RequestContext, RuleHit, PdpOptions } from "../types";
 
@@ -8,6 +8,9 @@ import { PolicySet, PolicyRoute, RequestContext, RuleHit, PdpOptions } from "../
  */
 const ajv = new Ajv({ allErrors: true, strict: false });
 addFormats(ajv);
+
+/** Cache compiled schemas by ref to avoid recompilation on every request. */
+const schemaCache = new Map<string, ValidateFunction>();
 
 export async function validateContract(
   _policy: PolicySet,
@@ -22,8 +25,14 @@ export async function validateContract(
   const loader = opts.schemaLoader;
   if (!loader) return hits;
 
-  const schema = await loader(contract.requestSchemaRef);
-  const validate = ajv.compile(schema);
+  const ref = contract.requestSchemaRef;
+  let validate = schemaCache.get(ref);
+  let schema: any;
+  if (!validate) {
+    schema = await loader(ref);
+    validate = ajv.compile(schema);
+    schemaCache.set(ref, validate);
+  }
 
   const sample = ctx.request.body?.json?.sample;
   if (sample == null) return hits;
@@ -37,6 +46,7 @@ export async function validateContract(
     });
   }
 
+  // Check rejectUnknownFields only if we loaded the schema fresh
   if (contract.rejectUnknownFields === true && schema && schema.additionalProperties !== false) {
     hits.push({
       id: "contract.reject_unknown_fields",
