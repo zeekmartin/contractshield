@@ -1,7 +1,7 @@
 import Ajv, { ValidateFunction } from "ajv";
 import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
-import { PolicySet, PolicyRoute, RequestContext, RuleHit, PdpOptions } from "../types";
+import { PolicySet, PolicyRoute, RequestContext, RuleHit, PdpOptions } from "../types.js";
 
 /**
  * Contract validation is schema-first.

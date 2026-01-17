@@ -1,4 +1,4 @@
-import { PolicyRoute } from "../types";
+import { PolicyRoute } from "../types.js";
 
 export function matchRoute(routes: PolicyRoute[], method: string, path: string, routeId?: string): PolicyRoute | null {
   // v0.1: exact match only; later: templates/prefix

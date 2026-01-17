@@ -16,7 +16,7 @@
  */
 
 import express from "express";
-import { evaluate, type PolicySet, type RequestContext } from "../../packages/pdp/src/index.js";
+import { evaluate, type PolicySet, type RequestContext } from "../../packages/pdp/dist/index.js";
 import fs from "fs";
 
 const app = express();

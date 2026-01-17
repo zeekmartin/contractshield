@@ -1,4 +1,4 @@
-import { PolicyRoute, RequestContext, RuleHit, PdpOptions } from "../types";
+import { PolicyRoute, RequestContext, RuleHit, PdpOptions } from "../types.js";
 
 /**
  * Stripe replay protection (v0.1)

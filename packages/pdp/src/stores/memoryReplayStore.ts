@@ -1,4 +1,4 @@
-import { ReplayStore } from "../types";
+import { ReplayStore } from "../types.js";
 
 export class MemoryReplayStore implements ReplayStore {
   private seen = new Map<string, number>();
