@@ -1,4 +1,4 @@
-# Why Guardrails (and not just a WAF or RASP?)
+# Why ContractShield (and not just a WAF or RASP?)
 
 ## WAFs
 - operate at the edge
@@ -12,12 +12,12 @@
 - complex to reason about
 - often opaque
 
-## Guardrails
+## ContractShield
 - contract-first
 - intent-based
 - deterministic
 - testable
 - developer-owned
 
-Guardrails does not replace WAFs or RASP.
+ContractShield does not replace WAFs or RASP.
 It fills the **application-intent gap**.

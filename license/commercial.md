@@ -2,7 +2,7 @@
 
 ## Scope
 
-Commercial licenses apply only to non-open-source components of Guardrails.
+Commercial licenses apply only to non-open-source components of ContractShield.
 
 These components are distributed under a proprietary license and are not covered by Apache 2.0.
 
@@ -37,7 +37,7 @@ Commercial features may use:
 - offline verification
 - optional periodic validation
 
-Guardrails Core **never phones home** and never requires a license key.
+ContractShield Core **never phones home** and never requires a license key.
 
 ---
 

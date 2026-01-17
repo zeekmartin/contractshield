@@ -1,9 +1,9 @@
 # Security Controls Comparison
-## WAF vs RASP vs Application-layer Guardrails
+## WAF vs RASP vs Application-layer ContractShield
 
 Date: 2026-01-15
 
-This document explains how **Application-layer Guardrails** compares to
+This document explains how **Application-layer ContractShield** compares to
 traditional **WAFs** and **RASP** solutions, and why it exists as a distinct layer.
 
 ---
@@ -14,9 +14,9 @@ traditional **WAFs** and **RASP** solutions, and why it exists as a distinct lay
 |------|---------------------------|
 | WAF | Does this request look malicious at the network edge? |
 | RASP | Is untrusted data reaching a dangerous sink at runtime? |
-| Guardrails | Is this request aligned with what the application declared as expected? |
+| ContractShield | Is this request aligned with what the application declared as expected? |
 
-Guardrails does **not** replace WAF or RASP.
+ContractShield does **not** replace WAF or RASP.
 It fills the **semantic gap** between them.
 
 ---
@@ -64,9 +64,9 @@ It fills the **semantic gap** between them.
 
 ---
 
-## Application-layer Guardrails
+## Application-layer ContractShield
 
-### What Guardrails does well
+### What ContractShield does well
 - Enforces declared intent
 - Uses contracts (OpenAPI, schemas)
 - Binds identity to data
@@ -95,7 +95,7 @@ Internet
    |
  [ WAF ]
    |
- [ Guardrails ]  <-- semantic enforcement
+ [ ContractShield ]  <-- semantic enforcement
    |
  [ Application ]
    |
@@ -113,7 +113,7 @@ Each layer answers a **different security question**.
 - You protect legacy apps
 - You need generic attack filtering
 
-### Use Guardrails when:
+### Use ContractShield when:
 - You control the application code
 - You want deterministic security
 - You need to prevent logic abuse
@@ -126,7 +126,7 @@ Each layer answers a **different security question**.
 
 ---
 
-## Why Guardrails is developer-first
+## Why ContractShield is developer-first
 
 - Policies are code
 - Behavior is explicit
@@ -138,6 +138,6 @@ Each layer answers a **different security question**.
 
 ## Key takeaway
 
-> WAF guesses intent.  
-> RASP observes execution.  
-> **Guardrails enforces declared meaning.**
+> WAF guesses intent.
+> RASP observes execution.
+> **ContractShield enforces declared meaning.**

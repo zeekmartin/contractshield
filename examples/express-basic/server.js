@@ -1,5 +1,5 @@
 /**
- * Express Basic Example - Guardrails
+ * Express Basic Example - ContractShield
  *
  * Demonstrates:
  * - Policy enforcement middleware
@@ -35,7 +35,7 @@ app.use((req, _res, next) => {
     }
     next();
 });
-// Guardrails middleware (inline for demo, use @guardrails/pep-express in real apps)
+// ContractShield middleware (inline for demo, use @contractshield/pep-express in real apps)
 app.use(async (req, res, next) => {
     const ctx = {
         version: "0.1",
@@ -67,10 +67,10 @@ app.use(async (req, res, next) => {
     };
     const decision = await evaluate(policy, ctx);
     // Set decision header
-    res.setHeader("X-Guardrails-Decision", decision.action);
+    res.setHeader("X-ContractShield-Decision", decision.action);
     // Log
     const emoji = decision.action === "ALLOW" ? "✓" : decision.action === "BLOCK" ? "✗" : "⚠";
-    console.log(`[guardrails] ${emoji} ${decision.action} ${req.method} ${req.path}`, decision.ruleHits?.length ? `(${decision.ruleHits.map((h) => h.id).join(", ")})` : "");
+    console.log(`[contractshield] ${emoji} ${decision.action} ${req.method} ${req.path}`, decision.ruleHits?.length ? `(${decision.ruleHits.map((h) => h.id).join(", ")})` : "");
     // Enforce
     if (decision.action === "BLOCK") {
         return res.status(decision.statusCode).json({
@@ -80,7 +80,7 @@ app.use(async (req, res, next) => {
         });
     }
     // Attach decision to request for downstream use
-    req.guardrails = { decision, context: ctx };
+    req.contractshield = { decision, context: ctx };
     next();
 });
 // Routes

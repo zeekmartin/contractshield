@@ -1,8 +1,8 @@
-# Guardrails Quick Start — Node.js (10–15 minutes)
+# ContractShield Quick Start — Node.js (10–15 minutes)
 
 Date: 2026-01-15
 
-This quick start shows Guardrails enforcing declared intent on a single endpoint.
+This quick start shows ContractShield enforcing declared intent on a single endpoint.
 
 ## What you'll see
 - One endpoint: `/api/license/activate`

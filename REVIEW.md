@@ -1,4 +1,4 @@
-# Revue Complète – Guardrails v0.1
+# Revue Complète – ContractShield v0.1
 
 Date: 2026-01-17
 
@@ -6,7 +6,7 @@ Date: 2026-01-17
 
 ## Résumé exécutif
 
-Le projet Guardrails est une implémentation solide d'une couche de sécurité applicative basée sur le modèle PEP/PDP/PAP. L'architecture est claire, le scope v0.1 est réaliste, et les choix technologiques sont pertinents.
+Le projet ContractShield est une implémentation solide d'une couche de sécurité applicative basée sur le modèle PEP/PDP/PAP. L'architecture est claire, le scope v0.1 est réaliste, et les choix technologiques sont pertinents.
 
 **Points forts:**
 - Architecture propre avec séparation des responsabilités
@@ -33,7 +33,7 @@ Le projet Guardrails est une implémentation solide d'une couche de sécurité a
 
 Le pattern PEP/PDP/PAP (issu de XACML) est le standard de facto pour l'enforcement déclaratif de policies. Il offre:
 
-| Composant | Rôle | Implémentation Guardrails |
+| Composant | Rôle | Implémentation ContractShield |
 |-----------|------|---------------------------|
 | **PDP** | Décision | `packages/pdp/src/pdp.ts` → `evaluate()` |
 | **PEP** | Enforcement | Adapters futurs (Express, Java servlet) |
@@ -472,10 +472,10 @@ Après lecture complète de tous les documents (`/docs/*`, `/tutorial/*`, `*.md`
 |----------|---------|----------|
 | `docs/manifesto.md` | ✅ Excellent | Les 10 principes sont clairs et cohérents |
 | `docs/threat-model.md` | ✅ Excellent | Scope explicite, menaces bien cartographiées |
-| `docs/comparison.md` | ✅ Excellent | Positionnement WAF/RASP/Guardrails clair |
+| `docs/comparison.md` | ✅ Excellent | Positionnement WAF/RASP/ContractShield clair |
 | `docs/policy-language.md` | ✅ Très bon | Pitfalls bien documentés |
 | `docs/observability.md` | ✅ Très bon | Schema de logs, OTEL, responsabilités PDP/PEP |
-| `tutorial/hello-guardrails.md` | ✅ Bon | Tutoriel 10 min accessible |
+| `tutorial/hello-contractshield.md` | ✅ Bon | Tutoriel 10 min accessible |
 
 **Verdict global:** Documentation de qualité professionnelle, cohérente et complète pour un projet v0.1.
 
@@ -486,7 +486,7 @@ Après lecture complète de tous les documents (`/docs/*`, `/tutorial/*`, `*.md`
 | `docs/packs/oauth.md` | OAuth rule type | ❌ Non implémenté |
 | `docs/packs/uploads.md` | Upload rule type | ❌ Non implémenté |
 | `docs/security.md` | Rate limiting | ❌ Non implémenté |
-| `docs/guardrails.md` | CHALLENGE action | ⚠️ Défini mais non supporté |
+| `docs/contractshield.md` | CHALLENGE action | ⚠️ Défini mais non supporté |
 | `todo.md` | Node/Java PEP adapters | ⚠️ Quickstart existe, pas le middleware |
 
 **Recommandation:** Ajouter des badges `[future]` ou `[not yet implemented]` dans les docs des features non implémentées pour éviter la confusion.
@@ -532,7 +532,7 @@ Les principes sont excellents et le code les respecte majoritairement :
 
 ## 8. Conclusion
 
-Guardrails v0.1 est un projet bien conçu avec un scope réaliste. L'architecture PEP/PDP/PAP est adaptée, les choix technologiques sont pertinents, et le code est propre.
+ContractShield v0.1 est un projet bien conçu avec un scope réaliste. L'architecture PEP/PDP/PAP est adaptée, les choix technologiques sont pertinents, et le code est propre.
 
 **Actions immédiates recommandées:**
 1. Simplifier les fixtures avec le format YAML proposé

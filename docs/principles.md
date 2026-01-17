@@ -1,4 +1,4 @@
-# Guardrails Principles
+# ContractShield Principles
 
 Date: 2026-01-15
 

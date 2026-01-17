@@ -1,19 +1,19 @@
-# Guardrails
-### Application-layer Guardrails for modern APIs
+# ContractShield
+### Application-layer ContractShield for modern APIs
 
-Guardrails enforces **declared application intent** at runtime.
+ContractShield enforces **declared application intent** at runtime.
 
-Not signatures.  
-Not heuristics.  
+Not signatures.
+Not heuristics.
 Not blacklists.
 
 Contracts, invariants, and context — enforced where your code runs.
 
 ---
 
-## What Guardrails is
+## What ContractShield is
 
-Guardrails is an **application-layer Policy Enforcement Layer**.
+ContractShield is an **application-layer Policy Enforcement Layer**.
 
 It:
 - runs inside your application boundary
@@ -29,13 +29,13 @@ Decisions:
 
 ---
 
-## What Guardrails is not
+## What ContractShield is not
 
 - Not a WAF replacement
 - Not regex filtering
 - Not AI anomaly detection
 - Not a SaaS proxy
-- Not a “stop everything” promise
+- Not a "stop everything" promise
 
 ---
 
@@ -51,7 +51,7 @@ Reverse Proxy / Gateway
 PEP (middleware / filter)
   |
   v
-Guardrails PDP (embedded or sidecar)
+ContractShield PDP (embedded or sidecar)
   |
   v
 Application Logic
@@ -64,11 +64,11 @@ Application Logic
 
 ---
 
-## Why Guardrails exists
+## Why ContractShield exists
 
 Most security tools do not know what your application is supposed to do.
 
-Guardrails lets developers declare:
+ContractShield lets developers declare:
 - valid endpoints
 - valid payloads
 - valid identity bindings

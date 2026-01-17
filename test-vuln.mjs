@@ -48,7 +48,7 @@ function makeContext(body) {
   };
 }
 
-console.log("🛡️  Testing Guardrails Vulnerability Checks\n");
+console.log("Testing ContractShield Vulnerability Checks\n");
 console.log("=".repeat(60));
 
 // Test cases

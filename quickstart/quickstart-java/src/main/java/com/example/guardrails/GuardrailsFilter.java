@@ -1,28 +1,12 @@
 package com.example.guardrails;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.IOException;
+import com.example.contractshield.ContractShieldFilter;
 
-public class GuardrailsFilter implements Filter {
-
-    @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-            throws IOException, ServletException {
-
-        HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) res;
-
-        // Mock identity context
-        String tenant = "tenant-1";
-        String bodyTenant = request.getParameter("tenantId");
-
-        if (!tenant.equals(bodyTenant)) {
-            response.setStatus(403);
-            response.getWriter().write("{"action":"BLOCK","rule":"tenant.binding"}");
-            return;
-        }
-
-        chain.doFilter(req, res);
-    }
+/**
+ * @deprecated Use {@link com.example.contractshield.ContractShieldFilter} instead.
+ * This class is provided for backward compatibility only.
+ */
+@Deprecated
+public class GuardrailsFilter extends ContractShieldFilter {
+    // Backward compatibility alias - delegates to ContractShieldFilter
 }

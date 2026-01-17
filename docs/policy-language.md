@@ -2,7 +2,7 @@
 
 Date: 2026-01-15
 
-Guardrails uses **CEL** (Common Expression Language) for invariants.
+ContractShield uses **CEL** (Common Expression Language) for invariants.
 CEL is simple, fast, deterministic, and easy to migrate later to Rego/OPA if needed.
 
 This document defines:
@@ -54,7 +54,7 @@ CEL standard library usually includes:
 - list: `size()`, `exists(x, ...)`, `all(x, ...)`
 - comparisons and boolean logic
 
-Guardrails may also provide safe helpers (recommended roadmap):
+ContractShield may also provide safe helpers (recommended roadmap):
 - `lower(string)` / `upper(string)`
 - `hasScope("scope")` (checks `identity.scopes`)
 - `inCidr(ip, "10.0.0.0/8")` (future egress/ssrf packs)
@@ -151,7 +151,7 @@ The PDP includes a minimal CEL subset for docs/tests when no `celEvaluator` is p
 **For production**, provide a real `celEvaluator` via `opts.celEvaluator`:
 
 ```typescript
-import { evaluate } from "@guardrails/pdp";
+import { evaluate } from "@contractshield/pdp";
 
 const decision = await evaluate(policy, ctx, {
   celEvaluator: {
@@ -169,7 +169,7 @@ const decision = await evaluate(policy, ctx, {
 
 ## Vulnerability Checks (v0.2)
 
-In addition to CEL invariants, Guardrails includes built-in vulnerability checks that run **before** contract validation. These are denylist-based checks for common attack patterns.
+In addition to CEL invariants, ContractShield includes built-in vulnerability checks that run **before** contract validation. These are denylist-based checks for common attack patterns.
 
 ### Configuration
 

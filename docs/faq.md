@@ -2,12 +2,12 @@
 
 Date: 2026-01-15
 
-## Does Guardrails replace a WAF?
+## Does ContractShield replace a WAF?
 No. WAFs filter at the edge using generic patterns.
-Guardrails enforces **application intent** with app context.
+ContractShield enforces **application intent** with app context.
 They complement each other.
 
-## Does Guardrails replace authentication/authorization?
+## Does ContractShield replace authentication/authorization?
 No. It can require auth/scopes and bind identity to payload, but it does not replace your auth system.
 
 ## Does it stop all attacks?
@@ -32,7 +32,7 @@ You need at least a PEP integration to build context. Sidecar PDP reduces cross-
 Yes. Any runtime can implement a PEP adapter or call a sidecar PDP using the stable RequestContext/Decision contract.
 
 ## Why CEL first and not OPA?
-CEL is simpler and faster to adopt. Guardrails keeps stable interfaces so a Rego/OPA backend can be added later.
+CEL is simpler and faster to adopt. ContractShield keeps stable interfaces so a Rego/OPA backend can be added later.
 
 ## Is it open-source?
 Open-core: core engine/adapters/schemas can be open-source; advanced runtime agents/tooling can be commercial.

@@ -1,21 +1,21 @@
 
-# Application-layer Guardrails
+# Application-layer ContractShield
 
 Date: 2026-01-14
 
-## What is Application-layer Guardrails?
+## What is Application-layer ContractShield?
 
-**Application-layer Guardrails** (also referred to as a **Policy Enforcement Layer**) is a security layer that operates
+**Application-layer ContractShield** (also referred to as a **Policy Enforcement Layer**) is a security layer that operates
 *inside* or *next to* an application runtime to enforce **declared application intent**.
 
-Instead of guessing malicious intent through signatures or heuristics, Guardrails works by enforcing
+Instead of guessing malicious intent through signatures or heuristics, ContractShield works by enforcing
 **what the application is explicitly allowed to do**.
 
 > If it is not explicitly expected, it is rejected.
 
 ---
 
-## Why Guardrails exists
+## Why ContractShield exists
 
 Modern attacks increasingly bypass:
 - network firewalls
@@ -24,7 +24,7 @@ Modern attacks increasingly bypass:
 
 Because these tools lack **application context**.
 
-Guardrails adds:
+ContractShield adds:
 - route awareness
 - schema awareness
 - identity & tenant awareness
@@ -34,7 +34,7 @@ At runtime.
 
 ---
 
-## What Guardrails protects against
+## What ContractShield protects against
 
 ### Technical attacks
 - SQL / template / command injection
@@ -58,9 +58,9 @@ At runtime.
 
 ---
 
-## What Guardrails is not
+## What ContractShield is not
 
-Guardrails is **not**:
+ContractShield is **not**:
 - a network firewall
 - a signature-based WAF
 - an IDS / SIEM
@@ -109,7 +109,7 @@ It complements these controls by enforcing **runtime intent**.
 - Webhook protection
 - Monitor / enforce modes
 
-### Phase 2 — Behavioral guardrails
+### Phase 2 — Behavioral contractshield
 - workflow enforcement
 - quotas and rate invariants
 - egress allowlists
@@ -129,7 +129,7 @@ It complements these controls by enforcing **runtime intent**.
 
 ## Licensing model
 
-Guardrails follows an **open-core** model.
+ContractShield follows an **open-core** model.
 
 ### Open-source (Apache 2.0)
 - core policy engine (CEL)
@@ -151,4 +151,4 @@ Guardrails follows an **open-core** model.
 
 > Security by declared intent, not by signatures.
 
-Guardrails lets developers define what their application *is allowed to do* — and enforces it at runtime.
+ContractShield lets developers define what their application *is allowed to do* — and enforces it at runtime.

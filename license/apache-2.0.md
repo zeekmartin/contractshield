@@ -2,7 +2,7 @@
 
 ## Why Apache License 2.0
 
-Guardrails Core is licensed under **Apache License 2.0** because it:
+ContractShield Core is licensed under **Apache License 2.0** because it:
 
 - allows commercial use
 - allows modification and redistribution
@@ -17,7 +17,7 @@ Apache 2.0 is particularly well suited for security infrastructure projects.
 ## What Apache 2.0 allows you to do
 
 You are allowed to:
-- use Guardrails Core in production
+- use ContractShield Core in production
 - use it in proprietary or commercial products
 - modify the source code
 - redistribute modified or unmodified versions
@@ -27,7 +27,7 @@ You are allowed to:
 
 ## Your obligations under Apache 2.0
 
-When redistributing Guardrails Core (or modified versions), you must:
+When redistributing ContractShield Core (or modified versions), you must:
 - include the Apache 2.0 license text
 - preserve copyright notices
 - document any significant changes you made
@@ -49,7 +49,7 @@ If a contributor initiates patent litigation against users of the project, the p
 
 ---
 
-## How Guardrails manages Apache 2.0 licensing
+## How ContractShield manages Apache 2.0 licensing
 
 - A `LICENSE` file is included at the root of the repository
 - Source files include copyright headers where appropriate

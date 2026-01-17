@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://guardrails.dev/schemas/decision.v0.1.json",
-  "title": "Guardrails Decision v0.1",
+  "$id": "https://contractshield.dev/schemas/decision.v0.1.json",
+  "title": "ContractShield Decision v0.1",
   "type": "object",
   "required": [
     "version",

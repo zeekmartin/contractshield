@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in contributing to Guardrails!
+Thanks for your interest in contributing to ContractShield!
 
 ## Code of Conduct
 This project follows the Contributor Covenant.

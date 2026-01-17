@@ -1,8 +1,8 @@
-# Hello Guardrails — 10 minute tutorial
+# Hello ContractShield — 10 minute tutorial
 
 Date: 2026-01-15
 
-This tutorial shows **Application-layer Guardrails** in action in the simplest possible way.
+This tutorial shows **Application-layer ContractShield** in action in the simplest possible way.
 
 Goal:
 - 1 API endpoint
@@ -146,5 +146,5 @@ Then switch to **enforce**:
 
 ## Key takeaway
 
-> Guardrails does not guess attacks.  
+> ContractShield does not guess attacks.  
 > It enforces what you declared as acceptable.
