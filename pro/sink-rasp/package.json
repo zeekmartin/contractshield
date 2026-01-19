@@ -1,6 +1,6 @@
 {
-  "name": "@contractshield/sink-rasp",
-  "version": "1.0.0",
+  "name": "@cshield/sink-rasp",
+  "version": "1.5.0",
   "private": true,
   "description": "ContractShield Pro - Sink-aware RASP (Runtime Application Self-Protection)",
   "type": "module",
@@ -19,7 +19,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@contractshield/license": "workspace:*"
+    "@cshield/license": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.11.30",

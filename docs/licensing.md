@@ -8,11 +8,11 @@ The following packages are free and open source under the Apache 2.0 license:
 
 | Package | Description |
 |---------|-------------|
-| `@contractshield/pdp` | Policy Decision Point (core engine) |
-| `@contractshield/pep-express` | Express.js adapter |
-| `@contractshield/pep-fastify` | Fastify adapter |
-| `@contractshield/sidecar` | Standalone HTTP sidecar |
-| `@contractshield/license` | License verification library |
+| `@cshield/pdp` | Policy Decision Point (core engine) |
+| `@cshield/pep-express` | Express.js adapter |
+| `@cshield/pep-fastify` | Fastify adapter |
+| `@cshield/sidecar` | Standalone HTTP sidecar |
+| `@cshield/license` | License verification library |
 
 You can use these packages in any project, commercial or not, without restrictions.
 
@@ -29,11 +29,11 @@ The following packages require a commercial license:
 
 | Package | Feature | Pro | Enterprise |
 |---------|---------|:---:|:----------:|
-| `@contractshield/sink-rasp` | Sink-aware RASP | ✅ | ✅ |
-| `@contractshield/policy-ui` | Visual policy editor | ✅ | ✅ |
-| `@contractshield/compliance-pci` | PCI-DSS compliance pack | ❌ | ✅ |
-| `@contractshield/compliance-hipaa` | HIPAA compliance pack | ❌ | ✅ |
-| `@contractshield/compliance-soc2` | SOC 2 compliance pack | ❌ | ✅ |
+| `@cshield/sink-rasp` | Sink-aware RASP | ✅ | ✅ |
+| `@cshield/policy-ui` | Visual policy editor | ✅ | ✅ |
+| `@cshield/compliance-pci` | PCI-DSS compliance pack | ❌ | ✅ |
+| `@cshield/compliance-hipaa` | HIPAA compliance pack | ❌ | ✅ |
+| `@cshield/compliance-soc2` | SOC 2 compliance pack | ❌ | ✅ |
 
 ### Plan Comparison
 
@@ -66,7 +66,7 @@ export CONTRACTSHIELD_LICENSE_KEY="eyJhbGciOiJSUzI1Ni..."
 ### In Code
 
 ```typescript
-import { initSinkRasp } from '@contractshield/sink-rasp';
+import { initSinkRasp } from '@cshield/sink-rasp';
 
 // Using environment variable
 initSinkRasp({
@@ -85,7 +85,7 @@ initSinkRasp({
 ### Verifying Your License
 
 ```typescript
-import { verifyLicense, hasFeature } from '@contractshield/license';
+import { verifyLicense, hasFeature } from '@cshield/license';
 
 const license = verifyLicense(process.env.CONTRACTSHIELD_LICENSE_KEY);
 
@@ -113,7 +113,7 @@ if (hasFeature(process.env.CONTRACTSHIELD_LICENSE_KEY, 'sink-rasp')) {
 ### How It Works
 
 1. License keys are signed JWTs (JSON Web Tokens)
-2. The public key is embedded in `@contractshield/license`
+2. The public key is embedded in `@cshield/license`
 3. Verification happens locally using Node.js crypto
 4. No external dependencies required
 
@@ -154,7 +154,7 @@ Pro features stop working, but open source features continue. Your application w
 
 ### Can I get a trial license?
 
-Yes, contact [sales@contractshield.dev](mailto:sales@contractshield.dev) for a 30-day trial.
+Yes, contact [sales@cshield.dev](mailto:sales@cshield.dev) for a 30-day trial.
 
 ### Do you offer discounts?
 
@@ -181,7 +181,7 @@ Your contributions remain yours—you're just granting us permission to include 
 
 ## Contact
 
-- **Sales**: [sales@contractshield.dev](mailto:sales@contractshield.dev)
-- **License issues**: [license@contractshield.dev](mailto:license@contractshield.dev)
-- **Support**: [support@contractshield.dev](mailto:support@contractshield.dev)
+- **Sales**: [sales@cshield.dev](mailto:sales@cshield.dev)
+- **License issues**: [license@cshield.dev](mailto:license@cshield.dev)
+- **Support**: [support@cshield.dev](mailto:support@cshield.dev)
 - **Website**: [contractshield.dev](https://contractshield.dev)

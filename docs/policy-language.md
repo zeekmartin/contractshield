@@ -151,7 +151,7 @@ The PDP includes a minimal CEL subset for docs/tests when no `celEvaluator` is p
 **For production**, provide a real `celEvaluator` via `opts.celEvaluator`:
 
 ```typescript
-import { evaluate } from "@contractshield/pdp";
+import { evaluate } from "@cshield/pdp";
 
 const decision = await evaluate(policy, ctx, {
   celEvaluator: {

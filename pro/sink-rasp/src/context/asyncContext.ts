@@ -52,7 +52,7 @@ export function setContextValue(key: string, value: unknown): void {
  * @example
  * ```typescript
  * import express from 'express';
- * import { expressContextMiddleware } from '@contractshield/sink-rasp';
+ * import { expressContextMiddleware } from '@cshield/sink-rasp';
  *
  * const app = express();
  * app.use(expressContextMiddleware());
@@ -80,7 +80,7 @@ export function expressContextMiddleware() {
  * @example
  * ```typescript
  * import Fastify from 'fastify';
- * import { fastifyContextPlugin } from '@contractshield/sink-rasp';
+ * import { fastifyContextPlugin } from '@cshield/sink-rasp';
  *
  * const fastify = Fastify();
  * fastify.register(fastifyContextPlugin);

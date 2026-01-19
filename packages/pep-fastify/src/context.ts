@@ -1,5 +1,5 @@
 import type { FastifyRequest } from "fastify";
-import type { RequestContext } from "@contractshield/pdp";
+import type { RequestContext } from "@cshield/pdp";
 import { createHash, randomUUID } from "crypto";
 
 /**

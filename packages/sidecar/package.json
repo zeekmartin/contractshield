@@ -1,6 +1,6 @@
 {
-  "name": "@contractshield/sidecar",
-  "version": "0.3.0",
+  "name": "@cshield/sidecar",
+  "version": "1.5.0",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
@@ -11,11 +11,12 @@
     "start": "node dist/cli.js"
   },
   "dependencies": {
-    "@contractshield/pdp": "workspace:*",
+    "@cshield/pdp": "workspace:*",
     "fastify": "^4.26.0"
   },
   "devDependencies": {
     "typescript": "^5.5.4",
-    "@types/node": "^20.11.30"
+    "@types/node": "^20.11.30",
+    "redis": "^4.6.0"
   }
 }

@@ -7,7 +7,7 @@
  *
  * @example
  * ```typescript
- * import { enableLearning, analyze, suggest } from '@contractshield/learning';
+ * import { enableLearning, analyze, suggest } from '@cshield/learning';
  *
  * // Enable learning on your middleware
  * enableLearning(shield, {
@@ -23,7 +23,7 @@
  * @license Commercial
  */
 
-import { requireLicense } from "@contractshield/license";
+import { requireLicense } from "@cshield/license";
 import { Collector } from "./collector/index.js";
 import { FileStorage, type Storage } from "./storage/file.js";
 import { analyzeRoute } from "./analyzers/index.js";
@@ -83,8 +83,8 @@ export interface LearningOptions {
  * @example
  * ```typescript
  * import express from 'express';
- * import { contractshield } from '@contractshield/pep-express';
- * import { enableLearning } from '@contractshield/learning';
+ * import { contractshield } from '@cshield/pep-express';
+ * import { enableLearning } from '@cshield/learning';
  *
  * const app = express();
  * const shield = contractshield({ policy: './policy.yaml' });

@@ -368,7 +368,7 @@ export class FileStorage implements Storage {
 
       // Decrypt if needed
       if (filePath.endsWith(ENCRYPTED_EXTENSION) && this.encryptionKey) {
-        data = this.decrypt(data);
+        data = Buffer.from(this.decrypt(data));
       }
 
       // Decompress

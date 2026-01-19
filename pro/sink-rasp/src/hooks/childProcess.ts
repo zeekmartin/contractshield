@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Child Process Hooks
  * Intercepts exec, execSync, spawn, spawnSync to prevent command injection

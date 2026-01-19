@@ -8,7 +8,7 @@ import {
   type Decision,
   MemoryReplayStore,
   createRedisReplayStore,
-} from "@contractshield/pdp";
+} from "@cshield/pdp";
 import { getHealth, getReadiness, type HealthDependencies } from "./health.js";
 import {
   getMetrics,
@@ -68,7 +68,7 @@ export async function createSidecar(config: SidecarConfig): Promise<FastifyInsta
       const { createClient } = await import("redis");
       const client = createClient({ url: config.redisUrl });
       await client.connect();
-      replayStore = createRedisReplayStore({ client }) as any;
+      replayStore = createRedisReplayStore({ client: client as any }) as any;
       healthDeps.redis = { ping: () => client.ping() };
       fastify.log.info("Connected to Redis for replay store");
     } catch (error) {
@@ -166,7 +166,7 @@ export async function createSidecar(config: SidecarConfig): Promise<FastifyInsta
    * GET /webhooks
    */
   fastify.get("/webhooks", async () => {
-    const { listWebhookPlugins } = await import("@contractshield/pdp");
+    const { listWebhookPlugins } = await import("@cshield/pdp");
     return {
       plugins: listWebhookPlugins(),
     };

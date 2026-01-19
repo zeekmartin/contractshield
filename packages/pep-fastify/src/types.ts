@@ -1,5 +1,5 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
-import type { PolicySet, PdpOptions, Decision, RequestContext } from "@contractshield/pdp";
+import type { PolicySet, PdpOptions, Decision, RequestContext } from "@cshield/pdp";
 
 export interface ContractShieldOptions {
   /** Policy object or path to policy YAML/JSON file. */

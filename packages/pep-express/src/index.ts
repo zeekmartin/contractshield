@@ -14,4 +14,4 @@ export type {
 } from "./types.js";
 
 // Re-export common types from PDP for convenience
-export type { Decision, RequestContext, PolicySet, RuleHit } from "@contractshield/pdp";
+export type { Decision, RequestContext, PolicySet, RuleHit } from "@cshield/pdp";

@@ -1,0 +1,39 @@
+{
+  "name": "@cshield/core",
+  "version": "1.5.0",
+  "description": "Contract-first API security for Node.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zeekmartin/contractshield.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://contractshield.dev",
+  "bugs": {
+    "url": "https://github.com/zeekmartin/contractshield/issues"
+  },
+  "keywords": ["api-security", "contract-validation", "json-schema", "cel", "express", "fastify", "middleware"],
+  "files": ["dist"],
+  "dependencies": {
+    "@cshield/pdp": "workspace:*",
+    "@cshield/pep-express": "workspace:*",
+    "@cshield/pep-fastify": "workspace:*",
+    "@cshield/sidecar": "workspace:*",
+    "@cshield/client": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

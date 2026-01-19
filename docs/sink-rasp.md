@@ -17,7 +17,7 @@ Runtime Application Self-Protection (RASP) that intercepts dangerous function ca
 ## Quick Start
 
 ```typescript
-import { initSinkRasp } from '@contractshield/sink-rasp';
+import { initSinkRasp } from '@cshield/sink-rasp';
 
 initSinkRasp({
   licenseKey: process.env.CONTRACTSHIELD_LICENSE_KEY!,
@@ -30,7 +30,7 @@ initSinkRasp({
 ### Full Options
 
 ```typescript
-import { initSinkRasp, SinkRaspOptions } from '@contractshield/sink-rasp';
+import { initSinkRasp, SinkRaspOptions } from '@cshield/sink-rasp';
 
 const options: SinkRaspOptions = {
   // Required: Your license key
@@ -133,7 +133,7 @@ Link RASP events to HTTP requests for better observability:
 
 ```typescript
 import express from 'express';
-import { initSinkRasp, expressContextMiddleware } from '@contractshield/sink-rasp';
+import { initSinkRasp, expressContextMiddleware } from '@cshield/sink-rasp';
 
 const app = express();
 
@@ -154,7 +154,7 @@ initSinkRasp({
 
 ```typescript
 import Fastify from 'fastify';
-import { initSinkRasp, fastifyContextPlugin } from '@contractshield/sink-rasp';
+import { initSinkRasp, fastifyContextPlugin } from '@cshield/sink-rasp';
 
 const fastify = Fastify();
 
@@ -253,7 +253,7 @@ RASP events are logged as structured JSON for SIEM integration:
 ### Custom Logger
 
 ```typescript
-import { configureReporter } from '@contractshield/sink-rasp';
+import { configureReporter } from '@cshield/sink-rasp';
 
 configureReporter({
   logger: (entry) => {
@@ -273,7 +273,7 @@ configureReporter({
 To restore original functions (e.g., for testing):
 
 ```typescript
-import { shutdownSinkRasp } from '@contractshield/sink-rasp';
+import { shutdownSinkRasp } from '@cshield/sink-rasp';
 
 // Or use the instance
 const rasp = initSinkRasp({ ... });

@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction, RequestHandler } from "express";
-import { evaluate, type PolicySet, type Decision } from "@contractshield/pdp";
+import { evaluate, type PolicySet, type Decision } from "@cshield/pdp";
 import { buildRequestContext } from "./context.js";
 import type { ContractShieldOptions, ContractShieldRequest } from "./types.js";
 import fs from "fs";
@@ -11,7 +11,7 @@ import path from "path";
  * @example
  * ```typescript
  * import express from "express";
- * import { contractshield } from "@contractshield/pep-express";
+ * import { contractshield } from "@cshield/pep-express";
  *
  * const app = express();
  * app.use(express.json());

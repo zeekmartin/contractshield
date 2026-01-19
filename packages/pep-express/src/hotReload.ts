@@ -7,7 +7,7 @@ import { watch, type FSWatcher } from "fs";
 import { readFileSync, existsSync } from "fs";
 import { EventEmitter } from "events";
 import { resolve } from "path";
-import type { PolicySet } from "@contractshield/pdp";
+import type { PolicySet } from "@cshield/pdp";
 
 export interface HotReloadOptions {
   /** Enable hot reload (default: true in dev, false in prod) */

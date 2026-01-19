@@ -6,23 +6,23 @@ ContractShield provides adapters for popular Node.js frameworks and a standalone
 
 | Adapter | Package | Use Case |
 |---------|---------|----------|
-| **Express** | `@contractshield/pep-express` | Express.js applications |
-| **Fastify** | `@contractshield/pep-fastify` | Fastify applications |
-| **Sidecar** | `@contractshield/sidecar` | Any language via HTTP |
+| **Express** | `@cshield/pep-express` | Express.js applications |
+| **Fastify** | `@cshield/pep-fastify` | Fastify applications |
+| **Sidecar** | `@cshield/sidecar` | Any language via HTTP |
 
 ## Express Adapter
 
 ### Installation
 
 ```bash
-npm install @contractshield/pep-express
+npm install @cshield/pep-express
 ```
 
 ### Basic Usage
 
 ```typescript
 import express from "express";
-import { contractshield } from "@contractshield/pep-express";
+import { contractshield } from "@cshield/pep-express";
 
 const app = express();
 app.use(express.json());
@@ -81,7 +81,7 @@ app.post("/api/resource", (req, res) => {
 ### Webhook Support
 
 ```typescript
-import { contractshield, rawBodyCapture } from "@contractshield/pep-express";
+import { contractshield, rawBodyCapture } from "@cshield/pep-express";
 
 // Capture raw body BEFORE json parsing
 app.use(rawBodyCapture());
@@ -94,14 +94,14 @@ app.use(contractshield({ policy }));
 ### Installation
 
 ```bash
-npm install @contractshield/pep-fastify
+npm install @cshield/pep-fastify
 ```
 
 ### Basic Usage
 
 ```typescript
 import Fastify from "fastify";
-import { contractshield } from "@contractshield/pep-fastify";
+import { contractshield } from "@cshield/pep-fastify";
 
 const fastify = Fastify({ logger: true });
 
@@ -168,7 +168,7 @@ The sidecar is a standalone HTTP server that exposes the PDP as an API. Use it f
 ### Installation
 
 ```bash
-npm install @contractshield/sidecar
+npm install @cshield/sidecar
 ```
 
 ### Running
@@ -331,8 +331,8 @@ func evaluate(policy, context interface{}) (*EvaluateResponse, error) {
 
 | Scenario | Recommended |
 |----------|-------------|
-| Express.js app | `@contractshield/pep-express` |
-| Fastify app | `@contractshield/pep-fastify` |
+| Express.js app | `@cshield/pep-express` |
+| Fastify app | `@cshield/pep-fastify` |
 | Python/Go/Java/etc | Sidecar |
 | Shared policy evaluation | Sidecar |
 | Maximum performance | Embedded adapter |

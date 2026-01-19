@@ -1,5 +1,5 @@
 import type { Request } from "express";
-import type { RequestContext } from "@contractshield/pdp";
+import type { RequestContext } from "@cshield/pdp";
 import { createHash } from "crypto";
 
 /**

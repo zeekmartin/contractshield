@@ -74,7 +74,7 @@ Webhook signature verification requires access to the raw request body (before J
 
 ```typescript
 import express from "express";
-import { contractshield, rawBodyCapture } from "@contractshield/pep-express";
+import { contractshield, rawBodyCapture } from "@cshield/pep-express";
 
 const app = express();
 
@@ -88,7 +88,7 @@ app.use(contractshield({ policy }));
 
 ```typescript
 import Fastify from "fastify";
-import { contractshield } from "@contractshield/pep-fastify";
+import { contractshield } from "@cshield/pep-fastify";
 
 const fastify = Fastify({
   // Enable raw body access
@@ -105,7 +105,7 @@ ContractShield provides replay protection to prevent attackers from re-sending c
 ### Memory Store (Development)
 
 ```typescript
-import { MemoryReplayStore, evaluate } from "@contractshield/pdp";
+import { MemoryReplayStore, evaluate } from "@cshield/pdp";
 
 const replayStore = new MemoryReplayStore();
 const decision = await evaluate(policy, ctx, { replayStore });
@@ -115,7 +115,7 @@ const decision = await evaluate(policy, ctx, { replayStore });
 
 ```typescript
 import { createClient } from "redis";
-import { createRedisReplayStore, evaluate } from "@contractshield/pdp";
+import { createRedisReplayStore, evaluate } from "@cshield/pdp";
 
 const redis = createClient({ url: process.env.REDIS_URL });
 await redis.connect();
@@ -134,7 +134,7 @@ const decision = await evaluate(policy, ctx, { replayStore });
 You can register custom webhook plugins for providers not included by default.
 
 ```typescript
-import { registerWebhookPlugin, type WebhookPlugin } from "@contractshield/pdp";
+import { registerWebhookPlugin, type WebhookPlugin } from "@cshield/pdp";
 
 const customPlugin: WebhookPlugin = {
   name: "custom-provider",

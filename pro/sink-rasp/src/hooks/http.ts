@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * HTTP Egress Hooks
  * Intercepts http/https requests to prevent SSRF attacks
