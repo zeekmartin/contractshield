@@ -15,10 +15,10 @@
     "learning-mode"
   ],
   "dependencies": {
-    "@cshield/core": "^1.5.0",
-    "@cshield/sink-rasp": "^1.5.0",
+    "@cshield/core": "workspace:*",
+    "@cshield/sink-rasp": "workspace:*",
     "@cshield/learning": "workspace:*",
-    "@cshield/license-online": "^1.5.0"
+    "@cshield/license-online": "workspace:*"
   },
   "engines": {
     "node": ">=18.0.0"
