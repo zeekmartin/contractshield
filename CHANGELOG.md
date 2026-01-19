@@ -7,6 +7,63 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-01-19
+
+### Added
+
+- **Learning Mode Pro** (`@contractshield/learning`) - Commercial
+  - **Collector with Fixed-Rate Sampling**
+    - Configurable sample rate (0.0-1.0, default: 10%)
+    - Route exclusion patterns
+    - Response metadata capture (status, latency)
+
+  - **Automatic Sensitive Data Redaction**
+    - Built-in patterns: password, token, apikey, credit card, SSN, etc.
+    - Custom field patterns via `redactFields` config
+    - Header filtering (removes Authorization, Cookie, etc.)
+
+  - **File-Based Storage** (v1 backend)
+    - Gzip compression for efficiency
+    - Optional AES-256-GCM encryption (OFF by default)
+    - Configurable TTL and max samples per route
+    - Automatic purge of expired samples
+
+  - **Schema Inference Analyzer**
+    - Infers JSON Schema from observed traffic
+    - Type detection: string, integer, number, boolean, array, object
+    - Required field detection based on occurrence
+    - Confidence scores based on type consistency
+
+  - **Invariant Discovery Analyzer**
+    - Tenant binding detection (identity.tenant == body.field)
+    - Subset relationships (field values within observed set)
+    - Format patterns (email, UUID, ISO date)
+    - Generates CEL expressions with confidence
+
+  - **Vulnerability Pattern Analyzer**
+    - Prototype pollution detection
+    - Path traversal detection
+    - SSRF attempt detection (internal IPs, metadata endpoints)
+    - NoSQL injection detection (MongoDB operators)
+    - Command injection detection (shell metacharacters)
+
+  - **Suggestion Generator**
+    - Converts analysis to actionable ContractShield rules
+    - Severity classification (critical, high, medium, low)
+    - Confidence-based filtering
+    - YAML and JSON output formats
+
+  - **CLI Commands**
+    - `contractshield-learn status` - Show learning status
+    - `contractshield-learn analyze` - Run analyzers on samples
+    - `contractshield-learn suggest` - Generate rule suggestions
+    - `contractshield-learn clear` - Clear all samples
+    - `contractshield-learn purge` - Remove expired samples
+
+### Changed
+
+- Updated ROADMAP with v1.5 Learning Mode implementation
+
 ## [1.2.0] - 2026-01-19
 
 ### Added
