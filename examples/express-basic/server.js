@@ -15,7 +15,7 @@
  *     -d '{"tenantId": "t-1", "licenseKey": "XXX"}'
  */
 import express from "express";
-import { evaluate } from "../../packages/pdp/dist/index.js";
+import { evaluate } from "@cshield/pdp";
 import fs from "fs";
 const app = express();
 app.use(express.json());
