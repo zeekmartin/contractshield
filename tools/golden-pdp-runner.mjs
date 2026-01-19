@@ -1,4 +1,16 @@
 #!/usr/bin/env node
+/**
+ * Golden PDP Runner - Tests PDP against fixtures-v2/
+ *
+ * Usage:
+ *   node tools/golden-pdp-runner.mjs
+ *
+ * Environment:
+ *   POLICY_FILE - Path to policy file (default: policy/policy.example.yaml)
+ *   GOLDEN_MODE - enforce or monitor (default: enforce)
+ *   STRIPE_WEBHOOK_SECRET - Secret for Stripe webhook tests
+ */
+
 import fs from "fs";
 import path from "path";
 import yaml from "yaml";
@@ -7,10 +19,47 @@ import { fileSchemaLoader } from "./schemaLoader.mjs";
 
 const require = createRequire(import.meta.url);
 const ROOT = process.cwd();
+const FIXTURES_DIR = path.join(ROOT, "fixtures-v2");
 
-function readJson(p) {
-  return JSON.parse(fs.readFileSync(p, "utf8"));
+// ============== Template Expansion (from loader.mjs) ==============
+
+function parseYamlFile(filePath) {
+  return yaml.parse(fs.readFileSync(filePath, "utf8"));
 }
+
+function deepMerge(target, source) {
+  const result = { ...target };
+  for (const key of Object.keys(source)) {
+    if (source[key] === null) {
+      result[key] = null;
+    } else if (Array.isArray(source[key])) {
+      result[key] = [...source[key]];
+    } else if (typeof source[key] === "object" && typeof result[key] === "object" && !Array.isArray(result[key])) {
+      result[key] = deepMerge(result[key], source[key]);
+    } else {
+      result[key] = source[key];
+    }
+  }
+  return result;
+}
+
+function loadTemplate(name) {
+  const templatePath = path.join(FIXTURES_DIR, "templates", `${name}.yaml`);
+  if (!fs.existsSync(templatePath)) {
+    throw new Error(`Template not found: ${name}`);
+  }
+  return parseYamlFile(templatePath);
+}
+
+function expandFixture(fixturePath) {
+  const fixture = parseYamlFile(fixturePath);
+  const templateName = fixture._template || "api-request";
+  delete fixture._template;
+  const template = loadTemplate(templateName);
+  return deepMerge(template, fixture);
+}
+
+// ============== Utility Functions ==============
 
 function exists(rel) {
   return fs.existsSync(path.join(ROOT, rel));
@@ -99,17 +148,28 @@ function makeOpts(MemoryReplayStore) {
   };
 }
 
-function resolveExpectedPath(ctxId) {
-  const expDir = path.join(ROOT, "fixtures", "expected");
-  const primary = path.join(expDir, `${ctxId}.decision.json`);
-  if (fs.existsSync(primary)) return primary;
+// ============== Fixture Discovery ==============
 
-  const fallbackId = ctxId.replace(/-\d+$/, "");
-  const fallback = path.join(expDir, `${fallbackId}.decision.json`);
-  if (fallbackId !== ctxId && fs.existsSync(fallback)) return fallback;
-
-  return primary;
+function findFixtures(dir, files = []) {
+  const items = fs.readdirSync(dir, { withFileTypes: true });
+  for (const item of items) {
+    const fullPath = path.join(dir, item.name);
+    if (item.isDirectory()) {
+      findFixtures(fullPath, files);
+    } else if (item.name.endsWith(".yaml")) {
+      files.push(fullPath);
+    }
+  }
+  return files;
 }
+
+function resolveExpectedPath(ctxPath) {
+  // contexts/nominal/api-basic.yaml -> expected/nominal/api-basic.yaml
+  const relative = path.relative(path.join(FIXTURES_DIR, "contexts"), ctxPath);
+  return path.join(FIXTURES_DIR, "expected", relative);
+}
+
+// ============== Main ==============
 
 async function main() {
   const pdpDist = path.join(ROOT, "packages", "pdp", "dist", "index.js");
@@ -122,45 +182,54 @@ async function main() {
 
   const policy = loadPolicy();
 
-  const ctxDir = path.join(ROOT, "fixtures", "contexts");
-  const ctxFiles = fs.readdirSync(ctxDir).filter(f => f.endsWith(".json")).sort();
-  if (ctxFiles.length === 0) {
+  const ctxDir = path.join(FIXTURES_DIR, "contexts");
+  if (!fs.existsSync(ctxDir)) {
     console.error(`No fixtures found in ${ctxDir}`);
     process.exit(2);
   }
 
+  const ctxFiles = findFixtures(ctxDir).sort();
+  if (ctxFiles.length === 0) {
+    console.error(`No YAML fixtures found in ${ctxDir}`);
+    process.exit(2);
+  }
+
   const opts = makeOpts(MemoryReplayStore);
+  let passed = 0;
   let failed = 0;
 
-  for (const file of ctxFiles) {
-    const ctx = readJson(path.join(ctxDir, file));
+  for (const ctxPath of ctxFiles) {
+    const relativePath = path.relative(FIXTURES_DIR, ctxPath);
+    const ctx = expandFixture(ctxPath);
+
     if (!ctx.id) {
-      console.error(`Fixture missing ctx.id: ${file}`);
-      failed++;
+      console.error(`SKIP: ${relativePath} - missing ctx.id`);
       continue;
     }
 
-    const expPath = resolveExpectedPath(ctx.id);
+    const expPath = resolveExpectedPath(ctxPath);
     if (!fs.existsSync(expPath)) {
-      console.error(`Missing expected decision: ${expPath}`);
+      console.error(`SKIP: ${relativePath} - missing expected: ${path.relative(FIXTURES_DIR, expPath)}`);
       failed++;
       continue;
     }
 
-    const expected = readJson(expPath);
+    const expected = expandFixture(expPath);
     const actual = await evaluate(policy, ctx, opts);
 
     if (JSON.stringify(pick(actual)) !== JSON.stringify(pick(expected))) {
       failed++;
-      console.error(`\nFAIL: ${ctx.id}`);
+      console.error(`FAIL: ${ctx.id}`);
       console.error(diff(expected, actual));
     } else {
+      passed++;
       console.log(`PASS: ${ctx.id}`);
     }
   }
 
+  console.log(`\n${passed} passed, ${failed} failed`);
+
   if (failed > 0) {
-    console.error(`\n${failed} test(s) failed.`);
     process.exit(1);
   }
 
