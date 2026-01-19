@@ -1,10 +1,10 @@
-# Fixtures v2 - Format Compact YAML
+# Fixtures - Format Compact YAML
 
-Ce dossier contient un prototype de format de fixtures simplifié utilisant YAML avec héritage de templates.
+Ce dossier contient les fixtures de test utilisant YAML avec héritage de templates.
 
 ## Motivation
 
-Les fixtures JSON originales sont verbeux (~50 lignes par cas de test) avec beaucoup de duplication. Ce format réduit la verbosité de **~70%** tout en améliorant la lisibilité.
+Le format YAML avec templates réduit la verbosité de **~70%** par rapport au JSON tout en améliorant la lisibilité.
 
 ## Structure
 
@@ -88,14 +88,6 @@ _template: webhook-stripe  # Hérite de templates/webhook-stripe.yaml
 ```
 
 Si omis, utilise `api-request` pour les contextes.
-
-## Migration
-
-Pour migrer les fixtures existantes vers ce format :
-
-1. Identifier les champs qui diffèrent du template
-2. Créer un fichier YAML avec seulement les overrides
-3. Valider avec `node loader.mjs <file>.yaml | diff - <original>.json`
 
 ## Avantages
 

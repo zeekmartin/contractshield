@@ -201,7 +201,6 @@ Fixture Loader - Expands compact YAML fixtures into full JSON
 Usage:
   node fixtures-v2/loader.mjs <fixture.yaml>           Print expanded JSON
   node fixtures-v2/loader.mjs --all                    Expand all fixtures
-  node fixtures-v2/loader.mjs --compare                Compare old vs new format
 
 Examples:
   node fixtures-v2/loader.mjs contexts/nominal/api-basic.yaml
@@ -234,55 +233,6 @@ if (args.includes('--all')) {
   processDir(contextsDir, 'context');
   console.log('\n=== EXPECTED ===');
   processDir(expectedDir, 'expected');
-
-} else if (args.includes('--compare')) {
-  // Compare line counts
-  const oldContexts = fs.readdirSync(path.join(__dirname, '..', 'fixtures', 'contexts'))
-    .filter(f => f.endsWith('.json'))
-    .reduce((sum, f) => {
-      const content = fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'contexts', f), 'utf8');
-      return sum + content.split('\n').length;
-    }, 0);
-
-  const oldExpected = fs.readdirSync(path.join(__dirname, '..', 'fixtures', 'expected'))
-    .filter(f => f.endsWith('.json'))
-    .reduce((sum, f) => {
-      const content = fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'expected', f), 'utf8');
-      return sum + content.split('\n').length;
-    }, 0);
-
-  const countYamlLines = (dir) => {
-    let total = 0;
-    const items = fs.readdirSync(dir, { withFileTypes: true });
-    for (const item of items) {
-      const itemPath = path.join(dir, item.name);
-      if (item.isDirectory()) {
-        total += countYamlLines(itemPath);
-      } else if (item.name.endsWith('.yaml')) {
-        total += fs.readFileSync(itemPath, 'utf8').split('\n').length;
-      }
-    }
-    return total;
-  };
-
-  const newContexts = countYamlLines(path.join(__dirname, 'contexts'));
-  const newExpected = countYamlLines(path.join(__dirname, 'expected'));
-  const templates = countYamlLines(path.join(__dirname, 'templates'));
-
-  console.log('Line count comparison:');
-  console.log('');
-  console.log('OLD FORMAT (JSON):');
-  console.log(`  Contexts:  ${oldContexts} lines`);
-  console.log(`  Expected:  ${oldExpected} lines`);
-  console.log(`  Total:     ${oldContexts + oldExpected} lines`);
-  console.log('');
-  console.log('NEW FORMAT (YAML + templates):');
-  console.log(`  Templates: ${templates} lines (shared)`);
-  console.log(`  Contexts:  ${newContexts} lines`);
-  console.log(`  Expected:  ${newExpected} lines`);
-  console.log(`  Total:     ${templates + newContexts + newExpected} lines`);
-  console.log('');
-  console.log(`Reduction:   ${Math.round((1 - (templates + newContexts + newExpected) / (oldContexts + oldExpected)) * 100)}%`);
 
 } else {
   // Single file
