@@ -1,0 +1,47 @@
+{
+  "name": "@contractshield/learning",
+  "version": "1.5.0",
+  "private": true,
+  "description": "ContractShield Pro - Learning Mode for automatic rule suggestions",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "contractshield-learn": "./dist/cli/index.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "license": "SEE LICENSE IN ../LICENSE",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@contractshield/license": "workspace:*",
+    "commander": "^11.0.0",
+    "yaml": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "typescript": "^5.5.4",
+    "vitest": "^1.6.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "keywords": [
+    "security",
+    "learning",
+    "api",
+    "rules",
+    "inference"
+  ]
+}

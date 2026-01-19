@@ -1,6 +1,6 @@
 # Roadmap – ContractShield
 
-Last updated: 2026-01-17
+Last updated: 2026-01-19
 
 ---
 
@@ -135,7 +135,22 @@ Requête entrante
 
 ---
 
-## v1.2 — SQL + Eval Hooks (Planned)
+## v1.2 — LemonSqueezy License Integration ✅
+
+**Objectif** : Intégration avec LemonSqueezy pour la gestion des licences.
+
+- [x] `@contractshield/license-online` package
+- [x] Validation en ligne via API LemonSqueezy
+- [x] Cache licence 24h (~/.contractshield/)
+- [x] Graceful degradation (OSS mode si réseau indisponible)
+- [x] Activation tracking (limite d'instances)
+- [x] Feature gating avec prompts d'upgrade
+- [x] Documentation interne (`docs/internal/licensing.md`)
+- [x] Documentation export (`DOCUMENTATION_EXPORT.md`)
+
+---
+
+## v1.3 — SQL + Eval Hooks (Planned)
 
 - [ ] SQL hooks (mysql, pg, mysql2)
 - [ ] SQL injection analyzer
@@ -144,12 +159,44 @@ Requête entrante
 
 ---
 
-## v1.3 — Policy Packs (Planned)
+## v1.4 — Policy Packs (Planned)
 
 - [ ] Policy pack : `@contractshield/pack-api-basics`
 - [ ] Policy pack : `@contractshield/pack-stripe-webhook`
 - [ ] Egress controls (declared URL fields, destination allowlists)
 - [ ] Workflow counters (sequence + quotas)
+
+---
+
+## v1.5 — Learning Mode Pro ✅
+
+**Objectif** : Observer le trafic et suggérer automatiquement des règles.
+
+### Architecture
+- [x] `@contractshield/learning` package (Commercial)
+- [x] Collector with fixed-rate sampling (v1: no adaptive)
+- [x] Redactor automatique (données sensibles)
+- [x] Storage: File only (v1 simplification)
+
+### Analyseurs
+- [x] Schema inference (JSON Schema auto-généré)
+- [ ] Range detection (min/max/p99 des champs numériques) — v1.6
+- [x] Invariant discovery (tenant binding, formats)
+- [ ] Anomaly detection (outliers, patterns suspects) — v1.6
+- [x] Vulnerability scanning (attaques dans le trafic)
+
+### Output
+- [x] Générateur de suggestions YAML/JSON
+- [x] Scores de confiance
+- [x] CLI: `contractshield-learn status|analyze|suggest|clear|purge`
+
+### Sécurité
+- [x] Chiffrement AES-256-GCM au repos (optionnel, OFF par défaut)
+- [x] Auto-purge avec TTL configurable
+- [x] Limites de stockage (quotas par route)
+- [ ] Audit trail des opérations — v1.6
+
+**Voir:** `docs/internal/prompt5-learning-mode-analysis.md`
 
 ---
 
@@ -180,22 +227,21 @@ Requête entrante
 - gRPC adapter
 - ReDoS detection (regex complexity analysis)
 - Policy marketplace
-- Learn mode (observer le trafic, suggérer des règles)
 
 ---
 
 ## Couverture des attaques par version
 
-| Attaque | v0.1 | v0.2 | v1.0 | v1.1 |
-|---------|------|------|------|------|
-| Mass assignment | ✅ Contract | ✅ | ✅ | ✅ |
-| Schema violation | ✅ Contract | ✅ | ✅ | ✅ |
-| IDOR / cross-tenant | ✅ CEL invariants | ✅ | ✅ | ✅ |
-| Webhook spoofing | ✅ Signature | ✅ | ✅ | ✅ |
-| Prototype pollution | ❌ | ✅ Check | ✅ | ✅ |
-| Path traversal | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink |
-| SSRF | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink |
-| Command injection | ❌ | ⚠️ Opt-in | ✅ + Sink | ✅ + Sink |
-| NoSQL injection | ❌ | ⚠️ Opt-in | ✅ | ✅ |
-| SQL injection | ❌ | ❌ | ❌ | v1.2 |
-| Template injection | ❌ | ❌ | ❌ | v1.2 |
+| Attaque | v0.1 | v0.2 | v1.0 | v1.1 | v1.2 |
+|---------|------|------|------|------|------|
+| Mass assignment | ✅ Contract | ✅ | ✅ | ✅ | ✅ |
+| Schema violation | ✅ Contract | ✅ | ✅ | ✅ | ✅ |
+| IDOR / cross-tenant | ✅ CEL invariants | ✅ | ✅ | ✅ | ✅ |
+| Webhook spoofing | ✅ Signature | ✅ | ✅ | ✅ | ✅ |
+| Prototype pollution | ❌ | ✅ Check | ✅ | ✅ | ✅ |
+| Path traversal | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink | ✅ + Sink |
+| SSRF | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink | ✅ + Sink |
+| Command injection | ❌ | ⚠️ Opt-in | ✅ + Sink | ✅ + Sink | ✅ + Sink |
+| NoSQL injection | ❌ | ⚠️ Opt-in | ✅ | ✅ | ✅ |
+| SQL injection | ❌ | ❌ | ❌ | ❌ | v1.3 |
+| Template injection | ❌ | ❌ | ❌ | ❌ | v1.3 |

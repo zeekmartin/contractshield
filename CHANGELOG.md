@@ -7,6 +7,97 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-01-19
+
+### Added
+
+- **Learning Mode Pro** (`@contractshield/learning`) - Commercial
+  - **Collector with Fixed-Rate Sampling**
+    - Configurable sample rate (0.0-1.0, default: 10%)
+    - Route exclusion patterns
+    - Response metadata capture (status, latency)
+
+  - **Automatic Sensitive Data Redaction**
+    - Built-in patterns: password, token, apikey, credit card, SSN, etc.
+    - Custom field patterns via `redactFields` config
+    - Header filtering (removes Authorization, Cookie, etc.)
+
+  - **File-Based Storage** (v1 backend)
+    - Gzip compression for efficiency
+    - Optional AES-256-GCM encryption (OFF by default)
+    - Configurable TTL and max samples per route
+    - Automatic purge of expired samples
+
+  - **Schema Inference Analyzer**
+    - Infers JSON Schema from observed traffic
+    - Type detection: string, integer, number, boolean, array, object
+    - Required field detection based on occurrence
+    - Confidence scores based on type consistency
+
+  - **Invariant Discovery Analyzer**
+    - Tenant binding detection (identity.tenant == body.field)
+    - Subset relationships (field values within observed set)
+    - Format patterns (email, UUID, ISO date)
+    - Generates CEL expressions with confidence
+
+  - **Vulnerability Pattern Analyzer**
+    - Prototype pollution detection
+    - Path traversal detection
+    - SSRF attempt detection (internal IPs, metadata endpoints)
+    - NoSQL injection detection (MongoDB operators)
+    - Command injection detection (shell metacharacters)
+
+  - **Suggestion Generator**
+    - Converts analysis to actionable ContractShield rules
+    - Severity classification (critical, high, medium, low)
+    - Confidence-based filtering
+    - YAML and JSON output formats
+
+  - **CLI Commands**
+    - `contractshield-learn status` - Show learning status
+    - `contractshield-learn analyze` - Run analyzers on samples
+    - `contractshield-learn suggest` - Generate rule suggestions
+    - `contractshield-learn clear` - Clear all samples
+    - `contractshield-learn purge` - Remove expired samples
+
+### Changed
+
+- Updated ROADMAP with v1.5 Learning Mode implementation
+
+## [1.2.0] - 2026-01-19
+
+### Added
+
+- **LemonSqueezy Online License Validation** (`@contractshield/license-online`) - Commercial
+  - Online validation via LemonSqueezy API
+  - 24-hour license cache with secure storage (~/.contractshield/)
+  - Graceful degradation to OSS mode on network failure
+  - Instance activation tracking (limit enforcement)
+  - `validateLicense()` - Async validation with caching
+  - `deactivateLicense()` - Remove instance activation
+  - `checkFeature()` - Verify feature availability
+  - `gateFeature()` - Gate Pro features with warning on unavailable
+  - Cache utilities: `clearCache()`, `clearAllCaches()`, `getCacheStats()`
+
+- **Internal Licensing Documentation** (`docs/internal/licensing.md`)
+  - Architecture overview with flowcharts
+  - LemonSqueezy setup guide
+  - Enterprise license generation
+  - Troubleshooting guide
+  - Files to keep private
+
+- **Comprehensive Documentation Export** (`DOCUMENTATION_EXPORT.md`)
+  - Complete API reference for all packages
+  - Configuration options and environment variables
+  - Contract format documentation (JSON Schema, CEL)
+  - Complete examples (Express, Fastify, E-commerce)
+  - Deployment patterns guide
+
+### Changed
+
+- Renamed all remaining "Guardrails" references to "ContractShield"
+- Updated internal documentation structure
+
 ## [1.1.0] - 2026-01-17
 
 ### Added
