@@ -1,6 +1,6 @@
 # Roadmap – ContractShield
 
-Last updated: 2026-01-17
+Last updated: 2026-01-19
 
 ---
 
@@ -135,7 +135,22 @@ Requête entrante
 
 ---
 
-## v1.2 — SQL + Eval Hooks (Planned)
+## v1.2 — LemonSqueezy License Integration ✅
+
+**Objectif** : Intégration avec LemonSqueezy pour la gestion des licences.
+
+- [x] `@contractshield/license-online` package
+- [x] Validation en ligne via API LemonSqueezy
+- [x] Cache licence 24h (~/.contractshield/)
+- [x] Graceful degradation (OSS mode si réseau indisponible)
+- [x] Activation tracking (limite d'instances)
+- [x] Feature gating avec prompts d'upgrade
+- [x] Documentation interne (`docs/internal/licensing.md`)
+- [x] Documentation export (`DOCUMENTATION_EXPORT.md`)
+
+---
+
+## v1.3 — SQL + Eval Hooks (Planned)
 
 - [ ] SQL hooks (mysql, pg, mysql2)
 - [ ] SQL injection analyzer
@@ -144,7 +159,7 @@ Requête entrante
 
 ---
 
-## v1.3 — Policy Packs (Planned)
+## v1.4 — Policy Packs (Planned)
 
 - [ ] Policy pack : `@contractshield/pack-api-basics`
 - [ ] Policy pack : `@contractshield/pack-stripe-webhook`
@@ -186,16 +201,16 @@ Requête entrante
 
 ## Couverture des attaques par version
 
-| Attaque | v0.1 | v0.2 | v1.0 | v1.1 |
-|---------|------|------|------|------|
-| Mass assignment | ✅ Contract | ✅ | ✅ | ✅ |
-| Schema violation | ✅ Contract | ✅ | ✅ | ✅ |
-| IDOR / cross-tenant | ✅ CEL invariants | ✅ | ✅ | ✅ |
-| Webhook spoofing | ✅ Signature | ✅ | ✅ | ✅ |
-| Prototype pollution | ❌ | ✅ Check | ✅ | ✅ |
-| Path traversal | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink |
-| SSRF | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink |
-| Command injection | ❌ | ⚠️ Opt-in | ✅ + Sink | ✅ + Sink |
-| NoSQL injection | ❌ | ⚠️ Opt-in | ✅ | ✅ |
-| SQL injection | ❌ | ❌ | ❌ | v1.2 |
-| Template injection | ❌ | ❌ | ❌ | v1.2 |
+| Attaque | v0.1 | v0.2 | v1.0 | v1.1 | v1.2 |
+|---------|------|------|------|------|------|
+| Mass assignment | ✅ Contract | ✅ | ✅ | ✅ | ✅ |
+| Schema violation | ✅ Contract | ✅ | ✅ | ✅ | ✅ |
+| IDOR / cross-tenant | ✅ CEL invariants | ✅ | ✅ | ✅ | ✅ |
+| Webhook spoofing | ✅ Signature | ✅ | ✅ | ✅ | ✅ |
+| Prototype pollution | ❌ | ✅ Check | ✅ | ✅ | ✅ |
+| Path traversal | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink | ✅ + Sink |
+| SSRF | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink | ✅ + Sink |
+| Command injection | ❌ | ⚠️ Opt-in | ✅ + Sink | ✅ + Sink | ✅ + Sink |
+| NoSQL injection | ❌ | ⚠️ Opt-in | ✅ | ✅ | ✅ |
+| SQL injection | ❌ | ❌ | ❌ | ❌ | v1.3 |
+| Template injection | ❌ | ❌ | ❌ | ❌ | v1.3 |

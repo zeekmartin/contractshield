@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-01-19
+
+### Added
+
+- **LemonSqueezy Online License Validation** (`@contractshield/license-online`) - Commercial
+  - Online validation via LemonSqueezy API
+  - 24-hour license cache with secure storage (~/.contractshield/)
+  - Graceful degradation to OSS mode on network failure
+  - Instance activation tracking (limit enforcement)
+  - `validateLicense()` - Async validation with caching
+  - `deactivateLicense()` - Remove instance activation
+  - `checkFeature()` - Verify feature availability
+  - `gateFeature()` - Gate Pro features with warning on unavailable
+  - Cache utilities: `clearCache()`, `clearAllCaches()`, `getCacheStats()`
+
+- **Internal Licensing Documentation** (`docs/internal/licensing.md`)
+  - Architecture overview with flowcharts
+  - LemonSqueezy setup guide
+  - Enterprise license generation
+  - Troubleshooting guide
+  - Files to keep private
+
+- **Comprehensive Documentation Export** (`DOCUMENTATION_EXPORT.md`)
+  - Complete API reference for all packages
+  - Configuration options and environment variables
+  - Contract format documentation (JSON Schema, CEL)
+  - Complete examples (Express, Fastify, E-commerce)
+  - Deployment patterns guide
+
+### Changed
+
+- Renamed all remaining "Guardrails" references to "ContractShield"
+- Updated internal documentation structure
+
 ## [1.1.0] - 2026-01-17
 
 ### Added
