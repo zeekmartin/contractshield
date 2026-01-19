@@ -168,6 +168,38 @@ Requête entrante
 
 ---
 
+## v1.5 — Learning Mode Pro (Planned)
+
+**Objectif** : Observer le trafic et suggérer automatiquement des règles.
+
+### Architecture
+- [ ] `@contractshield/learning` package (Commercial)
+- [ ] Collector asynchrone avec sampling adaptatif
+- [ ] Redactor automatique (données sensibles)
+- [ ] Storage: File (encrypted), Memory, Redis
+
+### Analyseurs
+- [ ] Schema inference (JSON Schema auto-généré)
+- [ ] Range detection (min/max/p99 des champs numériques)
+- [ ] Invariant discovery (tenant binding, calculs)
+- [ ] Anomaly detection (outliers, patterns suspects)
+- [ ] Vulnerability scanning (attaques dans le trafic)
+
+### Output
+- [ ] Générateur de suggestions YAML/JSON
+- [ ] Scores de confiance
+- [ ] CLI: `contractshield-learn start|status|analyze|suggest|apply`
+
+### Sécurité
+- [ ] Chiffrement AES-256-GCM au repos
+- [ ] Auto-purge avec TTL configurable
+- [ ] Limites de stockage (quotas par route)
+- [ ] Audit trail des opérations
+
+**Voir:** `docs/internal/prompt5-learning-mode-analysis.md`
+
+---
+
 ## v2.0+ — Enterprise (Planned)
 
 ### Portability
@@ -195,7 +227,6 @@ Requête entrante
 - gRPC adapter
 - ReDoS detection (regex complexity analysis)
 - Policy marketplace
-- Learn mode (observer le trafic, suggérer des règles)
 
 ---
 
