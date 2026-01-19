@@ -16,11 +16,11 @@
     "cel"
   ],
   "dependencies": {
-    "@cshield/pdp": "^1.5.0",
-    "@cshield/pep-express": "^1.5.0",
-    "@cshield/pep-fastify": "^1.5.0",
-    "@cshield/sidecar": "^1.5.0",
-    "@cshield/client": "^1.5.0"
+    "@cshield/pdp": "workspace:*",
+    "@cshield/pep-express": "workspace:*",
+    "@cshield/pep-fastify": "workspace:*",
+    "@cshield/sidecar": "workspace:*",
+    "@cshield/client": "workspace:*"
   },
   "engines": {
     "node": ">=18.0.0"

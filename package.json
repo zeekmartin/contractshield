@@ -4,11 +4,12 @@
   "workspaces": [
     "packages/*",
     "pro/*",
-    "tools/*"
+    "tools/*",
+    "examples/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
     "golden-test": "node tools/golden-pdp-runner.mjs"
   },
   "devDependencies": {

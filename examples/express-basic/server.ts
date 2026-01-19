@@ -16,7 +16,7 @@
  */
 
 import express from "express";
-import { evaluate, type PolicySet, type RequestContext } from "../../packages/pdp/dist/index.js";
+import { evaluate, type PolicySet, type RequestContext, type RuleHit } from "@cshield/pdp";
 import fs from "fs";
 
 const app = express();
@@ -84,7 +84,7 @@ app.use(async (req, res, next) => {
   const emoji = decision.action === "ALLOW" ? "✓" : decision.action === "BLOCK" ? "✗" : "⚠";
   console.log(
     `[contractshield] ${emoji} ${decision.action} ${req.method} ${req.path}`,
-    decision.ruleHits?.length ? `(${decision.ruleHits.map((h) => h.id).join(", ")})` : ""
+    decision.ruleHits?.length ? `(${decision.ruleHits.map((h: RuleHit) => h.id).join(", ")})` : ""
   );
 
   // Enforce
@@ -92,7 +92,7 @@ app.use(async (req, res, next) => {
     return res.status(decision.statusCode).json({
       error: "Request blocked by policy",
       reason: decision.reason,
-      ruleHits: decision.ruleHits?.map((h) => h.id),
+      ruleHits: decision.ruleHits?.map((h: RuleHit) => h.id),
     });
   }
 
