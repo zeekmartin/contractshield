@@ -4,7 +4,8 @@
   "workspaces": [
     "packages/*",
     "pro/*",
-    "tools/*"
+    "tools/*",
+    "examples/*"
   ],
   "scripts": {
     "build": "pnpm -r build",
