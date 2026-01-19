@@ -41,8 +41,8 @@ The PDP runs in-process with your application.
 
 ```typescript
 import express from "express";
-import { contractshield } from "@contractshield/pep-express";
-import { MemoryReplayStore } from "@contractshield/pdp";
+import { contractshield } from "@cshield/pep-express";
+import { MemoryReplayStore } from "@cshield/pdp";
 
 const app = express();
 
@@ -62,7 +62,7 @@ Enable automatic policy reloading without restart:
 
 ```typescript
 import express from "express";
-import { contractshield } from "@contractshield/pep-express";
+import { contractshield } from "@cshield/pep-express";
 
 const app = express();
 
@@ -255,7 +255,7 @@ A shared PDP service for multiple applications.
 The client SDK provides caching, retry, and failover for resilience:
 
 ```typescript
-import { ContractShieldClient } from '@contractshield/client';
+import { ContractShieldClient } from '@cshield/client';
 
 const client = new ContractShieldClient({
   url: 'http://contractshield-service:3100',

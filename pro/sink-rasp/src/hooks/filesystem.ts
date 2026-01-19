@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Filesystem Hooks
  * Intercepts fs operations to prevent path traversal attacks

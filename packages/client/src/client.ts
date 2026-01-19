@@ -4,7 +4,7 @@
  */
 
 import { LRUCache } from "lru-cache";
-import type { RequestContext, Decision } from "@contractshield/pdp";
+import type { RequestContext, Decision } from "@cshield/pdp";
 
 export interface ClientOptions {
   /** HTTP URL of the ContractShield service */
@@ -63,10 +63,12 @@ export interface CacheStats {
 }
 
 const DEFAULT_FAILOPEN_DECISION: Decision = {
+  version: "0.1",
   action: "ALLOW",
+  statusCode: 200,
   reason: "Failover: ContractShield service unavailable",
   ruleHits: [],
-  risk: { score: 0, level: "unknown" },
+  risk: { score: 0, level: "none" },
 };
 
 /**

@@ -5,7 +5,7 @@
  *
  * @example
  * ```typescript
- * import { validateLicense, gateFeature } from '@contractshield/license-online';
+ * import { validateLicense, gateFeature } from '@cshield/license-online';
  *
  * const result = await validateLicense({
  *   licenseKey: process.env.CONTRACTSHIELD_LICENSE_KEY,

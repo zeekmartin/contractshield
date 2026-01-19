@@ -1,6 +1,6 @@
 import type { FastifyPluginAsync, FastifyRequest, FastifyReply } from "fastify";
 import fp from "fastify-plugin";
-import { evaluate, type PolicySet, type Decision } from "@contractshield/pdp";
+import { evaluate, type PolicySet, type Decision } from "@cshield/pdp";
 import { buildRequestContext } from "./context.js";
 import type { ContractShieldOptions } from "./types.js";
 import fs from "fs";
@@ -12,7 +12,7 @@ import path from "path";
  * @example
  * ```typescript
  * import Fastify from "fastify";
- * import { contractshield } from "@contractshield/pep-fastify";
+ * import { contractshield } from "@cshield/pep-fastify";
  *
  * const fastify = Fastify();
  *
@@ -201,7 +201,7 @@ function logDecision(decision: Decision, request: FastifyRequest, fastify: any):
  */
 export const contractshield = fp(contractshieldPlugin, {
   fastify: "4.x || 5.x",
-  name: "@contractshield/pep-fastify",
+  name: "@cshield/pep-fastify",
 });
 
 export default contractshield;

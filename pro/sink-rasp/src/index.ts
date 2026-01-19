@@ -14,7 +14,7 @@
  * @license Commercial - See ../LICENSE
  */
 
-import { requireLicense } from "@contractshield/license";
+import { requireLicense } from "@cshield/license";
 import { installHooks, uninstallHooks, getOptions, isInstalled } from "./interceptor.js";
 import { analyzeCommand } from "./analyzers/commandAnalyzer.js";
 import { analyzePath } from "./analyzers/pathAnalyzer.js";
@@ -38,7 +38,7 @@ let initialized = false;
  *
  * @example
  * ```typescript
- * import { initSinkRasp } from '@contractshield/sink-rasp';
+ * import { initSinkRasp } from '@cshield/sink-rasp';
  *
  * initSinkRasp({
  *   licenseKey: process.env.CONTRACTSHIELD_LICENSE_KEY,

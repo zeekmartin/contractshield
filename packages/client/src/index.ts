@@ -9,7 +9,7 @@
  *
  * @example
  * ```typescript
- * import { ContractShieldClient } from '@contractshield/client';
+ * import { ContractShieldClient } from '@cshield/client';
  *
  * const client = new ContractShieldClient({
  *   url: 'http://localhost:3100',
@@ -24,4 +24,4 @@
 export { ContractShieldClient, type ClientOptions, type CacheStats } from "./client.js";
 
 // Re-export types from PDP for convenience
-export type { Decision, RequestContext, PolicySet } from "@contractshield/pdp";
+export type { Decision, RequestContext, PolicySet } from "@cshield/pdp";

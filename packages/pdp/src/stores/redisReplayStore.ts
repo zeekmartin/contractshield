@@ -37,7 +37,7 @@ export interface RedisReplayStoreOptions {
  * @example
  * ```typescript
  * import { createClient } from 'redis';
- * import { createRedisReplayStore } from '@contractshield/pdp';
+ * import { createRedisReplayStore } from '@cshield/pdp';
  *
  * const redisClient = createClient({ url: process.env.REDIS_URL });
  * await redisClient.connect();

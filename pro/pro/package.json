@@ -1,0 +1,38 @@
+{
+  "name": "@cshield/pro",
+  "version": "1.5.0",
+  "description": "ContractShield Pro - Advanced API security with RASP and Learning Mode",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "SEE LICENSE IN LICENSE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zeekmartin/contractshield.git",
+    "directory": "pro/pro"
+  },
+  "homepage": "https://contractshield.dev",
+  "bugs": {
+    "url": "https://github.com/zeekmartin/contractshield/issues"
+  },
+  "keywords": ["api-security", "rasp", "learning-mode", "enterprise-security"],
+  "files": ["dist", "LICENSE"],
+  "dependencies": {
+    "@cshield/core": "workspace:*",
+    "@cshield/sink-rasp": "workspace:*",
+    "@cshield/learning": "workspace:*",
+    "@cshield/license-online": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
