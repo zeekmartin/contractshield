@@ -10,6 +10,7 @@ build/
 out/
 .next/
 .nuxt/
+*.js.map
 
 # Logs
 logs/
@@ -18,8 +19,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Environment
-.env
+# Environment (see also bottom of file)
 .env.local
 .env.*.local
 
@@ -47,8 +47,14 @@ temp/
 
 # Secrets (NEVER commit)
 .secrets/
-private.pem
+*.pem
 *.license
-
-# Keep public.pem example
 !packages/license/src/public.pem.example
+
+# Environment - keep example
+.env
+.env.*
+!.env.example
+
+# OS
+Thumbs.db

@@ -1,9 +1,0 @@
-{
-  "action": "BLOCK",
-  "ruleHits": [
-    {
-      "id": "tenant.binding",
-      "severity": "critical"
-    }
-  ]
-}
