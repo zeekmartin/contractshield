@@ -7,66 +7,87 @@ import {
   validateLicense,
   checkFeature,
   gateFeature,
+  isValidLicenseKeyFormat,
   clearCache,
   clearAllCaches,
 } from "../validator.js";
-import type { ValidationResult, LemonSqueezyValidateResponse } from "../types.js";
+import { clearFingerprintCache } from "../fingerprint.js";
+import type { ValidationResult, LicenseValidateSuccessResponse, LicenseValidateErrorResponse } from "../types.js";
 
 // Mock fetch globally
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
-// Sample valid response
-const validProResponse: LemonSqueezyValidateResponse = {
+// Test license keys (valid format)
+const VALID_PRO_KEY = "CSHIELD-ABCD-EFGH-2345-6789";
+const VALID_ENTERPRISE_KEY = "CSHIELD-WXYZ-ABCD-2345-9876";
+const INVALID_FORMAT_KEY = "invalid-key-123";
+
+// Sample valid response - Pro
+const validProResponse: LicenseValidateSuccessResponse = {
   valid: true,
-  error: null,
-  license_key: {
-    id: 1,
-    status: "active",
-    key: "test-key-123",
-    activation_limit: 3,
-    activation_usage: 1,
-    created_at: "2024-01-01T00:00:00.000000Z",
-    expires_at: null,
-  },
-  instance: {
-    id: "ins_test",
-    name: "test-instance",
-    created_at: "2024-01-15T00:00:00.000000Z",
-  },
-  meta: {
-    store_id: 12345,
-    order_id: 67890,
-    product_id: 11111,
-    product_name: "ContractShield Pro",
-    variant_id: 22222,
-    variant_name: "Pro Monthly",
-    customer_id: 33333,
-    customer_name: "Test Customer",
-    customer_email: "test@example.com",
-  },
+  plan: "pro",
+  features: ["sink-rasp", "learning-mode", "priority-support"],
+  seats: 5,
+  expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days
+  status: "active",
+  gracePeriodEnds: null,
 };
 
-const validEnterpriseResponse: LemonSqueezyValidateResponse = {
-  ...validProResponse,
-  meta: {
-    ...validProResponse.meta!,
-    product_name: "ContractShield Enterprise",
-    variant_name: "Enterprise Annual",
-  },
+// Sample valid response - Enterprise
+const validEnterpriseResponse: LicenseValidateSuccessResponse = {
+  valid: true,
+  plan: "enterprise",
+  features: ["sink-rasp", "learning-mode", "priority-support", "custom-rules", "sla-guarantee", "dedicated-support"],
+  seats: 25,
+  expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(), // 1 year
+  status: "active",
+  gracePeriodEnds: null,
 };
 
-const invalidResponse: LemonSqueezyValidateResponse = {
+// Invalid license response
+const invalidResponse: LicenseValidateErrorResponse = {
   valid: false,
-  error: "license_key_not_found",
-  license_key: null,
-  instance: null,
-  meta: null,
+  error: "invalid_license",
+  message: "License not found",
 };
+
+// Not activated response
+const notActivatedResponse: LicenseValidateErrorResponse = {
+  valid: false,
+  error: "not_activated",
+  message: "License not activated on this machine",
+  plan: "pro",
+};
+
+// Activation success response
+const activationSuccessResponse = {
+  activated: true,
+  alreadyActive: false,
+  remainingSeats: 4,
+};
+
+describe("isValidLicenseKeyFormat", () => {
+  it("should accept valid license key format", () => {
+    expect(isValidLicenseKeyFormat("CSHIELD-ABCD-EFGH-2345-6789")).toBe(true);
+    expect(isValidLicenseKeyFormat("CSHIELD-WXYZ-NMPQ-2345-9876")).toBe(true);
+  });
+
+  it("should reject invalid license key formats", () => {
+    expect(isValidLicenseKeyFormat("invalid")).toBe(false);
+    expect(isValidLicenseKeyFormat("CSHIELD-ABCD-EFGH-2345")).toBe(false); // Too short
+    expect(isValidLicenseKeyFormat("CS-ABCD-EFGH-2345-6789")).toBe(false); // Wrong prefix
+    expect(isValidLicenseKeyFormat("CSHIELD-ABCI-EFGH-2345-6789")).toBe(false); // Contains I
+    expect(isValidLicenseKeyFormat("CSHIELD-ABCO-EFGH-2345-6789")).toBe(false); // Contains O
+    expect(isValidLicenseKeyFormat("CSHIELD-ABC0-EFGH-2345-6789")).toBe(false); // Contains 0
+    expect(isValidLicenseKeyFormat("CSHIELD-ABC1-EFGH-2345-6789")).toBe(false); // Contains 1
+  });
+});
 
 describe("validateLicense", () => {
   beforeEach(() => {
     clearAllCaches();
+    clearFingerprintCache();
     mockFetch.mockReset();
   });
 
@@ -83,6 +104,15 @@ describe("validateLicense", () => {
     expect(result.error).toContain("No license key");
   });
 
+  it("should return error for invalid license key format", async () => {
+    const result = await validateLicense({ licenseKey: INVALID_FORMAT_KEY });
+
+    expect(result.valid).toBe(false);
+    expect(result.tier).toBe("oss");
+    expect(result.error).toContain("Invalid license key format");
+    expect(mockFetch).not.toHaveBeenCalled(); // Should not call API
+  });
+
   it("should validate a Pro license successfully", async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
@@ -90,15 +120,16 @@ describe("validateLicense", () => {
     });
 
     const result = await validateLicense({
-      licenseKey: "test-key-123",
+      licenseKey: VALID_PRO_KEY,
       skipCache: true,
     });
 
     expect(result.valid).toBe(true);
     expect(result.tier).toBe("pro");
-    expect(result.customer?.name).toBe("Test Customer");
-    expect(result.customer?.email).toBe("test@example.com");
-    expect(result.product?.name).toBe("ContractShield Pro");
+    expect(result.features).toContain("sink-rasp");
+    expect(result.features).toContain("learning-mode");
+    expect(result.seats).toBe(5);
+    expect(result.status).toBe("active");
     expect(result.fromCache).toBe(false);
     expect(result.degraded).toBe(false);
   });
@@ -110,30 +141,86 @@ describe("validateLicense", () => {
     });
 
     const result = await validateLicense({
-      licenseKey: "enterprise-key",
+      licenseKey: VALID_ENTERPRISE_KEY,
       skipCache: true,
     });
 
     expect(result.valid).toBe(true);
     expect(result.tier).toBe("enterprise");
-    expect(result.product?.variant).toBe("Enterprise Annual");
+    expect(result.features).toContain("custom-rules");
+    expect(result.seats).toBe(25);
   });
 
   it("should handle invalid license", async () => {
     mockFetch.mockResolvedValueOnce({
-      ok: true,
+      ok: false,
+      status: 403,
       json: async () => invalidResponse,
     });
 
     const result = await validateLicense({
-      licenseKey: "invalid-key",
+      licenseKey: VALID_PRO_KEY,
       skipCache: true,
     });
 
     expect(result.valid).toBe(false);
     expect(result.tier).toBe("oss");
-    expect(result.error).toBe("license_key_not_found");
+    expect(result.error).toBe("License not found");
     expect(result.degraded).toBe(false);
+  });
+
+  it("should auto-activate license when not activated", async () => {
+    // First call returns not_activated
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 403,
+      json: async () => notActivatedResponse,
+    });
+    // Activation call succeeds
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => activationSuccessResponse,
+    });
+    // Retry validation succeeds
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => validProResponse,
+    });
+
+    const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+
+    const result = await validateLicense({
+      licenseKey: VALID_PRO_KEY,
+      skipCache: true,
+      autoActivate: true,
+    });
+
+    expect(result.valid).toBe(true);
+    expect(result.tier).toBe("pro");
+    expect(mockFetch).toHaveBeenCalledTimes(3);
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining("activating")
+    );
+
+    consoleSpy.mockRestore();
+  });
+
+  it("should not auto-activate when autoActivate is false", async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: false,
+      status: 403,
+      json: async () => notActivatedResponse,
+    });
+
+    const result = await validateLicense({
+      licenseKey: VALID_PRO_KEY,
+      skipCache: true,
+      autoActivate: false,
+    });
+
+    expect(result.valid).toBe(false);
+    expect(result.error).toBe("License not activated on this machine");
+    expect(mockFetch).toHaveBeenCalledTimes(1); // Only validation, no activation
   });
 
   it("should use cache on second call", async () => {
@@ -143,12 +230,12 @@ describe("validateLicense", () => {
     });
 
     // First call - should hit API
-    const result1 = await validateLicense({ licenseKey: "cached-key" });
+    const result1 = await validateLicense({ licenseKey: VALID_PRO_KEY });
     expect(result1.fromCache).toBe(false);
     expect(mockFetch).toHaveBeenCalledTimes(1);
 
     // Second call - should use cache
-    const result2 = await validateLicense({ licenseKey: "cached-key" });
+    const result2 = await validateLicense({ licenseKey: VALID_PRO_KEY });
     expect(result2.fromCache).toBe(true);
     expect(mockFetch).toHaveBeenCalledTimes(1); // Still 1, no new call
   });
@@ -159,8 +246,8 @@ describe("validateLicense", () => {
       json: async () => validProResponse,
     });
 
-    await validateLicense({ licenseKey: "skip-cache-key" });
-    await validateLicense({ licenseKey: "skip-cache-key", skipCache: true });
+    await validateLicense({ licenseKey: VALID_PRO_KEY });
+    await validateLicense({ licenseKey: VALID_PRO_KEY, skipCache: true });
 
     expect(mockFetch).toHaveBeenCalledTimes(2);
   });
@@ -169,8 +256,9 @@ describe("validateLicense", () => {
     mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
     const result = await validateLicense({
-      licenseKey: "network-error-key",
+      licenseKey: VALID_PRO_KEY,
       gracefulDegradation: true,
+      skipCache: true,
     });
 
     expect(result.valid).toBe(false);
@@ -185,29 +273,25 @@ describe("validateLicense", () => {
       ok: true,
       json: async () => validProResponse,
     });
-    await validateLicense({ licenseKey: "cache-fallback-key" });
-
-    // Clear the cache entry manually to test fallback
-    // (in real scenario, cache would be expired)
-    clearCache("cache-fallback-key");
-
-    // Repopulate cache
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => validProResponse,
-    });
-    await validateLicense({ licenseKey: "cache-fallback-key" });
+    await validateLicense({ licenseKey: VALID_PRO_KEY });
 
     // Network error - should use cache
     mockFetch.mockRejectedValueOnce(new Error("Network error"));
+    const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
     const result = await validateLicense({
-      licenseKey: "cache-fallback-key",
+      licenseKey: VALID_PRO_KEY,
       skipCache: false,
     });
 
     // Should still be valid from cache
     expect(result.fromCache).toBe(true);
     expect(result.valid).toBe(true);
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining("using cached result")
+    );
+
+    consoleSpy.mockRestore();
   });
 
   it("should throw when gracefulDegradation is false and validation fails", async () => {
@@ -215,7 +299,7 @@ describe("validateLicense", () => {
 
     await expect(
       validateLicense({
-        licenseKey: "strict-mode-key",
+        licenseKey: VALID_PRO_KEY,
         gracefulDegradation: false,
         skipCache: true,
       })
@@ -230,13 +314,35 @@ describe("validateLicense", () => {
     });
 
     const result = await validateLicense({
-      licenseKey: "http-error-key",
+      licenseKey: VALID_PRO_KEY,
       gracefulDegradation: true,
       skipCache: true,
     });
 
     expect(result.valid).toBe(false);
     expect(result.degraded).toBe(true);
+  });
+
+  it("should handle grace period status", async () => {
+    const gracePeriodResponse: LicenseValidateSuccessResponse = {
+      ...validProResponse,
+      status: "grace_period",
+      gracePeriodEnds: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    };
+
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => gracePeriodResponse,
+    });
+
+    const result = await validateLicense({
+      licenseKey: VALID_PRO_KEY,
+      skipCache: true,
+    });
+
+    expect(result.valid).toBe(true);
+    expect(result.status).toBe("grace_period");
+    expect(result.gracePeriodEnds).toBeDefined();
   });
 });
 
@@ -245,6 +351,7 @@ describe("checkFeature", () => {
     const validation: ValidationResult = {
       valid: true,
       tier: "pro",
+      features: ["sink-rasp", "learning-mode", "priority-support"],
       fromCache: false,
       degraded: false,
     };
@@ -253,29 +360,45 @@ describe("checkFeature", () => {
     expect(result.available).toBe(true);
   });
 
+  it("should allow learning-mode for Pro license", () => {
+    const validation: ValidationResult = {
+      valid: true,
+      tier: "pro",
+      features: ["sink-rasp", "learning-mode", "priority-support"],
+      fromCache: false,
+      degraded: false,
+    };
+
+    const result = checkFeature(validation, "learning-mode");
+    expect(result.available).toBe(true);
+  });
+
   it("should allow all features for Enterprise license", () => {
     const validation: ValidationResult = {
       valid: true,
       tier: "enterprise",
+      features: ["sink-rasp", "learning-mode", "priority-support", "custom-rules", "sla-guarantee", "dedicated-support"],
       fromCache: false,
       degraded: false,
     };
 
     expect(checkFeature(validation, "sink-rasp").available).toBe(true);
-    expect(checkFeature(validation, "hot-reload").available).toBe(true);
-    expect(checkFeature(validation, "policy-packs").available).toBe(true);
-    expect(checkFeature(validation, "audit-export").available).toBe(true);
+    expect(checkFeature(validation, "learning-mode").available).toBe(true);
+    expect(checkFeature(validation, "custom-rules").available).toBe(true);
+    expect(checkFeature(validation, "sla-guarantee").available).toBe(true);
+    expect(checkFeature(validation, "dedicated-support").available).toBe(true);
   });
 
-  it("should deny policy-packs for Pro license", () => {
+  it("should deny custom-rules for Pro license", () => {
     const validation: ValidationResult = {
       valid: true,
       tier: "pro",
+      features: ["sink-rasp", "learning-mode", "priority-support"],
       fromCache: false,
       degraded: false,
     };
 
-    const result = checkFeature(validation, "policy-packs");
+    const result = checkFeature(validation, "custom-rules");
     expect(result.available).toBe(false);
     expect(result.reason).toContain("Enterprise");
     expect(result.upgradeUrl).toBeDefined();
@@ -307,6 +430,20 @@ describe("checkFeature", () => {
     expect(result.available).toBe(false);
     expect(result.reason).toBe("Invalid license");
   });
+
+  it("should use API features list when available", () => {
+    // Even if tier is pro, if API returns custom-rules in features, allow it
+    const validation: ValidationResult = {
+      valid: true,
+      tier: "pro",
+      features: ["sink-rasp", "learning-mode", "custom-rules"], // API says custom-rules is available
+      fromCache: false,
+      degraded: false,
+    };
+
+    const result = checkFeature(validation, "custom-rules");
+    expect(result.available).toBe(true);
+  });
 });
 
 describe("gateFeature", () => {
@@ -314,6 +451,7 @@ describe("gateFeature", () => {
     const validation: ValidationResult = {
       valid: true,
       tier: "pro",
+      features: ["sink-rasp", "learning-mode", "priority-support"],
       fromCache: false,
       degraded: false,
     };
@@ -347,6 +485,7 @@ describe("gateFeature", () => {
     const validation: ValidationResult = {
       valid: true,
       tier: "pro",
+      features: ["sink-rasp", "learning-mode", "priority-support"],
       fromCache: false,
       degraded: false,
     };
@@ -354,11 +493,11 @@ describe("gateFeature", () => {
     const enableFn = vi.fn();
     const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
-    gateFeature("policy-packs", validation, enableFn);
+    gateFeature("custom-rules", validation, enableFn);
 
     expect(enableFn).not.toHaveBeenCalled();
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("policy-packs")
+      expect.stringContaining("custom-rules")
     );
     expect(consoleSpy).toHaveBeenCalledWith(
       expect.stringContaining("contractshield.dev/pricing")
@@ -371,6 +510,7 @@ describe("gateFeature", () => {
 describe("clearCache", () => {
   beforeEach(() => {
     clearAllCaches();
+    clearFingerprintCache();
     mockFetch.mockReset();
   });
 
@@ -381,17 +521,17 @@ describe("clearCache", () => {
     });
 
     // Populate cache
-    await validateLicense({ licenseKey: "clear-test-key" });
+    await validateLicense({ licenseKey: VALID_PRO_KEY });
 
     // Verify cache is used
-    const result1 = await validateLicense({ licenseKey: "clear-test-key" });
+    const result1 = await validateLicense({ licenseKey: VALID_PRO_KEY });
     expect(result1.fromCache).toBe(true);
 
     // Clear cache
-    clearCache("clear-test-key");
+    clearCache(VALID_PRO_KEY);
 
     // Should hit API again
-    const result2 = await validateLicense({ licenseKey: "clear-test-key" });
+    const result2 = await validateLicense({ licenseKey: VALID_PRO_KEY });
     expect(result2.fromCache).toBe(false);
   });
 });

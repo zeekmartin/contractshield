@@ -1,40 +1,56 @@
 /**
- * ContractShield Pro - LemonSqueezy License Validator
+ * ContractShield Pro - License Validator
  *
- * Online license validation via LemonSqueezy API with caching
+ * Online license validation via ContractShield License API with caching
  * and graceful degradation.
  *
  * @license Commercial
  */
 
-import * as os from "os";
 import type {
-  LemonSqueezyValidateRequest,
-  LemonSqueezyValidateResponse,
-  LemonSqueezyDeactivateResponse,
+  LicenseValidateRequest,
+  LicenseValidateResponse,
+  LicenseValidateSuccessResponse,
+  LicenseActivateRequest,
+  LicenseActivateResponse,
+  LicenseDeactivateResponse,
   LicenseValidationOptions,
   ValidationResult,
   ProFeature,
   FeatureCheckResult,
 } from "./types.js";
-import { readCache, writeCache, clearCache } from "./cache.js";
+import { readCache, writeCache, clearCache, isCacheExpired } from "./cache.js";
+import { generateFingerprint, getMachineMetadata } from "./fingerprint.js";
 
-const DEFAULT_API_ENDPOINT = "https://api.lemonsqueezy.com/v1";
+const DEFAULT_API_ENDPOINT = "https://api.contractshield.dev";
 const DEFAULT_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 const REQUEST_TIMEOUT_MS = 10000; // 10 seconds
 
 const UPGRADE_URL = "https://contractshield.dev/pricing";
 
 /**
+ * License key format regex: CSHIELD-XXXX-XXXX-XXXX-XXXX
+ * Characters: A-H, J-N, P-Z (no I, O), 2-9 (no 0, 1)
+ */
+const LICENSE_KEY_REGEX = /^CSHIELD-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/;
+
+/**
  * Pro features available in each tier
  */
 const TIER_FEATURES: Record<string, ProFeature[]> = {
-  pro: ["sink-rasp", "hot-reload", "priority-support"],
-  enterprise: ["sink-rasp", "hot-reload", "policy-packs", "audit-export", "priority-support"],
+  pro: ["sink-rasp", "learning-mode", "priority-support"],
+  enterprise: ["sink-rasp", "learning-mode", "priority-support", "custom-rules", "sla-guarantee", "dedicated-support"],
 };
 
 /**
- * Validate a license key via LemonSqueezy API.
+ * Validate license key format.
+ */
+export function isValidLicenseKeyFormat(licenseKey: string): boolean {
+  return LICENSE_KEY_REGEX.test(licenseKey);
+}
+
+/**
+ * Validate a license key via ContractShield License API.
  *
  * @param options - Validation options
  * @returns Validation result
@@ -43,12 +59,11 @@ const TIER_FEATURES: Record<string, ProFeature[]> = {
  * ```typescript
  * const result = await validateLicense({
  *   licenseKey: process.env.CONTRACTSHIELD_LICENSE_KEY,
- *   instanceName: 'production-server-1',
  *   gracefulDegradation: true,
  * });
  *
  * if (result.valid) {
- *   console.log(`Licensed to: ${result.customer?.name}`);
+ *   console.log(`Licensed: ${result.tier} plan with ${result.features?.join(', ')}`);
  * } else if (result.degraded) {
  *   console.log('Running in OSS mode (license validation failed)');
  * }
@@ -59,11 +74,11 @@ export async function validateLicense(
 ): Promise<ValidationResult> {
   const {
     licenseKey,
-    instanceName = getDefaultInstanceName(),
-    apiEndpoint = process.env.CONTRACTSHIELD_LICENSE_API || DEFAULT_API_ENDPOINT,
+    apiEndpoint = process.env.CONTRACTSHIELD_API_URL || DEFAULT_API_ENDPOINT,
     cacheTtlMs = DEFAULT_CACHE_TTL_MS,
     skipCache = false,
     gracefulDegradation = true,
+    autoActivate = true,
   } = options;
 
   // No license key provided - run in OSS mode
@@ -77,27 +92,64 @@ export async function validateLicense(
     };
   }
 
+  // Validate license key format
+  if (!isValidLicenseKeyFormat(licenseKey)) {
+    return {
+      valid: false,
+      tier: "oss",
+      error: "Invalid license key format. Expected: CSHIELD-XXXX-XXXX-XXXX-XXXX",
+      fromCache: false,
+      degraded: gracefulDegradation,
+    };
+  }
+
+  const fingerprint = generateFingerprint();
+
   // Check cache first (unless skipCache)
   if (!skipCache) {
-    const cached = readCache(licenseKey);
-    if (cached) {
+    const cached = readCache(licenseKey, fingerprint);
+    if (cached && !isCacheExpired(cached)) {
       return parseValidationResponse(cached.response, true);
     }
   }
 
   // Online validation
   try {
-    const response = await callLemonSqueezyApi(apiEndpoint, licenseKey, instanceName);
+    const response = await callValidateApi(apiEndpoint, licenseKey, fingerprint);
+
+    // Handle not_activated error with auto-activation
+    if (!response.valid && "error" in response && response.error === "not_activated" && autoActivate) {
+      console.log("[ContractShield] License not activated on this machine, activating...");
+
+      const activated = await activateLicense(licenseKey, fingerprint, apiEndpoint);
+      if (activated) {
+        // Retry validation after activation
+        const retryResponse = await callValidateApi(apiEndpoint, licenseKey, fingerprint);
+        if (retryResponse.valid) {
+          writeCache(licenseKey, retryResponse, fingerprint, cacheTtlMs);
+          return parseValidationResponse(retryResponse, false);
+        }
+      }
+
+      // Activation failed
+      return {
+        valid: false,
+        tier: "oss",
+        error: "License activation failed",
+        fromCache: false,
+        degraded: gracefulDegradation,
+      };
+    }
 
     // Cache successful responses
     if (response.valid) {
-      writeCache(licenseKey, response, cacheTtlMs);
+      writeCache(licenseKey, response, fingerprint, cacheTtlMs);
     }
 
     return parseValidationResponse(response, false);
   } catch (err) {
     // Network error - try cache even if expired
-    const cached = readCache(licenseKey);
+    const cached = readCache(licenseKey, fingerprint);
     if (cached) {
       console.warn(
         "[ContractShield] License validation failed, using cached result:",
@@ -127,18 +179,18 @@ export async function validateLicense(
 }
 
 /**
- * Call LemonSqueezy API to validate license.
+ * Call ContractShield API to validate license.
  */
-async function callLemonSqueezyApi(
+async function callValidateApi(
   apiEndpoint: string,
   licenseKey: string,
-  instanceName: string
-): Promise<LemonSqueezyValidateResponse> {
-  const url = `${apiEndpoint}/licenses/validate`;
+  fingerprint: string
+): Promise<LicenseValidateResponse> {
+  const url = `${apiEndpoint}/v1/license/validate`;
 
-  const body: LemonSqueezyValidateRequest = {
-    license_key: licenseKey,
-    instance_name: instanceName,
+  const body: LicenseValidateRequest = {
+    licenseKey,
+    fingerprint,
   };
 
   const controller = new AbortController();
@@ -155,63 +207,91 @@ async function callLemonSqueezyApi(
       signal: controller.signal,
     });
 
-    if (!response.ok) {
+    const data = await response.json() as LicenseValidateResponse;
+
+    // The API returns 403 for invalid licenses but still sends JSON
+    if (!response.ok && response.status !== 403) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
 
-    return (await response.json()) as LemonSqueezyValidateResponse;
+    return data;
   } finally {
     clearTimeout(timeout);
   }
 }
 
 /**
- * Parse LemonSqueezy response into ValidationResult.
+ * Activate license on this machine.
+ */
+async function activateLicense(
+  licenseKey: string,
+  fingerprint: string,
+  apiEndpoint: string
+): Promise<boolean> {
+  const url = `${apiEndpoint}/v1/license/activate`;
+
+  const body: LicenseActivateRequest = {
+    licenseKey,
+    fingerprint,
+    metadata: getMachineMetadata(),
+  };
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+
+    if (!response.ok && response.status !== 403) {
+      return false;
+    }
+
+    const result = await response.json() as LicenseActivateResponse;
+    return result.activated === true;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+/**
+ * Parse API response into ValidationResult.
  */
 function parseValidationResponse(
-  response: LemonSqueezyValidateResponse,
+  response: LicenseValidateResponse,
   fromCache: boolean
 ): ValidationResult {
   if (!response.valid) {
+    const errorResponse = response as { error?: string; message?: string };
     return {
       valid: false,
       tier: "oss",
-      error: response.error || "Invalid license",
+      error: errorResponse.message || errorResponse.error || "Invalid license",
       fromCache,
       degraded: false,
     };
   }
 
-  const licenseKey = response.license_key!;
-  const meta = response.meta!;
-  const instance = response.instance;
-
-  // Determine tier from product variant
-  const variantLower = meta.variant_name.toLowerCase();
-  const tier = variantLower.includes("enterprise")
-    ? "enterprise"
-    : variantLower.includes("pro")
-      ? "pro"
-      : "pro"; // Default to pro for unknown variants
+  const successResponse = response as LicenseValidateSuccessResponse;
 
   return {
     valid: true,
-    tier,
-    customer: {
-      name: meta.customer_name,
-      email: meta.customer_email,
-    },
-    product: {
-      name: meta.product_name,
-      variant: meta.variant_name,
-    },
-    expiresAt: licenseKey.expires_at ? new Date(licenseKey.expires_at) : undefined,
-    activation: instance
-      ? {
-          limit: licenseKey.activation_limit,
-          usage: licenseKey.activation_usage,
-          instanceId: instance.id,
-        }
+    tier: successResponse.plan,
+    features: successResponse.features,
+    seats: successResponse.seats,
+    expiresAt: new Date(successResponse.expiresAt),
+    status: successResponse.status,
+    gracePeriodEnds: successResponse.gracePeriodEnds
+      ? new Date(successResponse.gracePeriodEnds)
       : undefined,
     fromCache,
     degraded: false,
@@ -219,18 +299,17 @@ function parseValidationResponse(
 }
 
 /**
- * Deactivate a license instance.
+ * Deactivate a license from this machine.
  *
  * @param licenseKey - The license key
- * @param instanceId - The instance ID to deactivate
  * @param apiEndpoint - Custom API endpoint (optional)
  */
 export async function deactivateLicense(
   licenseKey: string,
-  instanceId: string,
-  apiEndpoint: string = DEFAULT_API_ENDPOINT
+  apiEndpoint: string = process.env.CONTRACTSHIELD_API_URL || DEFAULT_API_ENDPOINT
 ): Promise<boolean> {
-  const url = `${apiEndpoint}/licenses/deactivate`;
+  const fingerprint = generateFingerprint();
+  const url = `${apiEndpoint}/v1/license/deactivate`;
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -243,8 +322,8 @@ export async function deactivateLicense(
         Accept: "application/json",
       },
       body: JSON.stringify({
-        license_key: licenseKey,
-        instance_id: instanceId,
+        licenseKey,
+        fingerprint,
       }),
       signal: controller.signal,
     });
@@ -253,7 +332,7 @@ export async function deactivateLicense(
       return false;
     }
 
-    const result = (await response.json()) as LemonSqueezyDeactivateResponse;
+    const result = await response.json() as LicenseDeactivateResponse;
 
     // Clear cache on deactivation
     if (result.deactivated) {
@@ -289,26 +368,26 @@ export function checkFeature(
     };
   }
 
+  // Check features from API response first
+  if (validationResult.features?.includes(feature)) {
+    return { available: true };
+  }
+
+  // Fallback to tier-based check
   const tierFeatures = TIER_FEATURES[validationResult.tier] || [];
 
   if (!tierFeatures.includes(feature)) {
+    const requiredTier = feature === "custom-rules" || feature === "sla-guarantee" || feature === "dedicated-support"
+      ? "Enterprise"
+      : "Pro";
     return {
       available: false,
-      reason: `Feature '${feature}' requires ${feature === "audit-export" || feature === "policy-packs" ? "Enterprise" : "Pro"} license`,
+      reason: `Feature '${feature}' requires ${requiredTier} license`,
       upgradeUrl: UPGRADE_URL,
     };
   }
 
   return { available: true };
-}
-
-/**
- * Get default instance name based on hostname and environment.
- */
-function getDefaultInstanceName(): string {
-  const hostname = os.hostname();
-  const env = process.env.NODE_ENV || "development";
-  return `${hostname}-${env}`;
 }
 
 /**
@@ -349,3 +428,4 @@ export function gateFeature(
 }
 
 export { clearCache, clearAllCaches, getCacheStats } from "./cache.js";
+export { generateFingerprint, getMachineMetadata, clearFingerprintCache } from "./fingerprint.js";

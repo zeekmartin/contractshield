@@ -11,7 +11,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as os from "os";
 import * as crypto from "crypto";
-import type { CachedLicense, LemonSqueezyValidateResponse } from "./types.js";
+import type { CachedLicense, LicenseValidateSuccessResponse } from "./types.js";
 
 const DEFAULT_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 const CACHE_DIR_NAME = ".contractshield";
@@ -64,9 +64,10 @@ function getCacheFilePath(licenseKey: string): string {
  * Read cached license data.
  *
  * @param licenseKey - The license key to look up
- * @returns Cached data or null if not found/expired
+ * @param fingerprint - The machine fingerprint (cache is fingerprint-specific)
+ * @returns Cached data or null if not found/expired/different machine
  */
-export function readCache(licenseKey: string): CachedLicense | null {
+export function readCache(licenseKey: string, fingerprint?: string): CachedLicense | null {
   try {
     const filePath = getCacheFilePath(licenseKey);
 
@@ -85,11 +86,17 @@ export function readCache(licenseKey: string): CachedLicense | null {
       return null;
     }
 
+    // If fingerprint is provided, verify it matches
+    if (fingerprint && cached.fingerprint && cached.fingerprint !== fingerprint) {
+      // Different machine - don't use this cache
+      return null;
+    }
+
     // Check if expired
     if (Date.now() > cached.expiresAt) {
-      // Cache expired, delete it
-      fs.unlinkSync(filePath);
-      return null;
+      // Cache expired, but we might still use it for graceful degradation
+      // Don't delete - let the caller decide
+      return cached;
     }
 
     return cached;
@@ -99,15 +106,24 @@ export function readCache(licenseKey: string): CachedLicense | null {
 }
 
 /**
+ * Check if cache is expired.
+ */
+export function isCacheExpired(cached: CachedLicense): boolean {
+  return Date.now() > cached.expiresAt;
+}
+
+/**
  * Write license data to cache.
  *
  * @param licenseKey - The license key
  * @param response - The validation response to cache
+ * @param fingerprint - The machine fingerprint
  * @param ttlMs - Cache TTL in milliseconds (default: 24 hours)
  */
 export function writeCache(
   licenseKey: string,
-  response: LemonSqueezyValidateResponse,
+  response: LicenseValidateSuccessResponse,
+  fingerprint: string,
   ttlMs: number = DEFAULT_TTL_MS
 ): void {
   try {
@@ -119,6 +135,7 @@ export function writeCache(
       expiresAt: now + ttlMs,
       response,
       keyHash: hashLicenseKey(licenseKey),
+      fingerprint,
     };
 
     // Write with restrictive permissions (owner read/write only)

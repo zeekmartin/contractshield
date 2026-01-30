@@ -1,7 +1,7 @@
 /**
  * ContractShield Pro - Online License Validation
  *
- * LemonSqueezy-based license validation with caching and graceful degradation.
+ * License validation with ContractShield API, caching, and graceful degradation.
  *
  * @example
  * ```typescript
@@ -25,9 +25,13 @@ export {
   deactivateLicense,
   checkFeature,
   gateFeature,
+  isValidLicenseKeyFormat,
   clearCache,
   clearAllCaches,
   getCacheStats,
+  generateFingerprint,
+  getMachineMetadata,
+  clearFingerprintCache,
 } from "./validator.js";
 
 export type {
@@ -36,6 +40,15 @@ export type {
   ProFeature,
   FeatureCheckResult,
   CachedLicense,
+  LicenseValidateRequest,
+  LicenseValidateResponse,
+  LicenseValidateSuccessResponse,
+  LicenseValidateErrorResponse,
+  LicenseActivateRequest,
+  LicenseActivateResponse,
+  LicenseDeactivateResponse,
+  LicenseInfoResponse,
+  // Legacy types (deprecated)
   LemonSqueezyValidateResponse,
   LemonSqueezyDeactivateResponse,
 } from "./types.js";
