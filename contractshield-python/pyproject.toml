@@ -52,8 +52,8 @@ dev = [
 [project.urls]
 Homepage = "https://contractshield.dev"
 Documentation = "https://docs.contractshield.dev"
-Repository = "https://github.com/zeekmartin/contractshield-python"
-Issues = "https://github.com/zeekmartin/contractshield-python/issues"
+Repository = "https://github.com/zeekmartin/contractshield"
+Issues = "https://github.com/zeekmartin/contractshield"
 
 [build-system]
 requires = ["setuptools>=61.0", "setuptools-scm"]
