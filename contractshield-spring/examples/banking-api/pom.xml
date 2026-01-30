@@ -14,7 +14,7 @@
 
     <groupId>dev.contractshield.examples</groupId>
     <artifactId>banking-api</artifactId>
-    <version>1.5.2</version>
+    <version>1.5.4</version>
     <name>Banking API Example</name>
     <description>Example Spring Boot application using ContractShield</description>
 
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>dev.contractshield</groupId>
             <artifactId>contractshield-spring-boot-starter</artifactId>
-            <version>1.5.2</version>
+            <version>1.5.4</version>
         </dependency>
 
         <!-- Spring Boot -->
