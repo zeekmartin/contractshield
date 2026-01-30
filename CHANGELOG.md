@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-[1.5.3] - 2026-02-XX
-Added
+## [1.5.3] - 2026-02-XX
+###Added
 
 ☕ Java/Spring Boot support - ContractShield now available for Spring Boot via Maven Central
 
@@ -26,7 +26,7 @@ dev.contractshield:contractshield-spring-boot-starter-test - Test utilities
 ☕ Spring Boot auto-configuration - Zero-config setup with application.yml
 📖 Python README - Package description now visible on PyPI
 
-Changed
+###Changed
 
 📦 All npm packages now properly obfuscated for Pro modules
 🔧 Improved monorepo structure for multi-platform support
