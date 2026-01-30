@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: banking-api
+
+server:
+  port: 8080
+
+# ContractShield Configuration
+contractshield:
+  enabled: true
+  url-patterns:
+    - /api/**
+  exclude-paths:
+    - /actuator/**
+  sanitize-errors: false  # Show detailed errors in development
+
+  # Vulnerability scanning
+  vulnerability:
+    enabled: true
+    enable-sqli: true
+    enable-xss: true
+    enable-path-traversal: true
+    enable-prototype-pollution: true
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    dev.contractshield: DEBUG
