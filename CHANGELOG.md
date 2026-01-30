@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.5.3] - 2026-02-XX
+## [1.5.4] - 2026-02-02
+### Added
+
+- Update all packages to version 1.5.4
+- Add Python CI: lint, type check, test, build (Python 3.10-3.12)
+- Add Java CI: compile, test, package (JDK 17, 21)
+- Existing Node.js CI unchanged (Node 18, 20)
+
+## [1.5.3] - 2026-02-02
 ### Added
 
 ☕ Java/Spring Boot support - ContractShield now available for Spring Boot via Maven Central
