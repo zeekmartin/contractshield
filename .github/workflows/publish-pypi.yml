@@ -20,6 +20,14 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Extract version from tag
+        id: version
+        run: |
+          # Remove 'v' prefix from tag if present
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Building version: $VERSION"
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -34,6 +42,8 @@ jobs:
 
       - name: Build package
         working-directory: contractshield-python
+        env:
+          SETUPTOOLS_SCM_PRETEND_VERSION: ${{ steps.version.outputs.version }}
         run: python -m build
 
       - name: Publish to PyPI

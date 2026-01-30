@@ -1,7 +1,12 @@
 name: Publish to TestPyPI
 
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 1.5.2)'
+        required: true
+        type: string
 
 jobs:
   publish:
@@ -30,6 +35,8 @@ jobs:
 
       - name: Build package
         working-directory: contractshield-python
+        env:
+          SETUPTOOLS_SCM_PRETEND_VERSION: ${{ inputs.version }}
         run: python -m build
 
       - name: Publish to TestPyPI
