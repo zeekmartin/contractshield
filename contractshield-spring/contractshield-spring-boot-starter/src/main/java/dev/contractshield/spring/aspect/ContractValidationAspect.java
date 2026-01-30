@@ -226,7 +226,7 @@ public class ContractValidationAspect {
         List<dev.contractshield.core.ValidationError> errors = findings.stream()
                 .map(f -> new dev.contractshield.core.ValidationError(
                         f.path(),
-                        f.type().name() + ": " + f.description(),
+                        f.type().name() + ": " + f.message(),
                         dev.contractshield.core.ValidationErrorType.VULNERABILITY_DETECTED))
                 .toList();
         return new ValidationResult(false, errors);
