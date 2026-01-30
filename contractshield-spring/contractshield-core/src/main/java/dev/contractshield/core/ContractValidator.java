@@ -34,9 +34,19 @@ public class ContractValidator {
      * @param schemaNode the JSON Schema
      */
     public ContractValidator(JsonNode schemaNode) {
+        this(schemaNode, new CELEvaluator());
+    }
+
+    /**
+     * Create a validator from a JSON Schema node with a custom CEL evaluator.
+     *
+     * @param schemaNode the JSON Schema
+     * @param celEvaluator the CEL evaluator to use
+     */
+    public ContractValidator(JsonNode schemaNode, CELEvaluator celEvaluator) {
         JsonSchemaFactory factory = JsonSchemaFactory.getInstance(SpecVersion.VersionFlag.V202012);
         this.schema = factory.getSchema(schemaNode);
-        this.celEvaluator = new CELEvaluator();
+        this.celEvaluator = celEvaluator;
         this.celExpressions = extractCELExpressions(schemaNode);
         this.objectMapper = new ObjectMapper();
     }

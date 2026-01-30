@@ -11,6 +11,14 @@ import java.util.List;
  */
 public record ValidationResult(boolean valid, List<ValidationError> errors) {
 
+    /**
+     * Check if the validation passed.
+     * @return true if valid
+     */
+    public boolean isValid() {
+        return valid;
+    }
+
     public static ValidationResult success() {
         return new ValidationResult(true, Collections.emptyList());
     }
