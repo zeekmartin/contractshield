@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.2] - 2026-01-31
+
+### Added
+- 🐍 **Python/FastAPI support** - ContractShield now available for Python via `pip install contractshield`
+- 🐍 **Flask support** - Flask middleware included via `pip install contractshield[flask]`
+- 📦 PyPI publication workflow with automatic Pro obfuscation
+
+### Changed
+- 📄 Updated licensing structure
+- 🔒 Enhanced Pro module obfuscation for npm packages
+
+### Fixed
+- 🔧 Build pipeline improvements for monorepo structure
+
+### Security
+- 🛡️ Pro modules now properly obfuscated before npm/PyPI publication
+
+---
+
 ## [1.5.0] - 2026-01-19
 
 ### Added
