@@ -2,7 +2,7 @@
 name = "contractshield"
 dynamic = ["version"]
 description = "Contract-First API Security for Python"
-authors = [{name = "AuditLabs", email = "contact@contractshield.dev"}]
+authors = [{name = "ContractShield", email = "contact@contractshield.dev"}]
 license = {text = "Apache-2.0"}
 readme = "README.md"
 requires-python = ">=3.9"
@@ -52,8 +52,8 @@ dev = [
 [project.urls]
 Homepage = "https://contractshield.dev"
 Documentation = "https://docs.contractshield.dev"
-Repository = "https://github.com/AuditLabs/contractshield-python"
-Issues = "https://github.com/AuditLabs/contractshield-python/issues"
+Repository = "https://github.com/zeekmartin/contractshield-python"
+Issues = "https://github.com/zeekmartin/contractshield-python/issues"
 
 [build-system]
 requires = ["setuptools>=61.0", "setuptools-scm"]
