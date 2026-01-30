@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+[1.5.3] - 2026-02-XX
+Added
+
+☕ Java/Spring Boot support - ContractShield now available for Spring Boot via Maven Central
+
+dev.contractshield:contractshield-core - Core validation library
+dev.contractshield:contractshield-spring-boot-starter - Auto-configuration
+dev.contractshield:contractshield-spring-boot-starter-test - Test utilities
+
+
+☕ Spring Boot annotations
+
+@ValidateContract - Schema validation on endpoints
+@CELExpression - Repeatable CEL business rules
+
+
+☕ Spring Boot auto-configuration - Zero-config setup with application.yml
+📖 Python README - Package description now visible on PyPI
+
+Changed
+
+📦 All npm packages now properly obfuscated for Pro modules
+🔧 Improved monorepo structure for multi-platform support
+
+Example Usage
+Maven:
+xml<dependency>
+    <groupId>dev.contractshield</groupId>
+    <artifactId>contractshield-spring-boot-starter</artifactId>
+    <version>1.5.3</version>
+</dependency>
+Spring Controller:
+java@PostMapping("/transfer")
+@ValidateContract(schema = "schemas/transfer.json")
+@CELExpression(value = "data.amount > 0", message = "Amount must be positive")
+public ResponseEntity<TransferResponse> transfer(@RequestBody TransferRequest request) {
+    // Already validated!
+}
+
+
 ## [1.5.2] - 2026-01-31
 
 ### Added
