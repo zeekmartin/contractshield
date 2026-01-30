@@ -1,6 +1,6 @@
 {
   "name": "@cshield/sink-rasp",
-  "version": "1.5.0",
+  "version": "1.5.2",
   "private": true,
   "description": "ContractShield Pro - Sink-aware RASP (Runtime Application Self-Protection)",
   "type": "module",
