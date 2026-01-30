@@ -33,11 +33,46 @@ jobs:
       - name: Build
         run: pnpm build
 
+      # Obfuscate Pro modules before publishing
+      - name: Obfuscate Pro modules
+        run: |
+          npm install -g javascript-obfuscator
+          
+          # Obfuscate all JS files in pro packages dist folders
+          for pro_pkg in pro/sink-rasp pro/learning pro/license-online pro/pro; do
+            if [ -d "$pro_pkg/dist" ]; then
+              echo "Obfuscating $pro_pkg..."
+              find "$pro_pkg/dist" -name "*.js" -type f | while read file; do
+                echo "  → $file"
+                javascript-obfuscator "$file" \
+                  --output "$file" \
+                  --compact true \
+                  --control-flow-flattening true \
+                  --control-flow-flattening-threshold 0.75 \
+                  --dead-code-injection true \
+                  --dead-code-injection-threshold 0.4 \
+                  --string-array true \
+                  --string-array-encoding 'rc4' \
+                  --string-array-threshold 0.75 \
+                  --transform-object-keys true \
+                  --unicode-escape-sequence true
+              done
+            fi
+          done
+
       # Publish all packages
       - name: Publish packages
         run: |
-          for pkg in packages/license packages/pdp packages/pep-express packages/pep-fastify packages/sidecar packages/client packages/core pro/sink-rasp pro/learning pro/license-online pro/pro; do
+          # Open source packages first
+          for pkg in packages/license packages/pdp packages/pep-express packages/pep-fastify packages/sidecar packages/client packages/core; do
             echo "Publishing $pkg..."
+            cd $pkg && npm publish --access public --provenance || true
+            cd -
+          done
+          
+          # Pro packages (now obfuscated)
+          for pkg in pro/sink-rasp pro/learning pro/license-online pro/pro; do
+            echo "Publishing $pkg (obfuscated)..."
             cd $pkg && npm publish --access public --provenance || true
             cd -
           done
