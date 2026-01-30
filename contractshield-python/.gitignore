@@ -73,6 +73,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# setuptools-scm generated version file
+src/contractshield/_version.py
+
 # IDE
 .idea/
 .vscode/

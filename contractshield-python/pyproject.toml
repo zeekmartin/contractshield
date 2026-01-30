@@ -1,6 +1,6 @@
 [project]
 name = "contractshield"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Contract-First API Security for Python"
 authors = [{name = "AuditLabs", email = "contact@contractshield.dev"}]
 license = {text = "Apache-2.0"}
@@ -56,11 +56,16 @@ Repository = "https://github.com/AuditLabs/contractshield-python"
 Issues = "https://github.com/AuditLabs/contractshield-python/issues"
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=61.0", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/contractshield"]
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools_scm]
+write_to = "src/contractshield/_version.py"
+version_scheme = "guess-next-dev"
+local_scheme = "no-local-version"
 
 [tool.ruff]
 target-version = "py39"
