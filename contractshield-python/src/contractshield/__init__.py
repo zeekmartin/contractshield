@@ -27,10 +27,8 @@ from contractshield.core.errors import (
     PolicyError,
 )
 
-try:
-    from contractshield._version import version as __version__
-except ImportError:
-    __version__ = "0.1.0"  # Fallback for development
+__version__ = "1.5.2"
+
 __all__ = [
     # Core
     "ContractValidator",
