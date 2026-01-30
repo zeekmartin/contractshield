@@ -1,6 +1,6 @@
 {
   "name": "@cshield/core",
-  "version": "1.5.2",
+  "version": "1.5.4",
   "description": "Contract-first API security for Node.js - installs all core packages",
   "license": "Apache-2.0",
   "repository": {

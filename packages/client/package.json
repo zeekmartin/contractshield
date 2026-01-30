@@ -1,6 +1,6 @@
 {
   "name": "@cshield/client",
-  "version": "1.5.2",
+  "version": "1.5.4",
   "description": "ContractShield client SDK with caching, retry, and failover",
   "type": "module",
   "main": "src/index.ts",

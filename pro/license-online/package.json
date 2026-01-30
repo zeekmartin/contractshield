@@ -1,6 +1,6 @@
 {
   "name": "@cshield/license-online",
-  "version": "1.5.2",
+  "version": "1.5.4",
   "private": true,
   "description": "ContractShield Pro - Online license validation via ContractShield License API",
   "type": "module",

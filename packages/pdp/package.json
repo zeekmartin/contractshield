@@ -1,6 +1,6 @@
 {
   "name": "@cshield/pdp",
-  "version": "1.5.2",
+  "version": "1.5.4",
   "type": "commonjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

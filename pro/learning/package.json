@@ -1,6 +1,6 @@
 {
   "name": "@cshield/learning",
-  "version": "1.5.2",
+  "version": "1.5.4",
   "private": true,
   "description": "ContractShield Pro - Learning Mode for automatic rule suggestions",
   "type": "module",
