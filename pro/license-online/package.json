@@ -1,8 +1,8 @@
 {
   "name": "@cshield/license-online",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "ContractShield Pro - LemonSqueezy online license validation",
+  "description": "ContractShield Pro - Online license validation via ContractShield License API",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,7 +32,8 @@
   "keywords": [
     "security",
     "license",
-    "lemonsqueezy",
-    "validation"
+    "contractshield",
+    "validation",
+    "api"
   ]
 }
