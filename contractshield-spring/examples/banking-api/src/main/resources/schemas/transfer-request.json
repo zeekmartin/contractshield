@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contractshield.dev/schemas/transfer-request.json",
+  "title": "Transfer Request",
+  "description": "Schema for bank transfer requests",
+  "type": "object",
+  "required": ["fromAccount", "toAccount", "amount", "currency"],
+  "properties": {
+    "fromAccount": {
+      "type": "string",
+      "pattern": "^ACC-[0-9]{3}$",
+      "description": "Source account number"
+    },
+    "toAccount": {
+      "type": "string",
+      "pattern": "^ACC-[0-9]{3}$",
+      "description": "Destination account number"
+    },
+    "amount": {
+      "type": "number",
+      "minimum": 0.01,
+      "maximum": 1000000,
+      "description": "Transfer amount"
+    },
+    "currency": {
+      "type": "string",
+      "enum": ["USD", "EUR", "GBP", "CAD"],
+      "description": "Currency code"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Optional transfer description"
+    }
+  },
+  "additionalProperties": false
+}

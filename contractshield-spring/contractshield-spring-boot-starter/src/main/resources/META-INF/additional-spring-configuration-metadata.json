@@ -1,0 +1,88 @@
+{
+  "groups": [
+    {
+      "name": "contractshield",
+      "type": "dev.contractshield.spring.ContractShieldProperties",
+      "description": "ContractShield configuration properties."
+    },
+    {
+      "name": "contractshield.openapi",
+      "type": "dev.contractshield.spring.ContractShieldProperties$OpenAPIProperties",
+      "description": "OpenAPI contract configuration."
+    },
+    {
+      "name": "contractshield.vulnerability",
+      "type": "dev.contractshield.spring.ContractShieldProperties$VulnerabilityProperties",
+      "description": "Vulnerability scanning configuration."
+    }
+  ],
+  "properties": [
+    {
+      "name": "contractshield.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable or disable ContractShield protection.",
+      "defaultValue": true
+    },
+    {
+      "name": "contractshield.url-patterns",
+      "type": "java.util.List<java.lang.String>",
+      "description": "URL patterns to protect.",
+      "defaultValue": ["/api/**"]
+    },
+    {
+      "name": "contractshield.exclude-paths",
+      "type": "java.util.List<java.lang.String>",
+      "description": "URL patterns to exclude from protection.",
+      "defaultValue": ["/actuator/**", "/swagger-ui/**", "/v3/api-docs/**"]
+    },
+    {
+      "name": "contractshield.sanitize-errors",
+      "type": "java.lang.Boolean",
+      "description": "Whether to sanitize error messages in responses.",
+      "defaultValue": true
+    },
+    {
+      "name": "contractshield.openapi.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable OpenAPI contract validation.",
+      "defaultValue": false
+    },
+    {
+      "name": "contractshield.openapi.spec-path",
+      "type": "java.lang.String",
+      "description": "Path to the OpenAPI specification file.",
+      "defaultValue": "classpath:openapi.yaml"
+    },
+    {
+      "name": "contractshield.vulnerability.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable vulnerability scanning.",
+      "defaultValue": true
+    },
+    {
+      "name": "contractshield.vulnerability.enable-sqli",
+      "type": "java.lang.Boolean",
+      "description": "Enable SQL injection detection.",
+      "defaultValue": true
+    },
+    {
+      "name": "contractshield.vulnerability.enable-xss",
+      "type": "java.lang.Boolean",
+      "description": "Enable XSS detection.",
+      "defaultValue": true
+    },
+    {
+      "name": "contractshield.vulnerability.enable-path-traversal",
+      "type": "java.lang.Boolean",
+      "description": "Enable path traversal detection.",
+      "defaultValue": true
+    },
+    {
+      "name": "contractshield.vulnerability.enable-prototype-pollution",
+      "type": "java.lang.Boolean",
+      "description": "Enable prototype pollution detection.",
+      "defaultValue": true
+    }
+  ],
+  "hints": []
+}
