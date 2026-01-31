@@ -14,15 +14,26 @@ import org.springframework.context.annotation.Primary;
 @TestConfiguration
 public class ContractShieldTestConfiguration {
 
+    /**
+     * Creates test-friendly ContractShield properties.
+     * Error sanitization is disabled to show full error details in tests.
+     *
+     * @return configured properties for testing
+     */
     @Bean
     @Primary
     public ContractShieldProperties testContractShieldProperties() {
         ContractShieldProperties properties = new ContractShieldProperties();
         properties.setEnabled(true);
-        properties.setSanitizeErrors(false); // Show full error details in tests
+        properties.setSanitizeErrors(false);
         return properties;
     }
 
+    /**
+     * Creates a VulnerabilityScanner with default configuration for testing.
+     *
+     * @return configured vulnerability scanner
+     */
     @Bean
     @Primary
     public VulnerabilityScanner testVulnerabilityScanner() {
