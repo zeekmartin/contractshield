@@ -1,6 +1,6 @@
 # Roadmap – ContractShield
 
-Last updated: 2026-01-19
+Last updated: 2026-02-09
 
 ---
 
@@ -87,7 +87,7 @@ Requête entrante
 
 ### Adapters
 - [x] Fastify adapter (`@contractshield/pep-fastify`)
-- [ ] Java adapter (Spring/Servlet)
+- [ ] Java adapter (Spring/Servlet) — moved to v1.6
 
 ### Webhooks
 - [x] Webhook générique (signature plugin system)
@@ -120,8 +120,8 @@ Requête entrante
 - [x] Monitor and enforce modes
 - [x] Request context tracking
 - [x] Structured logging for SIEM
-- [ ] SQL hooks (mysql, pg) — v1.2
-- [ ] Template injection — v1.2
+- [ ] SQL hooks (mysql, pg) — v1.7
+- [ ] Template injection — v1.7
 
 ---
 
@@ -152,6 +152,77 @@ Requête entrante
 
 ## v1.3 — SQL + Eval Hooks (Planned)
 
+Moved to v1.7
+
+---
+
+## v1.4 — Policy Packs (Planned)
+
+Moved to v1.8
+
+---
+
+## v1.5 — Multi-Platform + Learning Mode ✅
+
+**Objectif** : Support multi-langage et observation intelligente du trafic.
+
+### Multi-Platform Support
+- [x] Node.js (Express, Fastify) — Core
+- [x] Python (FastAPI) — `pip install contractshield`
+- [ ] Java (Spring Boot) — moved to v1.6
+
+### Learning Mode Pro
+- [x] `@contractshield/learning` package (Commercial)
+- [x] Collector with fixed-rate sampling
+- [x] Redactor automatique (données sensibles)
+- [x] Storage: File only (v1 simplification)
+- [x] Schema inference (JSON Schema auto-généré)
+- [x] Invariant discovery (tenant binding, formats)
+- [x] Vulnerability scanning (attaques dans le trafic)
+- [x] Générateur de suggestions YAML/JSON
+- [x] Scores de confiance
+- [x] CLI: `contractshield-learn status|analyze|suggest|clear|purge`
+- [x] Chiffrement AES-256-GCM au repos (optionnel)
+- [x] Auto-purge avec TTL configurable
+
+---
+
+## v1.6 — Spring Boot + BOLA Detection (Next)
+
+**Objectif** : Support enterprise Java et détection automatique BOLA/IDOR.
+
+### Spring Boot Adapter
+- [ ] `contractshield-spring-boot-starter` Maven package
+- [ ] Auto-configuration Spring Boot
+- [ ] Filter/Interceptor integration
+- [ ] Annotation support (`@ContractShield`)
+- [ ] Spring Security integration
+- [ ] Documentation + examples
+
+### BOLA/IDOR Auto-Detection (Pro) 🆕
+- [ ] Automatic detection of ID-manipulating endpoints
+- [ ] Path parameter analysis (`{id}`, `{uuid}`, `{userId}`)
+- [ ] Body field detection (`user_id`, `account_id`, `tenant_id`, `owner_id`)
+- [ ] Query param detection (`id`, `userId`, `ownerId`)
+- [ ] Auto-suggestion of ownership CEL rules
+- [ ] Risk scoring for unprotected endpoints
+- [ ] Dashboard integration
+
+**Example output:**
+```yaml
+# Auto-generated BOLA suggestion
+- id: orders.get
+  match:
+    path: /api/orders/{order_id}
+  bola_risk: HIGH
+  suggested_rule: "resource.owner_id == request.auth.sub"
+  reason: "Endpoint exposes order_id without ownership check"
+```
+
+---
+
+## v1.7 — SQL + Eval Hooks (Planned)
+
 - [ ] SQL hooks (mysql, pg, mysql2)
 - [ ] SQL injection analyzer
 - [ ] Eval hooks (eval, Function, vm)
@@ -159,44 +230,13 @@ Requête entrante
 
 ---
 
-## v1.4 — Policy Packs (Planned)
+## v1.8 — Policy Packs + Response Validation (Planned)
 
 - [ ] Policy pack : `@contractshield/pack-api-basics`
 - [ ] Policy pack : `@contractshield/pack-stripe-webhook`
+- [ ] Response validation (prevent data leaks)
 - [ ] Egress controls (declared URL fields, destination allowlists)
 - [ ] Workflow counters (sequence + quotas)
-
----
-
-## v1.5 — Learning Mode Pro ✅
-
-**Objectif** : Observer le trafic et suggérer automatiquement des règles.
-
-### Architecture
-- [x] `@contractshield/learning` package (Commercial)
-- [x] Collector with fixed-rate sampling (v1: no adaptive)
-- [x] Redactor automatique (données sensibles)
-- [x] Storage: File only (v1 simplification)
-
-### Analyseurs
-- [x] Schema inference (JSON Schema auto-généré)
-- [ ] Range detection (min/max/p99 des champs numériques) — v1.6
-- [x] Invariant discovery (tenant binding, formats)
-- [ ] Anomaly detection (outliers, patterns suspects) — v1.6
-- [x] Vulnerability scanning (attaques dans le trafic)
-
-### Output
-- [x] Générateur de suggestions YAML/JSON
-- [x] Scores de confiance
-- [x] CLI: `contractshield-learn status|analyze|suggest|clear|purge`
-
-### Sécurité
-- [x] Chiffrement AES-256-GCM au repos (optionnel, OFF par défaut)
-- [x] Auto-purge avec TTL configurable
-- [x] Limites de stockage (quotas par route)
-- [ ] Audit trail des opérations — v1.6
-
-**Voir:** `docs/internal/prompt5-learning-mode-analysis.md`
 
 ---
 
@@ -206,10 +246,13 @@ Requête entrante
 - [ ] WASM PDP
 - [ ] OPA/Rego backend alternatif
 
-### Enterprise
+### Enterprise Features
 - [ ] Policy UI (authoring + replay)
+- [ ] Dashboard Analytics
 - [ ] Audit logging certifié
 - [ ] `npx contractshield init --from openapi.yaml` (génération auto)
+- [ ] Multi-tenant isolation validation
+- [ ] AI Anomaly Detection (ML-based)
 
 ### Decisions
 - [ ] CHALLENGE
@@ -219,29 +262,55 @@ Requête entrante
 
 ---
 
+## v3.0+ — Long Term Vision
+
+- [ ] GraphQL support (depth, complexity, introspection control)
+- [ ] gRPC / Protocol Buffers support
+- [ ] Go Gin adapter
+- [ ] Rules Marketplace (community sharing)
+- [ ] Service Mesh integration (Istio, Linkerd, Envoy)
+- [ ] API Gateway plugins (Kong, Traefik, AWS API Gateway)
+- [ ] Chaos Engineering (contract fuzzing)
+
+---
+
 ## Backlog (non planifié)
 
 - Upload inspection (mime allowlist, max pages, decompression limits)
 - OAuth rule type
-- GraphQL support
-- gRPC adapter
 - ReDoS detection (regex complexity analysis)
-- Policy marketplace
+- Django REST adapter
+- Flask adapter
+- NestJS dedicated adapter
 
 ---
 
 ## Couverture des attaques par version
 
-| Attaque | v0.1 | v0.2 | v1.0 | v1.1 | v1.2 |
+| Attaque | v0.1 | v0.2 | v1.0 | v1.5 | v1.6 |
 |---------|------|------|------|------|------|
 | Mass assignment | ✅ Contract | ✅ | ✅ | ✅ | ✅ |
 | Schema violation | ✅ Contract | ✅ | ✅ | ✅ | ✅ |
-| IDOR / cross-tenant | ✅ CEL invariants | ✅ | ✅ | ✅ | ✅ |
+| IDOR / cross-tenant | ✅ CEL (manual) | ✅ | ✅ | ✅ | ✅ Auto-detect |
+| **BOLA** | ❌ | ❌ | ❌ | ❌ | ✅ Auto-detect |
 | Webhook spoofing | ✅ Signature | ✅ | ✅ | ✅ | ✅ |
 | Prototype pollution | ❌ | ✅ Check | ✅ | ✅ | ✅ |
 | Path traversal | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink | ✅ + Sink |
 | SSRF | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink | ✅ + Sink |
 | Command injection | ❌ | ⚠️ Opt-in | ✅ + Sink | ✅ + Sink | ✅ + Sink |
 | NoSQL injection | ❌ | ⚠️ Opt-in | ✅ | ✅ | ✅ |
-| SQL injection | ❌ | ❌ | ❌ | ❌ | v1.3 |
-| Template injection | ❌ | ❌ | ❌ | ❌ | v1.3 |
+| SQL injection | ❌ | ❌ | ❌ | ❌ | v1.7 |
+| Template injection | ❌ | ❌ | ❌ | ❌ | v1.7 |
+
+---
+
+## Platform Support Matrix
+
+| Platform | Package | Status | Version |
+|----------|---------|--------|---------|
+| Node.js Express | `@contractshield/pep-express` | ✅ Stable | v1.5.x |
+| Node.js Fastify | `@contractshield/pep-fastify` | ✅ Stable | v1.5.x |
+| Python FastAPI | `contractshield` (PyPI) | ✅ Stable | v1.5.4 |
+| Java Spring Boot | `contractshield-spring-boot-starter` | 🔜 v1.6 | - |
+| Go Gin | - | 📅 v3.0+ | - |
+| Sidecar (any language) | `@contractshield/sidecar` | ✅ Stable | v1.5.x |
