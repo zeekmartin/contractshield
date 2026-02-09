@@ -83,11 +83,10 @@ Requête entrante
 
 ## v0.3 — Multi-runtime + Webhooks ✅
 
-**Objectif** : Java support, webhooks généralisés.
+**Objectif** : Adaptateurs multi-frameworks, webhooks généralisés.
 
 ### Adapters
 - [x] Fastify adapter (`@contractshield/pep-fastify`)
-- [ ] Java adapter (Spring/Servlet) — moved to v1.6
 
 ### Webhooks
 - [x] Webhook générique (signature plugin system)
@@ -150,26 +149,19 @@ Requête entrante
 
 ---
 
-## v1.3 — SQL + Eval Hooks (Planned)
-
-Moved to v1.7
-
----
-
-## v1.4 — Policy Packs (Planned)
-
-Moved to v1.8
-
----
-
 ## v1.5 — Multi-Platform + Learning Mode ✅
 
 **Objectif** : Support multi-langage et observation intelligente du trafic.
 
 ### Multi-Platform Support
 - [x] Node.js (Express, Fastify) — Core
-- [x] Python (FastAPI) — `pip install contractshield`
-- [ ] Java (Spring Boot) — moved to v1.6
+- [x] Python (FastAPI, Flask) — `pip install contractshield` (v1.5.2)
+- [x] Java (Spring Boot) — Maven Central (v1.5.3)
+  - [x] `dev.contractshield:contractshield-core`
+  - [x] `dev.contractshield:contractshield-spring-boot-starter`
+  - [x] `dev.contractshield:contractshield-spring-boot-starter-test`
+  - [x] Annotations: `@ValidateContract`, `@CELExpression`
+  - [x] Spring Boot auto-configuration
 
 ### Learning Mode Pro
 - [x] `@contractshield/learning` package (Commercial)
@@ -187,17 +179,9 @@ Moved to v1.8
 
 ---
 
-## v1.6 — Spring Boot + BOLA Detection (Next)
+## v1.6 — BOLA/IDOR Auto-Detection (Next)
 
-**Objectif** : Support enterprise Java et détection automatique BOLA/IDOR.
-
-### Spring Boot Adapter
-- [ ] `contractshield-spring-boot-starter` Maven package
-- [ ] Auto-configuration Spring Boot
-- [ ] Filter/Interceptor integration
-- [ ] Annotation support (`@ContractShield`)
-- [ ] Spring Security integration
-- [ ] Documentation + examples
+**Objectif** : Détecter automatiquement les vulnérabilités BOLA/IDOR (#1 OWASP API Top 10).
 
 ### BOLA/IDOR Auto-Detection (Pro) 🆕
 - [ ] Automatic detection of ID-manipulating endpoints
@@ -206,7 +190,8 @@ Moved to v1.8
 - [ ] Query param detection (`id`, `userId`, `ownerId`)
 - [ ] Auto-suggestion of ownership CEL rules
 - [ ] Risk scoring for unprotected endpoints
-- [ ] Dashboard integration
+- [ ] Learning Mode integration for real traffic analysis
+- [ ] BOLA vulnerability report generation
 
 **Example output:**
 ```yaml
@@ -280,27 +265,26 @@ Moved to v1.8
 - OAuth rule type
 - ReDoS detection (regex complexity analysis)
 - Django REST adapter
-- Flask adapter
 - NestJS dedicated adapter
 
 ---
 
 ## Couverture des attaques par version
 
-| Attaque | v0.1 | v0.2 | v1.0 | v1.5 | v1.6 |
-|---------|------|------|------|------|------|
-| Mass assignment | ✅ Contract | ✅ | ✅ | ✅ | ✅ |
-| Schema violation | ✅ Contract | ✅ | ✅ | ✅ | ✅ |
-| IDOR / cross-tenant | ✅ CEL (manual) | ✅ | ✅ | ✅ | ✅ Auto-detect |
-| **BOLA** | ❌ | ❌ | ❌ | ❌ | ✅ Auto-detect |
-| Webhook spoofing | ✅ Signature | ✅ | ✅ | ✅ | ✅ |
-| Prototype pollution | ❌ | ✅ Check | ✅ | ✅ | ✅ |
-| Path traversal | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink | ✅ + Sink |
-| SSRF | ❌ | ✅ Check | ✅ + Sink | ✅ + Sink | ✅ + Sink |
-| Command injection | ❌ | ⚠️ Opt-in | ✅ + Sink | ✅ + Sink | ✅ + Sink |
-| NoSQL injection | ❌ | ⚠️ Opt-in | ✅ | ✅ | ✅ |
-| SQL injection | ❌ | ❌ | ❌ | ❌ | v1.7 |
-| Template injection | ❌ | ❌ | ❌ | ❌ | v1.7 |
+| Attaque | v0.2 | v1.0 | v1.5 | v1.6 |
+|---------|------|------|------|------|
+| Mass assignment | ✅ | ✅ | ✅ | ✅ |
+| Schema violation | ✅ | ✅ | ✅ | ✅ |
+| IDOR / cross-tenant | ✅ CEL (manual) | ✅ | ✅ | ✅ **Auto-detect** |
+| **BOLA** | ❌ | ❌ | ❌ | ✅ **Auto-detect** |
+| Webhook spoofing | ✅ | ✅ | ✅ | ✅ |
+| Prototype pollution | ✅ | ✅ | ✅ | ✅ |
+| Path traversal | ✅ | ✅ + Sink | ✅ + Sink | ✅ + Sink |
+| SSRF | ✅ | ✅ + Sink | ✅ + Sink | ✅ + Sink |
+| Command injection | ⚠️ Opt-in | ✅ + Sink | ✅ + Sink | ✅ + Sink |
+| NoSQL injection | ⚠️ Opt-in | ✅ | ✅ | ✅ |
+| SQL injection | ❌ | ❌ | ❌ | v1.7 |
+| Template injection | ❌ | ❌ | ❌ | v1.7 |
 
 ---
 
@@ -310,7 +294,8 @@ Moved to v1.8
 |----------|---------|--------|---------|
 | Node.js Express | `@contractshield/pep-express` | ✅ Stable | v1.5.x |
 | Node.js Fastify | `@contractshield/pep-fastify` | ✅ Stable | v1.5.x |
-| Python FastAPI | `contractshield` (PyPI) | ✅ Stable | v1.5.4 |
-| Java Spring Boot | `contractshield-spring-boot-starter` | 🔜 v1.6 | - |
+| Python FastAPI | `contractshield` (PyPI) | ✅ Stable | v1.5.2+ |
+| Python Flask | `contractshield[flask]` (PyPI) | ✅ Stable | v1.5.2+ |
+| Java Spring Boot | `dev.contractshield:contractshield-spring-boot-starter` | ✅ Stable | v1.5.4 |
 | Go Gin | - | 📅 v3.0+ | - |
 | Sidecar (any language) | `@contractshield/sidecar` | ✅ Stable | v1.5.x |
