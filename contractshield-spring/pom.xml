@@ -48,7 +48,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <spring-boot.version>3.2.0</spring-boot.version>
+        <spring-boot.version>4.0.2</spring-boot.version>
         <jackson.version>2.15.3</jackson.version>
         <json-schema-validator.version>1.0.87</json-schema-validator.version>
         <cel-java.version>0.4.0</cel-java.version>
