@@ -14,6 +14,10 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     environment: release
+    permissions:
+      contents: read
+      id-token: write  # For SLSA provenance
+      attestations: write  # For build attestations
 
     steps:
       - name: Checkout code
@@ -52,6 +56,11 @@ jobs:
       - name: Build and verify
         working-directory: contractshield-spring
         run: mvn clean verify -B
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'contractshield-spring/**/target/*.jar'
 
       - name: Publish to Maven Central
         working-directory: contractshield-spring

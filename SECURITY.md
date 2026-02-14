@@ -1,33 +1,37 @@
 # Security Policy
 
-Date: 2026-01-15
+## Reporting a Vulnerability
 
-## Reporting a vulnerability
+If you discover a security vulnerability in ContractShield, please report it responsibly.
 
-Please report security vulnerabilities privately.
+**Email:** security@contractshield.dev
 
-- Preferred: open a private security advisory on the repository (GitHub Security Advisories)
-- Alternatively: email the maintainer/security contact configured for this project
+You can also open a [private security advisory](https://github.com/zeekmartin/contractshield/security/advisories/new) on this repository.
 
-Do not file a public issue for security reports.
+Please do NOT open a public GitHub issue for security vulnerabilities.
 
-## What to include
-- description of the vulnerability
-- impact and attack scenario
-- reproduction steps or PoC
-- affected versions/commits
-- suggested mitigations (if any)
+### What to include
+- Description of the vulnerability
+- Impact and attack scenario
+- Reproduction steps or PoC
+- Affected versions/commits
+- Suggested mitigations (if any)
 
-## Response targets
-- Acknowledge within 3 business days
+### Response targets
+- Acknowledge within 48 hours
 - Status update within 7 business days
 - Coordinate disclosure once a fix is available
 
-## Supported versions
-Once releases exist, only the latest minor version is supported for security fixes.
+## Supported Versions
 
-## Safe harbor
+| Version | Supported          |
+|---------|--------------------|
+| 1.5.x   | :white_check_mark: Current |
+| < 1.5   | :x: Not supported  |
+
+## Safe Harbor
+
 We support good-faith security research. Please avoid:
-- privacy violations
-- service disruption
-- data destruction
+- Privacy violations
+- Service disruption
+- Data destruction
