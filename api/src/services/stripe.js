@@ -131,6 +131,22 @@ export async function handleCheckoutCompleted(session) {
     subscriptionId,
   });
 
+  // Track referral conversion
+  const referrer = session.metadata?.referrer;
+  if (referrer && referrer !== 'organic') {
+    try {
+      trackReferralConversion(referrer, {
+        customerId,
+        subscriptionId,
+        customerEmail,
+        plan,
+        amountTotal: session.amount_total,
+      });
+    } catch (refError) {
+      logger.error('Failed to track referral conversion', { error: refError.message, referrer });
+    }
+  }
+
   // Send license email
   try {
     await sendLicenseEmail(customerEmail, license.license_key, plan);
@@ -253,6 +269,47 @@ export async function handlePaymentFailed(invoice) {
   });
 
   return { success: true, graceUntil: graceUntil.toISOString() };
+}
+
+/**
+ * Track a referral conversion when a referred customer completes checkout
+ */
+function trackReferralConversion(partnerId, { customerId, subscriptionId, customerEmail, plan, amountTotal }) {
+  const partner = queryOne(
+    'SELECT * FROM referrals WHERE partner_id = ? AND status = ?',
+    [partnerId, 'active']
+  );
+
+  if (!partner) {
+    logger.info('No active partner found for referrer', { partnerId });
+    return;
+  }
+
+  const amount = (amountTotal || 0) / 100;
+  const commission = amount * partner.commission_rate;
+
+  execute(
+    `INSERT INTO referral_conversions
+     (referral_id, stripe_customer_id, stripe_subscription_id, customer_email, plan, amount, commission)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [partner.id, customerId, subscriptionId, customerEmail, plan || 'unknown', amount, commission]
+  );
+
+  execute(
+    `UPDATE referrals
+     SET total_converted = total_converted + 1,
+         total_earned = total_earned + ?,
+         updated_at = datetime('now')
+     WHERE id = ?`,
+    [commission, partner.id]
+  );
+
+  logger.info('Referral conversion tracked', {
+    partnerId,
+    partnerName: partner.partner_name,
+    amount,
+    commission,
+  });
 }
 
 /**

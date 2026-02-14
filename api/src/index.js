@@ -7,6 +7,7 @@ import { initDatabase, closeDatabase } from './db/index.js';
 import { logger } from './utils/logger.js';
 import webhooksRouter from './routes/webhooks.js';
 import licensesRouter from './routes/licenses.js';
+import partnersRouter from './routes/partners.js';
 
 const app = express();
 
@@ -39,7 +40,7 @@ const corsOptions = {
 
     callback(new Error('Not allowed by CORS'));
   },
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   maxAge: 86400, // 24 hours
 };
@@ -113,6 +114,9 @@ app.use('/webhooks', webhooksRouter);
 app.use('/v1/license/validate', validationLimiter);
 app.use('/v1/license/activate', activationLimiter);
 app.use('/v1/license', licensesRouter);
+
+// Admin partner routes
+app.use('/v1/admin/partners', partnersRouter);
 
 // 404 handler
 app.use((req, res) => {
