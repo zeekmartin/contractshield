@@ -62,4 +62,4 @@ app.use(contractshield({
 ## License
 
 - Open Source: [Apache 2.0](LICENSE)
-- Pro: [Commercial](COMMERCIAL.md)
+- Pro: [Commercial](COMMERCIAL.md) 
