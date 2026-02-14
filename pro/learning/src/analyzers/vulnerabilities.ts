@@ -233,7 +233,7 @@ export class VulnerabilityAnalyzer {
 
     // Command injection patterns
     const commandPatterns = [
-      /[;&|`$].*(?:cat|ls|pwd|whoami|id|uname|curl|wget|nc|bash|sh|python|perl|ruby|php)/i,
+      /[;&|`$][^;&|`$]*(?:cat|ls|pwd|whoami|id|uname|curl|wget|nc|bash|sh|python|perl|ruby|php)/i,
       /\$\([^)]+\)/,           // $(command)
       /`[^`]+`/,               // `command`
       /\|\s*\w+/,              // | command

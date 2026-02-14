@@ -38,6 +38,7 @@ export async function validateContract(
   const sample = ctx.request.body?.json?.sample;
   if (sample == null) return hits;
 
+  if (typeof validate !== "function") return hits;
   const ok = validate(sample);
   if (!ok) {
     hits.push({

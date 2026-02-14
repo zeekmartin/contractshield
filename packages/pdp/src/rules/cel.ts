@@ -21,7 +21,7 @@ export function evalCelRule(rule: PolicyRule, env: Record<string, any>, opts: Pd
     } else if (e === "identity.tenant == request.body.tenantId") {
       ok = (env.identity?.tenant ?? "") === (env.request?.body?.json?.sample?.tenantId ?? env.request?.body?.tenantId);
     } else if (e.includes(" in [")) {
-      const m = e.match(/^(.+?)\s+in\s+\[(.+)\]\s*$/);
+      const m = e.match(/^([^\s]+)\s+in\s+\[([^\]]+)\]\s*$/);
       if (m) {
         const lhs = m[1].trim();
         const rhs = m[2].trim();
