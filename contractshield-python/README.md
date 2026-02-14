@@ -3,6 +3,7 @@
 [![PyPI version](https://badge.fury.io/py/contractshield.svg)](https://badge.fury.io/py/contractshield)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/pypi/pyversions/contractshield.svg)](https://pypi.org/project/contractshield/)
+[![OWASP ASVS Level 1](https://contractshield.dev/badges/owasp-asvs-badge.svg)](https://docs.contractshield.dev/security/asvs)
 
 **Contract-First API Security for Python**
 
@@ -152,6 +153,12 @@ Get your license at [contractshield.dev/pricing](https://contractshield.dev/pric
 - [GitHub](https://github.com/zeekmartin/contractshield)
 - [npm packages](https://www.npmjs.com/org/cshield) (Node.js)
 - [PyPI](https://pypi.org/project/contractshield/) (Python)
+
+## Security & Compliance
+
+- **OWASP ASVS Level 1** — Input validation (V5), API security (V13), access control (V4). [Full compliance map →](https://docs.contractshield.dev/security/asvs)
+- **OWASP API Security Top 10** — Protection against API1 (BOLA), API6 (Mass Assignment), API7 (SSRF), API8 (Injection)
+- **CWE Coverage** — CWE-22, CWE-78, CWE-89, CWE-639, CWE-915, CWE-918, CWE-943, CWE-1321
 
 ## 📄 License
 
