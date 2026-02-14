@@ -25,8 +25,8 @@ importers:
         specifier: ^5.0.6
         version: 5.0.6
       '@types/node':
-        specifier: ^20.11.30
-        version: 20.19.30
+        specifier: ^25.2.3
+        version: 25.2.3
       typescript:
         specifier: ^5.4.0
         version: 5.9.3
@@ -41,14 +41,14 @@ importers:
         specifier: workspace:*
         version: link:../pdp
       '@types/node':
-        specifier: ^20.11.30
-        version: 20.19.30
+        specifier: ^25.2.3
+        version: 25.2.3
       typescript:
         specifier: ^5.5.4
         version: 5.9.3
       vitest:
         specifier: ^1.3.0
-        version: 1.6.1(@types/node@20.19.30)
+        version: 1.6.1(@types/node@25.2.3)
 
   packages/core:
     dependencies:
@@ -71,14 +71,14 @@ importers:
   packages/license:
     devDependencies:
       '@types/node':
-        specifier: ^20.11.30
-        version: 20.19.30
+        specifier: ^25.2.3
+        version: 25.2.3
       typescript:
         specifier: ^5.5.4
         version: 5.9.3
       vitest:
         specifier: ^1.3.0
-        version: 1.6.1(@types/node@20.19.30)
+        version: 1.6.1(@types/node@25.2.3)
 
   packages/pdp:
     dependencies:
@@ -90,8 +90,8 @@ importers:
         version: 3.0.1(ajv@8.18.0)
     devDependencies:
       '@types/node':
-        specifier: ^20.11.30
-        version: 20.19.30
+        specifier: ^25.2.3
+        version: 25.2.3
       typescript:
         specifier: ^5.5.4
         version: 5.9.3
@@ -109,8 +109,8 @@ importers:
         specifier: ^5.0.6
         version: 5.0.6
       '@types/node':
-        specifier: ^20.11.30
-        version: 20.19.30
+        specifier: ^25.2.3
+        version: 25.2.3
       typescript:
         specifier: ^5.5.4
         version: 5.9.3
@@ -125,8 +125,8 @@ importers:
         version: 5.1.0
     devDependencies:
       '@types/node':
-        specifier: ^20.11.30
-        version: 20.19.30
+        specifier: ^25.2.3
+        version: 25.2.3
       fastify:
         specifier: ^5.7.3
         version: 5.7.3
@@ -144,8 +144,8 @@ importers:
         version: 5.7.3
     devDependencies:
       '@types/node':
-        specifier: ^20.11.30
-        version: 20.19.30
+        specifier: ^25.2.3
+        version: 25.2.3
       redis:
         specifier: ^4.6.0
         version: 4.7.1
@@ -166,26 +166,26 @@ importers:
         version: 2.8.2
     devDependencies:
       '@types/node':
-        specifier: ^20.11.30
-        version: 20.19.30
+        specifier: ^25.2.3
+        version: 25.2.3
       typescript:
         specifier: ^5.5.4
         version: 5.9.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.1(@types/node@20.19.30)
+        version: 1.6.1(@types/node@25.2.3)
 
   pro/license-online:
     devDependencies:
       '@types/node':
-        specifier: ^20.11.30
-        version: 20.19.30
+        specifier: ^25.2.3
+        version: 25.2.3
       typescript:
         specifier: ^5.5.4
         version: 5.9.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.1(@types/node@20.19.30)
+        version: 1.6.1(@types/node@25.2.3)
 
   pro/pro:
     dependencies:
@@ -209,14 +209,14 @@ importers:
         version: link:../../packages/license
     devDependencies:
       '@types/node':
-        specifier: ^20.11.30
-        version: 20.19.30
+        specifier: ^25.2.3
+        version: 25.2.3
       typescript:
         specifier: ^5.5.4
         version: 5.9.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.1(@types/node@20.19.30)
+        version: 1.6.1(@types/node@25.2.3)
 
 packages:
 
@@ -561,8 +561,8 @@ packages:
   '@types/http-errors@2.0.5':
     resolution: {integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==}
 
-  '@types/node@20.19.30':
-    resolution: {integrity: sha512-WJtwWJu7UdlvzEAUm484QNg5eAoq5QR08KDNx7g45Usrs2NtOPiX8ugDqmKdXkyL03rBqU5dYNYVQetEpBHq2g==}
+  '@types/node@25.2.3':
+    resolution: {integrity: sha512-m0jEgYlYz+mDJZ2+F4v8D1AyQb+QzsNqRuI7xg1VQX/KlKS0qT9r1Mo16yo5F/MtifXFgaofIFsdFMox2SxIbQ==}
 
   '@types/qs@6.14.0':
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
@@ -1312,8 +1312,8 @@ packages:
   ufo@1.6.3:
     resolution: {integrity: sha512-yDJTmhydvl5lJzBmy/hyOAA0d+aqCBuwl818haVdYCRrWV84o7YyeVm4QlVHStqNrrJSTb6jKuFAVqAFsr+K3Q==}
 
-  undici-types@6.21.0:
-    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
+  undici-types@7.16.0:
+    resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
   unpipe@1.0.0:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}
@@ -1621,17 +1621,17 @@ snapshots:
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 20.19.30
+      '@types/node': 25.2.3
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 20.19.30
+      '@types/node': 25.2.3
 
   '@types/estree@1.0.8': {}
 
   '@types/express-serve-static-core@5.1.1':
     dependencies:
-      '@types/node': 20.19.30
+      '@types/node': 25.2.3
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
@@ -1644,9 +1644,9 @@ snapshots:
 
   '@types/http-errors@2.0.5': {}
 
-  '@types/node@20.19.30':
+  '@types/node@25.2.3':
     dependencies:
-      undici-types: 6.21.0
+      undici-types: 7.16.0
 
   '@types/qs@6.14.0': {}
 
@@ -1654,12 +1654,12 @@ snapshots:
 
   '@types/send@1.2.1':
     dependencies:
-      '@types/node': 20.19.30
+      '@types/node': 25.2.3
 
   '@types/serve-static@2.2.0':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 20.19.30
+      '@types/node': 25.2.3
 
   '@vitest/expect@1.6.1':
     dependencies:
@@ -2529,7 +2529,7 @@ snapshots:
 
   ufo@1.6.3: {}
 
-  undici-types@6.21.0: {}
+  undici-types@7.16.0: {}
 
   unpipe@1.0.0: {}
 
@@ -2537,13 +2537,13 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite-node@1.6.1(@types/node@20.19.30):
+  vite-node@1.6.1(@types/node@25.2.3):
     dependencies:
       cac: 6.7.14
       debug: 4.4.3
       pathe: 1.1.2
       picocolors: 1.1.1
-      vite: 5.4.21(@types/node@20.19.30)
+      vite: 5.4.21(@types/node@25.2.3)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -2555,16 +2555,16 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.4.21(@types/node@20.19.30):
+  vite@5.4.21(@types/node@25.2.3):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.6
       rollup: 4.55.2
     optionalDependencies:
-      '@types/node': 20.19.30
+      '@types/node': 25.2.3
       fsevents: 2.3.3
 
-  vitest@1.6.1(@types/node@20.19.30):
+  vitest@1.6.1(@types/node@25.2.3):
     dependencies:
       '@vitest/expect': 1.6.1
       '@vitest/runner': 1.6.1
@@ -2583,11 +2583,11 @@ snapshots:
       strip-literal: 2.1.1
       tinybench: 2.9.0
       tinypool: 0.8.4
-      vite: 5.4.21(@types/node@20.19.30)
-      vite-node: 1.6.1(@types/node@20.19.30)
+      vite: 5.4.21(@types/node@25.2.3)
+      vite-node: 1.6.1(@types/node@25.2.3)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 20.19.30
+      '@types/node': 25.2.3
     transitivePeerDependencies:
       - less
       - lightningcss
