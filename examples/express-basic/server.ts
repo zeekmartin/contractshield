@@ -82,8 +82,7 @@ app.use(async (req, res, next) => {
 
   // Log
   const emoji = decision.action === "ALLOW" ? "✓" : decision.action === "BLOCK" ? "✗" : "⚠";
-  console.log(
-    `[contractshield] ${emoji} ${decision.action} ${req.method} ${req.path}`,
+  console.log("[contractshield] %s %s %s %s", emoji, decision.action, req.method, req.path,
     decision.ruleHits?.length ? `(${decision.ruleHits.map((h: RuleHit) => h.id).join(", ")})` : ""
   );
 

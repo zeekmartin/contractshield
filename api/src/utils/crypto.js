@@ -1,4 +1,4 @@
-import { randomBytes, createHash } from 'crypto';
+import { randomBytes, createHash, randomInt } from 'crypto';
 
 /**
  * Generate a license key in the format: CSHIELD-XXXX-XXXX-XXXX-XXXX
@@ -9,10 +9,9 @@ export function generateLicenseKey() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Excludes I, O, 0, 1 for readability
 
   for (let i = 0; i < 4; i++) {
-    const bytes = randomBytes(4);
     let segment = '';
     for (let j = 0; j < 4; j++) {
-      segment += chars[bytes[j] % chars.length];
+      segment += chars[randomInt(chars.length)];
     }
     segments.push(segment);
   }
