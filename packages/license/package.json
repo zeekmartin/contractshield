@@ -1,6 +1,6 @@
 {
   "name": "@cshield/license",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "License verification for ContractShield Pro/Enterprise",
   "type": "module",
   "main": "src/index.ts",

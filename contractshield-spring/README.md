@@ -5,7 +5,7 @@
 [![Java](https://img.shields.io/badge/Java-17%2B-blue)](https://openjdk.org/)
 [![OWASP ASVS Level 1](https://contractshield.dev/badges/owasp-asvs-badge.svg)](https://docs.contractshield.dev/security/asvs)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/zeekmartin/contractshield/badge)](https://scorecard.dev/viewer/?uri=github.com/zeekmartin/contractshield)
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/XXXXX/badge)](https://www.bestpractices.dev/projects/XXXXX)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11943/badge)](https://www.bestpractices.dev/projects/11943)
 [![SLSA Build Level 1](https://img.shields.io/badge/SLSA-Build_Level_1-blue?logo=openssf&logoColor=white)](https://slsa.dev/spec/v1.0/levels#build-l1)
 
 **Contract-First API Security for Spring Boot**
@@ -20,14 +20,14 @@ Protect your business logic, not just your formats. ContractShield validates API
 <dependency>
     <groupId>dev.contractshield</groupId>
     <artifactId>contractshield-spring-boot-starter</artifactId>
-    <version>1.5.4</version>
+    <version>1.5.5</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation 'dev.contractshield:contractshield-spring-boot-starter:1.5.4'
+implementation 'dev.contractshield:contractshield-spring-boot-starter:1.5.5'
 ```
 
 ## Quick Start
