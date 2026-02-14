@@ -28,6 +28,8 @@ export const config = {
     url: optional('DATABASE_URL', './data/licenses.db'),
   },
 
+  adminApiKey: required('ADMIN_API_KEY'),
+
   stripe: {
     secretKey: required('STRIPE_SECRET_KEY'),
     webhookSecret: required('STRIPE_WEBHOOK_SECRET'),
