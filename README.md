@@ -7,6 +7,9 @@
     <a href="https://www.npmjs.com/package/@cshield/pro"><img src="https://img.shields.io/npm/v/@cshield/pro?label=pro" alt="npm pro"></a>
     <a href="https://github.com/zeekmartin/contractshield/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" alt="License"></a>
     <a href="https://docs.contractshield.dev/security/asvs"><img src="https://contractshield.dev/badges/owasp-asvs-badge.svg" alt="OWASP ASVS Level 1"></a>
+    <a href="https://scorecard.dev/viewer/?uri=github.com/zeekmartin/contractshield"><img src="https://api.scorecard.dev/projects/github.com/zeekmartin/contractshield/badge" alt="OpenSSF Scorecard"></a>
+    <a href="https://www.bestpractices.dev/projects/XXXXX"><img src="https://www.bestpractices.dev/projects/XXXXX/badge" alt="OpenSSF Best Practices"></a>
+    <a href="https://slsa.dev/spec/v1.0/levels#build-l1"><img src="https://img.shields.io/badge/SLSA-Build_Level_1-blue?logo=openssf&logoColor=white" alt="SLSA Build Level 1"></a>
   </p>
 
   <p>

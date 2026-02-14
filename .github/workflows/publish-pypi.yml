@@ -9,7 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     permissions:
-      id-token: write  # For trusted publishing
+      contents: read
+      id-token: write  # For trusted publishing and SLSA provenance
+      attestations: write  # For build attestations
 
     steps:
       - name: Checkout code
@@ -54,9 +56,13 @@ jobs:
         working-directory: contractshield-python
         run: python -m build
 
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'contractshield-python/dist/*'
+
       - name: Publish to PyPI
-        working-directory: contractshield-python
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: twine upload dist/*.whl dist/*.tar.gz
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: contractshield-python/dist/
+          attestations: true
