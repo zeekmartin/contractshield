@@ -5,7 +5,7 @@
 [![Python](https://img.shields.io/pypi/pyversions/contractshield.svg)](https://pypi.org/project/contractshield/)
 [![OWASP ASVS Level 1](https://contractshield.dev/badges/owasp-asvs-badge.svg)](https://docs.contractshield.dev/security/asvs)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/zeekmartin/contractshield/badge)](https://scorecard.dev/viewer/?uri=github.com/zeekmartin/contractshield)
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/XXXXX/badge)](https://www.bestpractices.dev/projects/XXXXX)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11943/badge)](https://www.bestpractices.dev/projects/11943)
 [![SLSA Build Level 1](https://img.shields.io/badge/SLSA-Build_Level_1-blue?logo=openssf&logoColor=white)](https://slsa.dev/spec/v1.0/levels#build-l1)
 
 **Contract-First API Security for Python**

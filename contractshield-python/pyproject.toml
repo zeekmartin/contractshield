@@ -1,6 +1,6 @@
 [project]
 name = "contractshield"
-version = "1.5.4"
+version = "1.5.5"
 description = "Contract-First API Security for Python"
 authors = [{name = "ContractShield", email = "contact@contractshield.dev"}]
 license = {text = "Apache-2.0"}

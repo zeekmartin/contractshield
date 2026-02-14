@@ -8,7 +8,7 @@
     <parent>
         <groupId>dev.contractshield</groupId>
         <artifactId>contractshield-parent</artifactId>
-        <version>1.5.4</version>
+        <version>1.5.5</version>
     </parent>
 
     <artifactId>contractshield-spring-boot-starter</artifactId>

@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.5] - 2025-02-14
+
+### Security
+- Fixed polynomial regex vulnerability in rule analyzers (ReDoS prevention)
+- Tightened Helmet middleware configuration
+- Replaced biased random number generation with `crypto.randomInt()`
+- Added method allowlist for dynamic dispatch in contract rules
+- Fixed incomplete string escaping in rule suggester
+- Sanitized user-controlled input in log format strings
+- Added explicit permissions to all GitHub Actions workflows
+
+### Added
+- OpenSSF Scorecard automated security analysis
+- OpenSSF Best Practices Badge (Passing)
+- SLSA Build Level 1 provenance for npm packages
+- OWASP ASVS Level 1 compliance badge
+- SECURITY.md vulnerability reporting policy
+- CONTRIBUTING.md contribution guidelines
+- CodeQL static analysis in CI
+
+### Changed
+- Pinned all GitHub Actions dependencies to SHA hashes
+- Enabled Dependabot security alerts and updates
+- Updated dependencies to resolve known vulnerabilities
+
 ## [1.5.4] - 2026-02-02
 ### Added
 
