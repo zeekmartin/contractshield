@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@cshield/pdp": "workspace:*",
-    "fastify": "^5.7.3"
+    "fastify": "^5.7.4"
   },
   "devDependencies": {
     "typescript": "^5.5.4",
