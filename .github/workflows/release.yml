@@ -13,15 +13,15 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@c5ba7f7862a0f64c1b1a05fbac13e0b8e86ba08c # v4
         with:
           version: 10
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 20.x
           cache: 'pnpm'
@@ -37,7 +37,7 @@ jobs:
       - name: Obfuscate Pro modules
         run: |
           npm install -g javascript-obfuscator
-          
+
           # Obfuscate all JS files in pro packages dist folders
           for pro_pkg in pro/sink-rasp pro/learning pro/license-online pro/pro; do
             if [ -d "$pro_pkg/dist" ]; then
@@ -69,7 +69,7 @@ jobs:
             cd $pkg && npm publish --access public --provenance || true
             cd -
           done
-          
+
           # Pro packages (now obfuscated)
           for pkg in pro/sink-rasp pro/learning pro/license-online pro/pro; do
             echo "Publishing $pkg (obfuscated)..."
@@ -80,7 +80,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@26994186c0ac3ef5cae75ac16aa32e8153525f77 # v1
         with:
           generate_release_notes: true
         env:
