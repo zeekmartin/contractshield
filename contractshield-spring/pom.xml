@@ -50,7 +50,7 @@
 
         <spring-boot.version>3.2.0</spring-boot.version>
         <jackson.version>2.15.3</jackson.version>
-        <json-schema-validator.version>1.0.87</json-schema-validator.version>
+        <json-schema-validator.version>3.0.0</json-schema-validator.version>
         <cel-java.version>0.11.1</cel-java.version>
         <swagger-parser.version>2.1.18</swagger-parser.version>
 
