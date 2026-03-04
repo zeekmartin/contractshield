@@ -52,7 +52,7 @@
         <jackson.version>2.15.3</jackson.version>
         <json-schema-validator.version>1.0.87</json-schema-validator.version>
         <cel-java.version>0.11.1</cel-java.version>
-        <swagger-parser.version>2.1.18</swagger-parser.version>
+        <swagger-parser.version>2.1.37</swagger-parser.version>
 
         <junit.version>5.10.1</junit.version>
         <mockito.version>5.7.0</mockito.version>
