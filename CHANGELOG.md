@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.7] - 2026-03-09
+
+### Changed
+- Bumped `io.swagger.parser.v3:swagger-parser` from 2.1.37 to 2.1.38 (PR #82)
+- Bumped `dev.cel:cel` from 0.11.0 to 0.12.0 (PR #84)
+- Bumped `fastify` from 5.7.4 to 5.8.2 (PR #80)
+- Bumped `org.apache.maven.plugins:maven-surefire-plugin` from 3.5.4 to 3.5.5 (PR #85)
+- Bumped `@types/node` from 25.3.3 to 25.3.5 (PR #83)
+- Bumped `actions/attest-build-provenance` from 2.4.0 to 4.1.0 (PR #81)
+- Bumped `github/codeql-action` from 4.32.3 to 4.32.6 (PR #78)
+- Bumped `actions/setup-node` from 6.2.0 to 6.3.0 (PR #77)
+
+## [1.5.6] - 2026-03-02
+
+### Changed
+- Bumped `io.swagger.parser.v3:swagger-parser` from 2.1.24 to 2.1.37 (PR #69)
+- Bumped `org.apache.maven.plugins:maven-surefire-plugin` from 3.5.2 to 3.5.4 (PR #72)
+- Bumped `org.sonatype.central:central-publishing-maven-plugin` from 0.7.0 to 0.10.0 (PR #64)
+- Bumped `org.apache.maven.plugins:maven-source-plugin` from 3.3.1 to 3.4.0 (PR #62)
+- Bumped `redis` from 5.10.0 to 5.11.0 (PR #71)
+- Bumped `@types/node` from 25.2.3 to 25.3.3 (PR #74)
+- Bumped `pnpm/action-setup` to latest (PR #63)
+- Bumped `actions/setup-python` from 5.6.0 to 6.2.0 (PR #68)
+- Bumped `actions/setup-node` from 4.4.0 to 6.2.0 (PR #70)
+- Bumped `softprops/action-gh-release` from 1 to 2 (PR #67)
+- Bumped `ossf/scorecard-action` from 2.4.0 to 2.4.3 (PR #65)
+
+### Fixed
+- Fixed formatting in README for Pro license section
+- Added `workflow_dispatch` trigger to `publish-pypi.yml`
+
 ## [1.5.5] - 2025-02-14
 
 ### Security
