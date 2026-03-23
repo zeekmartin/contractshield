@@ -23,7 +23,7 @@
   "devDependencies": {
     "typescript": "^5.5.4",
     "@types/node": "^25.3.5",
-    "vitest": "^4.0.18",
+    "vitest": "^4.1.1",
     "@cshield/pdp": "workspace:*"
   },
   "peerDependencies": {
