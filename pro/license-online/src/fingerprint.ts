@@ -44,13 +44,14 @@ export function generateFingerprint(): string {
   ];
 
   const data = components.join("|");
-  cachedFingerprint = crypto
+  const fingerprint = crypto
     .createHash("sha256")
     .update(data)
     .digest("hex")
     .substring(0, 32);
+  cachedFingerprint = fingerprint;
 
-  return cachedFingerprint;
+  return fingerprint;
 }
 
 /**
